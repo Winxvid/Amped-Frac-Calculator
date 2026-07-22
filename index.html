@@ -90,6 +90,15 @@
       color: var(--text2);
       margin-bottom: 6px;
     }
+    /* Formula / tool card titles (not field labels, not dashboard icons) */
+    .tool-title {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      color: var(--text);
+      line-height: 1.25;
+    }
     .lbl-brand { color: var(--brand); }
     .lbl-blue  { color: var(--blue); }
 
@@ -479,7 +488,7 @@
     <!-- Order of Operations (PEMDAS) Card -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">🔢 Order of Operations</div>
+        <div class="lbl tool-title" style="margin:0;">Order of Operations</div>
         <span class="badge badge-green" style="font-size:11px;">Remember PEMDAS</span>
       </div>
       <div class="grid-2 gap-2 mb-1">
@@ -516,7 +525,7 @@
 
     <!-- Multi-Category Dynamic Unit Converter -->
     <div class="card mb-4">
-      <div class="lbl mb-3">↔ Interactive Multi-Unit Converter</div>
+      <div class="lbl mb-3 tool-title">Interactive Multi-Unit Converter</div>
       <div class="mb-3">
         <label class="lbl">Dimension Category</label>
         <select id="conv-cat" class="field" onchange="updateConvUnits()">
@@ -552,7 +561,7 @@
 
     <!-- Force on an Area Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🏋️ Force on an Area</div>
+      <div class="lbl mb-3 tool-title">Force on an Area</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Formula: Force (lbs) = Pressure (psi) × Surface Area (in²)</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
@@ -578,7 +587,7 @@
 
     <!-- Fluid Velocity in a Pipe Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🌊 Fluid Velocity in a Pipe</div>
+      <div class="lbl mb-3 tool-title">Fluid Velocity in a Pipe</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Formula: Fluid Velocity = Rate / (π × R²)</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
@@ -604,7 +613,7 @@
 
     <!-- Hose Volume Factors & Hose Volume Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔌 Hose Volume Factors &amp; Calculator</div>
+      <div class="lbl mb-3 tool-title">Hose Volume Factors &amp; Calculator</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Volume of Cylinder = πR² × Length. Standard hose benchmarks:</div>
       <div class="grid-2 gap-2 mb-3">
         <div class="surface-card">
@@ -660,7 +669,7 @@
 
     <!-- Rectangle Area -->
     <div class="card mb-4">
-      <div class="lbl mb-3">▭ Rectangle Area</div>
+      <div class="lbl mb-3 tool-title">Rectangle Area</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Length (IN)</label>
@@ -686,7 +695,7 @@
     <!-- Circle Area -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">● Circle Area &amp; Radius</div>
+        <div class="lbl tool-title" style="margin:0;">Circle Area &amp; Radius</div>
         <div class="flex gap-1">
           <button class="quick-btn sel" id="circ-mode-d" onclick="setCircleMode('d')">Diameter</button>
           <button class="quick-btn" id="circ-mode-r" onclick="setCircleMode('r')">Radius</button>
@@ -710,7 +719,7 @@
 
     <!-- Tank / Cube Volume -->
     <div class="card mb-4">
-      <div class="lbl mb-3">▦ Tank / Cube Volume (Length × Width × Height)</div>
+      <div class="lbl mb-3 tool-title">Tank / Cube Volume (Length × Width × Height)</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Length (IN)</label>
@@ -743,7 +752,7 @@
 
     <!-- Cylinder Volume -->
     <div class="card mb-4">
-      <div class="lbl mb-3">▬ Cylinder Volume (πR² × Length)</div>
+      <div class="lbl mb-3 tool-title">Cylinder Volume (πR² × Length)</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Diameter (IN)</label>
@@ -779,7 +788,7 @@
     <!-- Wellbore Capacity (Multi-Section) -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">🧮 Wellbore Capacity (Multi-Section)</div>
+        <div class="lbl tool-title" style="margin:0;">Wellbore Capacity (Multi-Section)</div>
         <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addWellCapRow()">+ Add Section</button>
       </div>
       <div id="wellcap-rows"><!-- injected --></div>
@@ -797,7 +806,7 @@
 
     <!-- Capacity Factor Reverse -->
     <div class="card mb-4">
-      <div class="lbl mb-3">↺ Capacity Factor (Reverse)</div>
+      <div class="lbl mb-3 tool-title">Capacity Factor (Reverse)</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Total Barrels</label>
@@ -816,7 +825,7 @@
 
     <!-- Casing Capacity Factors -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📐 Casing Capacity Factors</div>
+      <div class="lbl mb-3 tool-title">Casing Capacity Factors</div>
       <table class="tbl">
         <thead>
           <tr>
@@ -831,7 +840,7 @@
 
     <!-- Field Constants -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📚 Field Constants</div>
+      <div class="lbl mb-3 tool-title">Field Constants</div>
       <table class="tbl">
         <tbody id="const-tbody"><!-- injected --></tbody>
       </table>
@@ -840,7 +849,7 @@
     <!-- Complete Section 1 Unit Conversions Reference Table -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">🔄 Section 1 Unit Conversions Reference</div>
+        <div class="lbl tool-title" style="margin:0;">Section 1 Unit Conversions Reference</div>
         <span class="badge badge-green" style="font-size:11px;">25 Standard Values</span>
       </div>
       <table class="tbl">
@@ -858,7 +867,7 @@
     <!-- Acronyms / Abbreviations Card -->
     <div class="card">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">📖 Acronyms &amp; Abbreviations</div>
+        <div class="lbl tool-title" style="margin:0;">Acronyms &amp; Abbreviations</div>
         <span class="badge badge-green" style="font-size:11px;">Section 1 Reference</span>
       </div>
       <div class="grid-2 gap-2" id="acronyms-grid">
@@ -877,7 +886,7 @@
     <!-- Stage tabs -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">Stages (Design vs Actual Tracking)</div>
+        <div class="lbl tool-title" style="margin:0;">Stages (Design vs Actual Tracking)</div>
         <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addStage()">+ Add Stage</button>
       </div>
       <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;" id="stage-tabs"><!-- injected --></div>
@@ -888,7 +897,7 @@
     <!-- Sand Fundamentals Quick Reference -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">📖 Sand Fundamentals Reference</div>
+        <div class="lbl tool-title" style="margin:0;">Sand Fundamentals Reference</div>
         <span class="badge badge-green" style="font-size:11px;">Section 2 Standards</span>
       </div>
       <div class="grid-2 gap-2 mb-2">
@@ -916,7 +925,7 @@
 
     <!-- Bulk Density Calculator & Table -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚖ Bulk Density Calculator &amp; Reference</div>
+      <div class="lbl mb-3 tool-title">Bulk Density Calculator &amp; Reference</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Measured Mass (LBS)</label>
@@ -947,7 +956,7 @@
 
     <!-- Sand Needed <-> Clean Volume -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🏖 Sand Needed ↔ Clean Volume</div>
+      <div class="lbl mb-3 tool-title">Sand Needed ↔ Clean Volume</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Clean Volume (BBL)</label>
@@ -974,7 +983,7 @@
 
     <!-- AVF / CFR / Yield / Slurry Density -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📈 AVF • CFR • Yield • Slurry Density</div>
+      <div class="lbl mb-3 tool-title">AVF • CFR • Yield • Slurry Density</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">PPA (PPG)</label>
@@ -995,7 +1004,7 @@
 
     <!-- Proppant Concentration Calculations -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🎯 Proppant Concentration (PPA) Calculators</div>
+      <div class="lbl mb-3 tool-title">Proppant Concentration (PPA) Calculators</div>
       
       <!-- Method 1: From Slurry Rate & Clean Rate -->
       <div class="surface-card mb-3" style="padding:12px;">
@@ -1048,7 +1057,7 @@
 
     <!-- Sand Ramp Average PPA & Total Sand Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📈 Sand Ramp Calculator</div>
+      <div class="lbl mb-3 tool-title">Sand Ramp Calculator</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Start PPA (PPG)</label>
@@ -1079,7 +1088,7 @@
 
     <!-- PPR Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔩 PPR Calculator (Auger Dimensions)</div>
+      <div class="lbl mb-3 tool-title">PPR Calculator (Auger Dimensions)</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Auger Radius (IN)</label>
@@ -1107,7 +1116,7 @@
 
     <!-- PPR Recalibration Tool -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔄 PPR Recalibration (Post-Stage Adjustment)</div>
+      <div class="lbl mb-3 tool-title">PPR Recalibration (Post-Stage Adjustment)</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Old / Current PPR (LBS/REV)</label>
@@ -1131,7 +1140,7 @@
 
     <!-- Auger RPM, PPM & PPT Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚙ Auger RPM, PPM &amp; PPT Rates</div>
+      <div class="lbl mb-3 tool-title">Auger RPM, PPM &amp; PPT Rates</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Clean Rate (BPM)</label>
@@ -1166,7 +1175,7 @@
 
     <!-- Multi-Auger Priority RPM Allocator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔀 Multi-Auger Priority RPM Allocation</div>
+      <div class="lbl mb-3 tool-title">Multi-Auger Priority RPM Allocation</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Total Prop RPM Required</label>
@@ -1192,7 +1201,7 @@
 
     <!-- Job Prop Total from Cum Volumes -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🧮 Job Prop Total from Cum Volumes</div>
+      <div class="lbl mb-3 tool-title">Job Prop Total from Cum Volumes</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Slurry Cum (GAL)</label>
@@ -1233,7 +1242,7 @@
 
     <!-- Config -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Batch Config</div>
+      <div class="lbl mb-3 tool-title">Batch Config</div>
       <div class="mb-3">
         <label class="lbl">Clean Rate (BPM) <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--brand);">— shared with HP & Hydration</span></label>
         <input type="number" id="ch-rate" class="field" value="0" step="0.1" placeholder="0">
@@ -1252,7 +1261,7 @@
 
     <!-- Chemical Used from Straps -->
     <div class="card mb-4">
-      <div class="lbl mb-3">➖ Chemical Used from Straps</div>
+      <div class="lbl mb-3 tool-title">Chemical Used from Straps</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Starting Strap (GAL or IN)</label>
@@ -1271,7 +1280,7 @@
 
     <!-- Chemical Stage Variance -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📊 Chemical Stage Variance</div>
+      <div class="lbl mb-3 tool-title">Chemical Stage Variance</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Amount Pumped (GAL)</label>
@@ -1296,7 +1305,7 @@
 
     <!-- GPT <-> GPM Converter -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⇄ GPT ↔ GPM Converter</div>
+      <div class="lbl mb-3 tool-title">GPT ↔ GPM Converter</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Clean Rate (BPM)</label>
@@ -1323,7 +1332,7 @@
 
     <!-- HCL Density & % Converter -->
     <div class="card mb-4">
-      <div class="lbl mb-3">💧 HCL Density &amp; % Converter</div>
+      <div class="lbl mb-3 tool-title">HCL Density &amp; % Converter</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">% HCL</label>
@@ -1339,7 +1348,7 @@
 
     <!-- Acid Dilution -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🧪 Acid Dilution (HCL)</div>
+      <div class="lbl mb-3 tool-title">Acid Dilution (HCL)</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Raw Volume (GAL)</label>
@@ -1374,7 +1383,7 @@
 
     <!-- Buffer Needed -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🧴 Buffer Needed</div>
+      <div class="lbl mb-3 tool-title">Buffer Needed</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Clean Volume (BBL)</label>
@@ -1394,7 +1403,7 @@
 
     <!-- Tote Volume from Strap -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🛢 Tote Volume from Strap</div>
+      <div class="lbl mb-3 tool-title">Tote Volume from Strap</div>
       <div class="mb-3">
         <label class="lbl">Current Strap (IN)</label>
         <input type="number" id="tote-strap" class="field" value="48" step="0.1" placeholder="48">
@@ -1426,7 +1435,7 @@
     <!-- Multi-Tote Accessible Volume -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">🧮 Multi-Tote Accessible Volume</div>
+        <div class="lbl tool-title" style="margin:0;">Multi-Tote Accessible Volume</div>
         <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addMultiToteRow()">+ Add Tote</button>
       </div>
       <div id="multitote-rows"><!-- injected --></div>
@@ -1439,7 +1448,7 @@
 
     <!-- Ending Strap Predictor -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔮 Ending Strap Predictor</div>
+      <div class="lbl mb-3 tool-title">Ending Strap Predictor</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Clean Volume (BBL)</label>
@@ -1474,7 +1483,7 @@
 
     <!-- Tote Refill Count Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔄 Tote Refill Count Calculator</div>
+      <div class="lbl mb-3 tool-title">Tote Refill Count Calculator</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Stage Clean Vol (BBL)</label>
@@ -1518,7 +1527,7 @@
 
     <!-- Chemical Setpoint & Clean Volume Back-Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📐 Chemical Setpoint &amp; Clean Volume Back-Calculator</div>
+      <div class="lbl mb-3 tool-title">Chemical Setpoint &amp; Clean Volume Back-Calculator</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Chemical Rate (GPM)</label>
@@ -1553,7 +1562,7 @@
 
     <!-- Liquid vs Dry Concentration Converter (GPT ↔ PPT) -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔄 Liquid vs Dry Concentration Converter (GPT ↔ PPT)</div>
+      <div class="lbl mb-3 tool-title">Liquid vs Dry Concentration Converter (GPT ↔ PPT)</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Liquid Setpoint (GPT)</label>
@@ -1591,7 +1600,7 @@
 
     <!-- Strap Rate (IN/HR) & Chemical Flow Rate -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⏱ Strap Rate (IN/HR) &amp; Chemical Flow Rate</div>
+      <div class="lbl mb-3 tool-title">Strap Rate (IN/HR) &amp; Chemical Flow Rate</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Strap Rate (IN/HR)</label>
@@ -1622,7 +1631,7 @@
 
     <!-- Chemical Specific Gravity (SG) & Tote Weight -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚖ Chemical Specific Gravity (SG) &amp; Tote Weight</div>
+      <div class="lbl mb-3 tool-title">Chemical Specific Gravity (SG) &amp; Tote Weight</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Specific Gravity (SG)</label>
@@ -1653,7 +1662,7 @@
 
     <!-- Tote Capacity Factors -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📐 Tote Capacity Factors</div>
+      <div class="lbl mb-3 tool-title">Tote Capacity Factors</div>
       <table class="tbl">
         <thead><tr><th style="text-align:left;">Tote Type</th><th class="tbl-right">GAL/IN</th></tr></thead>
         <tbody id="totetype-tbody"><!-- injected --></tbody>
@@ -1662,7 +1671,7 @@
 
     <!-- % HCL by Mass Density -->
     <div class="card">
-      <div class="lbl mb-3">📚 % HCL by Mass Density</div>
+      <div class="lbl mb-3 tool-title">% HCL by Mass Density</div>
       <table class="tbl">
         <thead><tr><th style="text-align:left;">% HCL</th><th class="tbl-right">Density (PPG)</th></tr></thead>
         <tbody id="hcltable-tbody"><!-- injected --></tbody>
@@ -1689,7 +1698,7 @@
 
     <!-- LGA -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Liquid Gel Automation (LGA)</div>
+      <div class="lbl mb-3 tool-title">Liquid Gel Automation (LGA)</div>
       <div class="mb-3">
         <label class="lbl">LGA Target Concentration (GPT)</label>
         <input type="number" id="lga-gpt" class="field" value="1.0" step="0.01" placeholder="1.0">
@@ -1706,7 +1715,7 @@
 
     <!-- Guar Auger Rate & RPM Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚙ Guar Auger Rate &amp; RPM Calculator</div>
+      <div class="lbl mb-3 tool-title">Guar Auger Rate &amp; RPM Calculator</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Hydration Rate (BPM)</label>
@@ -1742,7 +1751,7 @@
 
     <!-- Tub Residence -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⏱ Tub Residence Optimization</div>
+      <div class="lbl mb-3 tool-title">Tub Residence Optimization</div>
       <div class="mb-3">
         <label class="lbl">Tub Capacity (BBL)</label>
         <input type="number" id="tub-cap" class="field" value="100" step="1" placeholder="100">
@@ -1770,7 +1779,7 @@
 
     <!-- Mid-Stage Tote Swap Predictor -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔄 Mid-Stage Tote Swap Predictor</div>
+      <div class="lbl mb-3 tool-title">Mid-Stage Tote Swap Predictor</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Tote 1 Start Strap (IN)</label>
@@ -1809,7 +1818,7 @@
 
     <!-- Rules of Four Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">✨ Rules of Four Calculator</div>
+      <div class="lbl mb-3 tool-title">Rules of Four Calculator</div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Every LGA gallon ≈ 4 lbs dry guar</div>
       <div class="mb-3">
         <label class="lbl">LGA Setpoint (GPT)</label>
@@ -1829,7 +1838,7 @@
 
     <!-- LGA/Gel Tote from Strap -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🧴 LGA / Gel Tote from Strap</div>
+      <div class="lbl mb-3 tool-title">LGA / Gel Tote from Strap</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Current Strap (IN)</label>
@@ -1848,7 +1857,7 @@
 
     <!-- Design LGA / Dry Gel for Stage -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📐 Design LGA or Dry Gel for Stage</div>
+      <div class="lbl mb-3 tool-title">Design LGA or Dry Gel for Stage</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Gel Stage Volume (BBL)</label>
@@ -1875,7 +1884,7 @@
 
     <!-- Adjust Tub Viscosity -->
     <div class="card">
-      <div class="lbl mb-3">🎚 Adjust Tub Viscosity</div>
+      <div class="lbl mb-3 tool-title">Adjust Tub Viscosity</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Tub Volume (BBL)</label>
@@ -1918,7 +1927,7 @@
 
     <!-- Clean & Slurry Rate Conversion (CFR & Yield) -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔄 Clean &amp; Slurry Rate Conversion (CFR &amp; Yield)</div>
+      <div class="lbl mb-3 tool-title">Clean &amp; Slurry Rate Conversion (CFR &amp; Yield)</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Clean Rate (BPM)</label>
@@ -1969,7 +1978,7 @@
 
     <!-- Screw Concentration & Total Auger RPM -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚙ Screw Concentration &amp; Total Auger RPM</div>
+      <div class="lbl mb-3 tool-title">Screw Concentration &amp; Total Auger RPM</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Clean Rate (BPM)</label>
@@ -2029,7 +2038,7 @@
 
     <!-- Design Clean Rate from Slurry Rate -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📐 Design Clean Rate from Design Slurry Rate</div>
+      <div class="lbl mb-3 tool-title">Design Clean Rate from Design Slurry Rate</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Design Slurry Rate (BPM)</label>
@@ -2053,7 +2062,7 @@
 
     <!-- Split Flow Blender Concentration (CLD) -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔀 Split Flow Blender Concentration (CLD)</div>
+      <div class="lbl mb-3 tool-title">Split Flow Blender Concentration (CLD)</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Design PPA (PPG)</label>
@@ -2077,7 +2086,7 @@
 
     <!-- Auger PPR Calculation & Recalibration -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📦 Auger PPR &amp; Dry Add Recalibration</div>
+      <div class="lbl mb-3 tool-title">Auger PPR &amp; Dry Add Recalibration</div>
       <div class="mb-3" style="background:var(--surface);padding:12px;border-radius:10px;">
         <div class="lbl mb-2">Theoretical PPR from Dimensions</div>
         <div class="grid-2 mb-2">
@@ -2130,7 +2139,7 @@
 
     <!-- Metric / Screwless Blender Clean Rate -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🌐 Metric / Screwless Blender Clean Rate</div>
+      <div class="lbl mb-3 tool-title">Metric / Screwless Blender Clean Rate</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Slurry Rate (m³/min)</label>
@@ -2161,7 +2170,7 @@
 
     <!-- Config -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Test Configuration</div>
+      <div class="lbl mb-3 tool-title">Test Configuration</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Simulated Rate (BPM)</label>
@@ -2238,7 +2247,7 @@
 
     <!-- Bucket Test Time & Adjustments -->
     <div class="card mt-4">
-      <div class="lbl mb-3">🪣 Bucket Test Time &amp; Adjustments</div>
+      <div class="lbl mb-3 tool-title">Bucket Test Time &amp; Adjustments</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Gallons Filled</label>
@@ -2284,7 +2293,7 @@
 
     <!-- Analog Scaled Value -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📡 Analog Scaled Value (4-20mA)</div>
+      <div class="lbl mb-3 tool-title">Analog Scaled Value (4-20mA)</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Device</label>
@@ -2327,7 +2336,7 @@
 
     <!-- Correction Vectors -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Correction Vectors</div>
+      <div class="lbl mb-3 tool-title">Correction Vectors</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Raw Meter Scale</label>
@@ -2349,7 +2358,7 @@
 
     <!-- Pressure Transducer (4-20mA ↔ PSI) Dual Converter -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🎛 Pressure Transducer (4-20mA ↔ PSI) Dual Converter</div>
+      <div class="lbl mb-3 tool-title">Pressure Transducer (4-20mA ↔ PSI) Dual Converter</div>
       <div class="mb-3">
         <label class="lbl">Transducer Rating (PSI)</label>
         <input type="number" id="transducer-rating" class="field" value="15000" placeholder="15000">
@@ -2380,7 +2389,7 @@
 
     <!-- Frequency & Pinion Speed Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⏱ Frequency &amp; Pinion Speed Calculator</div>
+      <div class="lbl mb-3 tool-title">Frequency &amp; Pinion Speed Calculator</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Raw Freq (PUL/SEC)</label>
@@ -2411,7 +2420,7 @@
 
     <!-- K-Factor Recalibration Tool -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🎯 K-Factor Recalibration Tool</div>
+      <div class="lbl mb-3 tool-title">K-Factor Recalibration Tool</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Old K-Factor</label>
@@ -2434,7 +2443,7 @@
 
     <!-- Hardware Matrix -->
     <div class="card">
-      <div class="lbl mb-3">Hardware Matrix</div>
+      <div class="lbl mb-3 tool-title">Hardware Matrix</div>
       <div class="mb-3">
         <label class="lbl">Active Meter Profile</label>
         <select id="lime-profile" class="field">
@@ -2475,7 +2484,7 @@
 
     <!-- Tubular Capacity, Displacement & Metal Volume -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📏 Tubular Capacity, Displacement &amp; Metal Volume</div>
+      <div class="lbl mb-3 tool-title">Tubular Capacity, Displacement &amp; Metal Volume</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Outer Diam OD (IN)</label>
@@ -2523,7 +2532,7 @@
 
     <!-- Equivalent Mud Weight (EMW) & Required STP -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚖ Equivalent Mud Weight (EMW) &amp; Surface Pressure</div>
+      <div class="lbl mb-3 tool-title">Equivalent Mud Weight (EMW) &amp; Surface Pressure</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Surface Pressure (PSI)</label>
@@ -2568,7 +2577,7 @@
 
     <!-- Overflush / Underflush & Top of Sand / PBTD -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🌊 Overflush / Underflush &amp; Top of Proppant (PBTD)</div>
+      <div class="lbl mb-3 tool-title">Overflush / Underflush &amp; Top of Proppant (PBTD)</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Perf Depth (FT)</label>
@@ -2618,7 +2627,7 @@
 
     <!-- Perforation Pressure Drop & Active Perfs Solver -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🎯 Perforation Pressure Drop &amp; Open Perfs Solver</div>
+      <div class="lbl mb-3 tool-title">Perforation Pressure Drop &amp; Open Perfs Solver</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Slurry Rate (BPM)</label>
@@ -2664,7 +2673,7 @@
 
     <!-- Surface Treating Pressure (STP) Predictor -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📈 Surface Treating Pressure (STP) Predictor</div>
+      <div class="lbl mb-3 tool-title">Surface Treating Pressure (STP) Predictor</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Target BHP (PSI)</label>
@@ -2703,7 +2712,7 @@
 
     <!-- Inputs -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Well Parameters</div>
+      <div class="lbl mb-3 tool-title">Well Parameters</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">TVD (FT)</label>
@@ -2730,7 +2739,7 @@
 
     <!-- Volumetrics -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Well Volumetrics</div>
+      <div class="lbl mb-3 tool-title">Well Volumetrics</div>
       <div class="flex gap-3 mb-3">
         <div class="tile flex-1">
           <div class="lbl">Hydrostatic</div>
@@ -2754,7 +2763,7 @@
 
     <!-- Friction Loss Breakdown & f_pipe Solver -->
     <div class="card mb-4">
-      <div class="lbl mb-3">📉 Friction Loss Breakdown &amp; Pipe Friction Solver</div>
+      <div class="lbl mb-3 tool-title">Friction Loss Breakdown &amp; Pipe Friction Solver</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Slurry Rate (BPM)</label>
@@ -2815,7 +2824,7 @@
 
     <!-- Well Control & Fracture Pressure -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🛡 Well Control &amp; Fracture Pressure</div>
+      <div class="lbl mb-3 tool-title">Well Control &amp; Fracture Pressure</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Formation Pressure (PSI)</label>
@@ -2851,7 +2860,7 @@
 
     <!-- BHP -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Bottom Hole Pressure (BHP)</div>
+      <div class="lbl mb-3 tool-title">Bottom Hole Pressure (BHP)</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Treating PSI</label>
@@ -2871,7 +2880,7 @@
     <!-- Flush Volume Multi-Section -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">💧 Flush Volume (Multi-Section Well)</div>
+        <div class="lbl tool-title" style="margin:0;">Flush Volume (Multi-Section Well)</div>
         <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addFlushSection()">+ Add Section</button>
       </div>
       <div id="flush-rows"><!-- injected --></div>
@@ -2884,7 +2893,7 @@
 
     <!-- Frac Gradient & Related -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚡ Frac Gradient &amp; Related</div>
+      <div class="lbl mb-3 tool-title">Frac Gradient &amp; Related</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">ISIP (PSI)</label>
@@ -2919,7 +2928,7 @@
 
     <!-- Proppant Left in Wellbore -->
     <div class="card">
-      <div class="lbl mb-3">🏖 Proppant Left in Wellbore</div>
+      <div class="lbl mb-3 tool-title">Proppant Left in Wellbore</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Slurry Volume (BBL)</label>
@@ -2951,7 +2960,7 @@
 
     <!-- Inputs -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Stage Energy Analysis</div>
+      <div class="lbl mb-3 tool-title">Stage Energy Analysis</div>
       <div class="flex gap-3 mb-3">
         <div class="flex-1">
           <label class="lbl">Treating PSI</label>
@@ -2991,7 +3000,7 @@
 
     <!-- Fleet Capacity, Load Factor & Mechanical Efficiency -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚡ Fleet Capacity, Load Factor &amp; Engine BHP</div>
+      <div class="lbl mb-3 tool-title">Fleet Capacity, Load Factor &amp; Engine BHP</div>
       <div class="grid-2 gap-2 mb-3">
         <div class="tile">
           <div class="lbl">HHP per Active Pump</div>
@@ -3025,7 +3034,7 @@
 
     <!-- Iron velocity -->
     <div class="card mb-4">
-      <div class="lbl mb-3">Internal Iron Velocity</div>
+      <div class="lbl mb-3 tool-title">Internal Iron Velocity</div>
       <table class="tbl">
         <thead>
           <tr>
@@ -3041,7 +3050,7 @@
 
     <!-- Suction/Discharge Hose Count -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🔧 Suction / Discharge Hose Count</div>
+      <div class="lbl mb-3 tool-title">Suction / Discharge Hose Count</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Max Clean Rate (BPM)</label>
@@ -3068,7 +3077,7 @@
 
     <!-- Engine Torque ↔ Horsepower Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚡ Engine Torque ↔ Horsepower Calculator</div>
+      <div class="lbl mb-3 tool-title">Engine Torque ↔ Horsepower Calculator</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Engine Speed (RPM)</label>
@@ -3104,7 +3113,7 @@
 
     <!-- Pump Displacement & Crank Speed Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚙ Pump Displacement &amp; Crank Speed Calculator</div>
+      <div class="lbl mb-3 tool-title">Pump Displacement &amp; Crank Speed Calculator</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Plunger Bore (IN)</label>
@@ -3152,7 +3161,7 @@
 
     <!-- Iron Rate Limit & Max Pressure Calculator -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🛡 Iron Rate Limit &amp; Max Pressure</div>
+      <div class="lbl mb-3 tool-title">Iron Rate Limit &amp; Max Pressure</div>
       <div class="grid-3 mb-3">
         <div>
           <label class="lbl">Iron Line ID (IN)</label>
@@ -3183,7 +3192,7 @@
 
     <!-- Transmission Output Speed -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚙ Transmission Output Speed</div>
+      <div class="lbl mb-3 tool-title">Transmission Output Speed</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Transmission Type</label>
@@ -3213,7 +3222,7 @@
 
     <!-- Pump Rate from Fluid End Specs -->
     <div class="card mb-4">
-      <div class="lbl mb-3">🛢 Pump Rate from Fluid End Specs</div>
+      <div class="lbl mb-3 tool-title">Pump Rate from Fluid End Specs</div>
       <div class="grid-2 mb-3">
         <div>
           <label class="lbl">Pump Type</label>
@@ -3242,7 +3251,7 @@
 
     <!-- ═══ GEAR OPTIMIZER ═══ -->
     <div class="card mb-4">
-      <div class="lbl mb-3">⚡ High-Rate Gear Optimizer</div>
+      <div class="lbl mb-3 tool-title">High-Rate Gear Optimizer</div>
 
       <div class="mb-4">
         <label class="lbl">Pumps Inline</label>
@@ -3298,7 +3307,7 @@
       </div>
 
       <div class="card mb-4">
-        <div class="lbl mb-3">Gear Assignment</div>
+        <div class="lbl mb-3 tool-title">Gear Assignment</div>
         <div style="overflow-x:auto;">
           <table class="tbl">
             <thead>
@@ -3321,7 +3330,7 @@
       </div>
 
       <div class="card" id="go-notes-card">
-        <div class="lbl mb-3">📍 Field Management Notes</div>
+        <div class="lbl mb-3 tool-title">Field Management Notes</div>
         <div id="go-notes"></div>
       </div>
     </div>
@@ -3939,7 +3948,7 @@ function renderSand() {
 
     <div>
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl" style="margin:0;">Inventory Matrix</div>
+        <div class="lbl tool-title" style="margin:0;">Inventory Matrix</div>
         <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addSand(${S.stageIdx})">+ Add</button>
       </div>
       ${st.inv.length === 0
