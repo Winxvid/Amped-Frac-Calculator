@@ -785,25 +785,6 @@
       </div>
     </div>
 
-    <!-- Wellbore Capacity (Multi-Section) -->
-    <div class="card mb-4">
-      <div class="flex justify-between items-center mb-3">
-        <div class="lbl tool-title" style="margin:0;">Wellbore Capacity (Multi-Section)</div>
-        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addWellCapRow()">+ Add Section</button>
-      </div>
-      <div id="wellcap-rows"><!-- injected --></div>
-      <div class="flex gap-3 mt-3">
-        <div class="tile flex-1">
-          <div class="lbl">Total Gallons</div>
-          <div class="val" id="wellcap-gal">0</div>
-        </div>
-        <div class="tile flex-1">
-          <div class="lbl">Total Barrels</div>
-          <div class="val" style="color:var(--brand);" id="wellcap-bbl">0.00</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Capacity Factor Reverse -->
     <div class="card mb-4">
       <div class="lbl mb-3 tool-title">Capacity Factor (Reverse)</div>
@@ -3026,17 +3007,27 @@
       </div>
     </div>
 
-    <!-- Flush Volume Multi-Section -->
+    <!-- Wellbore Capacity (Multi-Section) — moved from Math; supports chart + custom casing -->
     <div class="card mb-4">
       <div class="flex justify-between items-center mb-3">
-        <div class="lbl tool-title" style="margin:0;">Flush Volume (Multi-Section Well)</div>
-        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addFlushSection()">+ Add Section</button>
+        <div class="lbl tool-title" style="margin:0;">Wellbore Capacity (Multi-Section)</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addWellCapRow()">+ Add Section</button>
       </div>
-      <div id="flush-rows"><!-- injected --></div>
-      <div class="tile mt-3">
-        <div class="lbl">Total Flush Volume</div>
-        <div class="val" style="color:var(--brand);" id="flush-total">0.0</div>
-        <div class="unit">BBL</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">
+        Pick a chart casing or enter custom OD/ID to compute capacity. Section volume = Depth × BBL/FT.
+        Custom: BBL/FT = ID² ÷ 1029.44 &nbsp;·&nbsp; GAL/FT = ID² ÷ 24.51
+      </div>
+      <div id="wellcap-rows"><!-- injected --></div>
+      <div class="flex gap-3 mt-3">
+        <div class="tile flex-1">
+          <div class="lbl">Total Gallons</div>
+          <div class="val" id="wellcap-gal">0</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Barrels</div>
+          <div class="val" style="color:var(--brand);" id="wellcap-bbl">0.00</div>
+          <div class="unit">BBL</div>
+        </div>
       </div>
     </div>
 
@@ -3674,7 +3665,6 @@ function mkState() {
     goExtreme: false,
     wellCapRows: [],
     multiToteRows: [],
-    flushRows: [],
   };
 }
 
@@ -3999,61 +3989,190 @@ function renderMath() {
   if (document.getElementById('capfac-result')) document.getElementById('capfac-result').textContent = cfFt > 0 ? ((cfBbl*42)/cfFt).toFixed(4) : '0.0000';
 }
 
+// Capacity: BBL/FT = ID² / 1029.44 ; GAL/FT = ID² / 24.51 (chart factors are gal/ft)
+function wellCapFromId(idIn) {
+  const id = parseFloat(idIn) || 0;
+  if (id <= 0) return { bblPerFt: 0, galPerFt: 0 };
+  const bblPerFt = (id * id) / 1029.44;
+  return { bblPerFt, galPerFt: bblPerFt * 42 };
+}
+
+function wellCapNormalizeRow(row) {
+  // Migrate legacy rows that stored chart gal/ft in bblPerFt
+  if (row.galPerFt == null && row.bblPerFt != null && row.tubular && row.tubular !== 'custom') {
+    const t = TUBULAR_DATA.find(x => x.type === row.tubular);
+    if (t && Math.abs(row.bblPerFt - t.factor) < 1e-6) {
+      row.galPerFt = t.factor;
+      row.bblPerFt = t.factor / 42;
+      row.idIn = t.id;
+    }
+  }
+  if (row.galPerFt == null && row.bblPerFt != null) {
+    // If value looks like gal/ft (> ~0.1), convert; else treat as bbl/ft
+    if (row.bblPerFt > 0.1) {
+      row.galPerFt = row.bblPerFt;
+      row.bblPerFt = row.bblPerFt / 42;
+    } else {
+      row.galPerFt = row.bblPerFt * 42;
+    }
+  }
+  if (row.idIn == null) row.idIn = 0;
+  if (row.odIn == null) row.odIn = 0;
+  if (row.label == null) row.label = '';
+  if (row.manualFactor == null) row.manualFactor = false;
+  return row;
+}
+
 function wellCapRowHTML(row, i) {
+  row = wellCapNormalizeRow(row);
+  const isCustom = row.tubular === 'custom';
+  const chartOpts = TUBULAR_DATA.map((t, ti) =>
+    `<option value="${ti}"${row.tubular === t.type ? ' selected' : ''}>${t.type} — ${t.factor.toFixed(4)} gal/ft (ID ${t.id})</option>`
+  ).join('');
   return `
     <div class="card-sm mb-3">
       <div class="flex gap-2 mb-2 items-end">
         <div class="flex-1">
-          <label class="lbl">Depth (FT)</label>
-          <input type="number" class="field" value="${row.depth}" onchange="wellCapUpdate(${i},'depth',this.value)" placeholder="0">
+          <label class="lbl">Section Depth / Length (FT)</label>
+          <input type="number" class="field" value="${row.depth ?? ''}" oninput="wellCapUpdate(${i},'depth',this.value)" placeholder="0">
         </div>
-        <button class="btn-danger" onclick="wellCapDel(${i})">✕</button>
+        <button class="btn-danger" onclick="wellCapDel(${i})" title="Remove section">✕</button>
       </div>
       <div class="mb-2">
-        <label class="lbl">Casing</label>
+        <label class="lbl">Casing (Chart or Custom)</label>
         <select class="field" onchange="wellCapUpdate(${i},'tubular',this.value)">
-          <option value="custom"${row.tubular==='custom'?' selected':''}>Custom / Enter BBL/FT</option>
-          ${TUBULAR_DATA.map((t,ti)=>`<option value="${ti}"${row.tubular===t.type?' selected':''}>${t.type} (${t.factor})</option>`).join('')}
+          <option value="custom"${isCustom ? ' selected' : ''}>Custom casing (enter OD / ID)</option>
+          ${chartOpts}
         </select>
       </div>
-      <div>
-        <label class="lbl">BBL/FT</label>
-        <input type="number" class="field" step="0.0001" value="${row.bblPerFt}" onchange="wellCapUpdate(${i},'bblPerFt',this.value)" placeholder="0">
+      <div class="grid-2 mb-2" style="${isCustom ? '' : 'opacity:0.85;'}">
+        <div>
+          <label class="lbl">Outer Diam OD (IN)${isCustom ? '' : ' — chart'}</label>
+          <input type="number" class="field" step="0.001" value="${row.odIn || ''}"
+            oninput="wellCapUpdate(${i},'odIn',this.value)" placeholder="${isCustom ? 'e.g. 5.500' : '—'}" ${isCustom ? '' : 'readonly'}>
+        </div>
+        <div>
+          <label class="lbl">Inner Diam ID (IN)${isCustom ? ' — required' : ''}</label>
+          <input type="number" class="field" step="0.001" value="${row.idIn || ''}"
+            oninput="wellCapUpdate(${i},'idIn',this.value)" placeholder="${isCustom ? 'e.g. 4.778' : '—'}" ${isCustom ? '' : 'readonly'}>
+        </div>
+      </div>
+      ${isCustom ? `
+      <div class="mb-2">
+        <label class="lbl">Custom Label (optional)</label>
+        <input type="text" class="field" value="${esc(row.label || '')}"
+          oninput="wellCapUpdate(${i},'label',this.value)" placeholder="e.g. 5.5&quot; 20# special">
+      </div>` : ''}
+      <div class="grid-2 mb-2">
+        <div>
+          <label class="lbl">Capacity (GAL/FT)</label>
+          <input type="number" class="field" step="0.0001" value="${(row.galPerFt ?? 0).toFixed(4)}"
+            oninput="wellCapUpdate(${i},'galPerFt',this.value)" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Capacity (BBL/FT)</label>
+          <input type="number" class="field" step="0.0001" value="${(row.bblPerFt ?? 0).toFixed(4)}"
+            oninput="wellCapUpdate(${i},'bblPerFt',this.value)" placeholder="0">
+        </div>
+      </div>
+      <div class="tile" style="padding:8px 12px;">
+        <div class="lbl">Section Volume</div>
+        <div class="val" style="font-size:18px;color:var(--brand);">${((row.depth||0)*(row.bblPerFt||0)).toFixed(2)} <span class="unit">BBL</span>
+          <span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:8px;">${F.c((row.depth||0)*(row.galPerFt||0))} GAL</span>
+        </div>
       </div>
     </div>`;
 }
 
 function renderWellCap() {
-  const rows = S.wellCapRows;
   const c = document.getElementById('wellcap-rows');
+  if (!c) return;
+  S.wellCapRows.forEach(wellCapNormalizeRow);
+  const rows = S.wellCapRows;
   c.innerHTML = rows.length === 0
-    ? '<div style="color:var(--text2);text-align:center;padding:14px;font-size:13px;">No sections yet.</div>'
-    : rows.map((row,i) => wellCapRowHTML(row,i)).join('');
+    ? '<div style="color:var(--text2);text-align:center;padding:14px;font-size:13px;">No sections yet. Tap “+ Add Section” to build the well string.</div>'
+    : rows.map((row, i) => wellCapRowHTML(row, i)).join('');
   let totalBbl = 0;
-  rows.forEach(r => { totalBbl += (r.depth||0) * (r.bblPerFt||0); });
-  document.getElementById('wellcap-gal').textContent = F.c(totalBbl*42);
-  document.getElementById('wellcap-bbl').textContent = totalBbl.toFixed(2);
+  let totalGal = 0;
+  rows.forEach(r => {
+    totalBbl += (r.depth || 0) * (r.bblPerFt || 0);
+    totalGal += (r.depth || 0) * (r.galPerFt || 0);
+  });
+  // Prefer sum of gal if available; keep bbl from bblPerFt for consistency
+  if (totalGal > 0 && totalBbl === 0) totalBbl = totalGal / 42;
+  if (document.getElementById('wellcap-gal')) document.getElementById('wellcap-gal').textContent = F.c(totalGal > 0 ? totalGal : totalBbl * 42);
+  if (document.getElementById('wellcap-bbl')) document.getElementById('wellcap-bbl').textContent = totalBbl.toFixed(2);
 }
 
 function addWellCapRow() {
-  S.wellCapRows.push({ depth: 0, tubular: 'custom', bblPerFt: 0 });
-  saveS(); renderWellCap();
+  S.wellCapRows.push({
+    depth: 0,
+    tubular: 'custom',
+    odIn: 0,
+    idIn: 0,
+    label: '',
+    galPerFt: 0,
+    bblPerFt: 0,
+    manualFactor: false,
+  });
+  saveS();
+  renderWellCap();
 }
-function wellCapDel(i) { S.wellCapRows.splice(i,1); saveS(); renderWellCap(); }
+function wellCapDel(i) {
+  S.wellCapRows.splice(i, 1);
+  saveS();
+  renderWellCap();
+}
 function wellCapUpdate(i, field, v) {
   const row = S.wellCapRows[i];
   if (!row) return;
+  wellCapNormalizeRow(row);
+
   if (field === 'tubular') {
     if (v === 'custom') {
       row.tubular = 'custom';
+      row.manualFactor = false;
+      // keep existing ID/OD so user can edit
     } else {
-      const t = TUBULAR_DATA[parseInt(v)];
-      if (t) { row.tubular = t.type; row.bblPerFt = t.factor; }
+      const t = TUBULAR_DATA[parseInt(v, 10)];
+      if (t) {
+        row.tubular = t.type;
+        row.idIn = t.id;
+        row.odIn = 0;
+        row.galPerFt = t.factor;       // chart is gal/ft
+        row.bblPerFt = t.factor / 42;
+        row.manualFactor = false;
+        row.label = t.type;
+      }
     }
+  } else if (field === 'label') {
+    row.label = v;
+  } else if (field === 'idIn') {
+    row.idIn = parseFloat(v) || 0;
+    row.tubular = 'custom';
+    if (!row.manualFactor) {
+      const caps = wellCapFromId(row.idIn);
+      row.bblPerFt = caps.bblPerFt;
+      row.galPerFt = caps.galPerFt;
+    }
+  } else if (field === 'odIn') {
+    row.odIn = parseFloat(v) || 0;
+    row.tubular = 'custom';
+  } else if (field === 'galPerFt') {
+    row.galPerFt = parseFloat(v) || 0;
+    row.bblPerFt = row.galPerFt / 42;
+    row.manualFactor = true;
+  } else if (field === 'bblPerFt') {
+    row.bblPerFt = parseFloat(v) || 0;
+    row.galPerFt = row.bblPerFt * 42;
+    row.manualFactor = true;
+  } else if (field === 'depth') {
+    row.depth = parseFloat(v) || 0;
   } else {
     row[field] = parseFloat(v) || 0;
   }
-  saveS(); renderWellCap();
+  saveS();
+  renderWellCap();
 }
 
 // ================================================================
@@ -5128,45 +5247,6 @@ function renderWellbore() {
   if (document.getElementById('wellctrl-reqisip')) document.getElementById('wellctrl-reqisip').textContent = Math.round(reqIsip).toLocaleString();
 }
 
-function flushRowHTML(row, i) {
-  return `
-    <div class="card-sm mb-3">
-      <div class="flex gap-2 items-end">
-        <div class="flex-1">
-          <label class="lbl">Depth (FT)</label>
-          <input type="number" class="field" value="${row.depth}" oninput="flushUpdate(${i},'depth',this.value)" placeholder="0">
-        </div>
-        <div class="flex-1">
-          <label class="lbl">Casing BBL/FT</label>
-          <input type="number" class="field" value="${row.bblPerFt}" step="0.0001" oninput="flushUpdate(${i},'bblPerFt',this.value)" placeholder="0">
-        </div>
-        <button class="btn-danger" onclick="flushDel(${i})">✕</button>
-      </div>
-    </div>`;
-}
-
-function renderFlushVolume() {
-  const rows = S.flushRows;
-  const c = document.getElementById('flush-rows');
-  c.innerHTML = rows.length === 0
-    ? '<div style="color:var(--text2);text-align:center;padding:14px;font-size:13px;">No sections yet.</div>'
-    : rows.map((row,i) => flushRowHTML(row,i)).join('');
-  const total = rows.reduce((s,r) => s + (r.depth||0) * (r.bblPerFt||0), 0);
-  document.getElementById('flush-total').textContent = total.toFixed(1);
-}
-
-function addFlushSection() {
-  S.flushRows.push({ depth: 800, bblPerFt: 0.0394 });
-  saveS(); renderFlushVolume();
-}
-function flushDel(i) { S.flushRows.splice(i,1); saveS(); renderFlushVolume(); }
-function flushUpdate(i, field, v) {
-  const row = S.flushRows[i];
-  if (!row) return;
-  row[field] = parseFloat(v) || 0;
-  saveS(); renderFlushVolume();
-}
-
 function renderFracGradient() {
   const isip    = parseFloat(document.getElementById('fg-isip').value)    || 0;
   const tvd     = parseFloat(document.getElementById('fg-tvd').value)     || 0;
@@ -5497,7 +5577,6 @@ function init() {
    'force-psi','force-area','velpipe-rate','velpipe-id','hosecalc-size','hosecalc-id','hosecalc-len']
     .forEach(id => bindAll(id, renderMath));
   renderMath();
-  renderWellCap();
 
   // Sand
   renderSand();
@@ -5599,7 +5678,7 @@ function init() {
    'perfcalc-rate','perfcalc-dens','perfcalc-nperfs','perfcalc-diam','perfcalc-cd','perfcalc-measfrict',
    'stp-bhp','stp-density','stp-tvd','stp-pipefrict','stp-perffrict'].forEach(id => bindAll(id, renderWellbore));
   renderWellbore();
-  renderFlushVolume();
+  renderWellCap();
   ['fg-isip','fg-tvd','fg-density','fg-closure'].forEach(id => bindAll(id, renderFracGradient));
   renderFracGradient();
   ['pl-slurry','pl-conc','pl-sg'].forEach(id => bindAll(id, renderPropLeft));
