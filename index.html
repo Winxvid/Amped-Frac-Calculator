@@ -13,11 +13,13 @@
       --card:      #FFFFFF;
       --border:    #E5E5EA;
       --surface:   #F2F2F7;
-      /* Amped green — primary UI / actions */
+      /* Amped green — primary UI / actions (overridable via Settings) */
       --brand:     #2DC76D;
+      --brand-hover: #25a85c;
       --brand-dim: rgba(45,199,109,0.12);
       --brand-dim2: rgba(45,199,109,0.06);
-      /* Blue twin of brand green (same saturation/lightness, blue hue) — tool titles */
+      --brand-shadow: rgba(45,199,109,0.30);
+      /* Blue twin — tool titles (overridable via Settings) */
       --brand-blue:     #2D7AC7;
       --brand-blue-dim: rgba(45,122,199,0.12);
       --text:      #1C1C1E;
@@ -63,7 +65,7 @@
       background: var(--brand);
       border-radius: 16px;
       padding: 18px;
-      box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+      box-shadow: 0 4px 20px var(--brand-shadow);
       min-width: 0;
       max-width: 100%;
       gap: 12px;
@@ -187,7 +189,7 @@
       white-space: nowrap;
     }
     .btn-brand { background: var(--brand); color: #fff; }
-    .btn-brand:hover { background: #25a85c; }
+    .btn-brand:hover { background: var(--brand-hover); }
     .btn-brand:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-ghost { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); }
     .btn-ghost:hover { background: var(--brand-dim); }
@@ -252,6 +254,7 @@
     .nav-logo-center { display:block; margin:0 auto; height:100%; display:flex; align-items:center; justify-content:center; }
     .nav-logo-center img { height: calc(100% - 2px); max-height: calc(100% - 2px); width: auto; display: block; object-fit:contain; }
     .nav-header .menu-btn { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+    .nav-header .settings-btn { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); left: auto; }
     @media (max-width: 480px) {
       .nav-header { height: 60px; }
       .nav-logo-center img { height: calc(100% - 2px); max-height: calc(100% - 2px); }
@@ -409,7 +412,7 @@
 
     /* ── Badges ── */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-    .badge-green { background: rgba(16,185,129,0.15); color: var(--brand); }
+    .badge-green { background: var(--brand-dim); color: var(--brand); }
     .badge-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); }
     .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
 
@@ -499,9 +502,9 @@
     ::-webkit-scrollbar-thumb { background: #C7C7CC; border-radius: 3px; }
 
     /* ── Gear optimizer ── */
-    .gear-mid-row { background: rgba(45,199,109,0.07); border-radius: 6px; }
+    .gear-mid-row { background: var(--brand-dim2); border-radius: 6px; }
     .alt-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.15s; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-    .alt-card:hover, .alt-card.sel { border-color: rgba(45,199,109,0.5); background: rgba(45,199,109,0.07); }
+    .alt-card:hover, .alt-card.sel { border-color: var(--brand); background: var(--brand-dim2); }
 
     /* ── Frac gradient pill ── */
     .frac-pill {
@@ -620,7 +623,125 @@
     .menu-btn:hover { background: var(--brand-dim); color: var(--brand); border-color: var(--brand); }
     .dashboard-header { text-align: center; display: block; }
     .dashboard-header .sec-title { color: var(--brand); font-weight: 900; }
-    .dashboard-header .sec-sub { color: rgba(45,199,109,0.9); font-weight: 700; margin-top:4px; }
+    .dashboard-header .sec-sub { color: var(--brand); opacity: 0.9; font-weight: 700; margin-top:4px; }
+
+    /* ── Settings panel (right drawer) ── */
+    #settings-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 210;
+    }
+    #settings-overlay.open { display: block; }
+    #settings-panel {
+      position: fixed;
+      top: 0; right: 0;
+      height: 100%;
+      width: min(340px, 92vw);
+      background: var(--card);
+      border-left: 1px solid var(--border);
+      box-shadow: -4px 0 24px rgba(0,0,0,0.10);
+      z-index: 211;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #settings-panel.open { transform: translateX(0); }
+    .settings-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .settings-hdr .tool-title { margin: 0; }
+    .settings-body {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .settings-section-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text2);
+      margin-bottom: 10px;
+    }
+    .settings-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .settings-logo-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+      padding: 12px;
+      background: var(--card);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .settings-logo-preview img {
+      max-height: 56px;
+      max-width: 100%;
+      width: auto;
+      object-fit: contain;
+    }
+    .settings-color-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .settings-color-row:last-child { margin-bottom: 0; }
+    .settings-color-row .field { flex: 1; min-width: 0; font-family: 'Space Grotesk', monospace; font-size: 14px; text-transform: uppercase; }
+    .settings-swatch {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0;
+      background: none;
+      cursor: pointer;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .settings-swatch::-webkit-color-swatch-wrapper { padding: 0; }
+    .settings-swatch::-webkit-color-swatch { border: none; border-radius: 11px; }
+    .settings-swatch::-moz-color-swatch { border: none; border-radius: 11px; }
+    .settings-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .settings-hint {
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.4;
+      margin-top: 8px;
+    }
+    .settings-file-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+    }
+    .settings-file-btn input[type=file] { display: none; }
 
     /* ── Wellbore Capacity (Multi-Section) layout only ── */
     .wellcap-card .wellcap-head {
@@ -759,12 +880,59 @@
 <div id="sidebar-overlay" onclick="closeMenu()"></div>
 <div id="sidebar">
   <div class="sidebar-hdr">
-    <img src="/new-amped-logo.png" alt="Amped Energy Solutions">
+    <img class="app-logo" src="/new-amped-logo.png" alt="Company logo">
     <button class="sidebar-close" onclick="closeMenu()">✕</button>
   </div>
   <div class="sidebar-section-lbl">Navigation</div>
   <nav id="sidebar-nav"><!-- built by JS --></nav>
 </div>
+
+<!-- ─── SETTINGS (right) ─── -->
+<div id="settings-overlay" onclick="closeSettings()"></div>
+<aside id="settings-panel" aria-label="Settings" aria-hidden="true">
+  <div class="settings-hdr">
+    <div class="tool-title">Settings</div>
+    <button class="sidebar-close" onclick="closeSettings()" aria-label="Close settings">✕</button>
+  </div>
+  <div class="settings-body">
+    <div class="settings-block">
+      <div class="settings-section-title">Header Logo</div>
+      <div class="settings-logo-preview">
+        <img id="settings-logo-preview" class="app-logo" src="/new-amped-logo.png" alt="Logo preview">
+      </div>
+      <label class="btn btn-brand settings-file-btn">
+        Upload logo
+        <input type="file" id="settings-logo-file" accept="image/*" onchange="onLogoFileSelected(event)">
+      </label>
+      <button type="button" class="btn btn-ghost" style="width:100%;margin-top:8px;" onclick="resetLogo()">Use default logo</button>
+      <p class="settings-hint">Upload a PNG, JPG, or SVG from your device. Saved on this browser only.</p>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-section-title">Brand Colors</div>
+      <div class="settings-color-row">
+        <input type="color" class="settings-swatch" id="settings-green-swatch" value="#2DC76D" oninput="onColorPick('green', this.value)" title="Green / accent color">
+        <div class="flex-1" style="min-width:0;">
+          <label class="lbl" for="settings-green-hex">Green (buttons, results, accents)</label>
+          <input type="text" class="field" id="settings-green-hex" value="#2DC76D" maxlength="7" spellcheck="false" oninput="onColorHexInput('green', this.value)" placeholder="#2DC76D">
+        </div>
+      </div>
+      <div class="settings-color-row">
+        <input type="color" class="settings-swatch" id="settings-blue-swatch" value="#2D7AC7" oninput="onColorPick('blue', this.value)" title="Blue / title color">
+        <div class="flex-1" style="min-width:0;">
+          <label class="lbl" for="settings-blue-hex">Blue (tool titles)</label>
+          <input type="text" class="field" id="settings-blue-hex" value="#2D7AC7" maxlength="7" spellcheck="false" oninput="onColorHexInput('blue', this.value)" placeholder="#2D7AC7">
+        </div>
+      </div>
+      <p class="settings-hint">Changes apply instantly and are remembered on this device.</p>
+    </div>
+
+    <div class="settings-actions">
+      <button type="button" class="btn btn-ghost" style="width:100%;" onclick="resetThemeColors()">Reset colors to default</button>
+      <button type="button" class="btn btn-brand" style="width:100%;" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+</aside>
 
 <!-- ═══════════════════════════════════════════════════════════
      NAV
@@ -773,8 +941,9 @@
   <div class="nav-header">
     <button class="menu-btn" onclick="openMenu()" aria-label="Open menu">☰</button>
     <div class="nav-logo-center">
-      <img src="/new-amped-logo.png" alt="Amped Energy Solutions">
+      <img class="app-logo" src="/new-amped-logo.png" alt="Company logo">
     </div>
+    <button class="menu-btn settings-btn" onclick="openSettings()" aria-label="Open settings" title="Settings">⚙</button>
   </div>
   <div class="tab-row" id="tab-row"><!-- built by JS --></div>
 </div>
@@ -3999,6 +4168,229 @@ function saveS() {
 }
 
 // ================================================================
+// SETTINGS — logo + brand colors (local to this browser)
+// ================================================================
+
+const SETTINGS_KEY = 'ampdFrac_settings_v1';
+const DEFAULT_LOGO = '/new-amped-logo.png';
+const DEFAULT_GREEN = '#2DC76D';
+const DEFAULT_BLUE = '#2D7AC7';
+
+const THEME = {
+  logoDataUrl: null, // null = default asset
+  green: DEFAULT_GREEN,
+  blue: DEFAULT_BLUE,
+};
+
+function normalizeHex(hex) {
+  if (!hex) return null;
+  let h = String(hex).trim();
+  if (!h.startsWith('#')) h = '#' + h;
+  if (/^#[0-9A-Fa-f]{3}$/.test(h)) {
+    h = '#' + h[1] + h[1] + h[2] + h[2] + h[3] + h[3];
+  }
+  if (!/^#[0-9A-Fa-f]{6}$/.test(h)) return null;
+  return h.toUpperCase();
+}
+
+function hexToRgb(hex) {
+  const h = normalizeHex(hex);
+  if (!h) return null;
+  return {
+    r: parseInt(h.slice(1, 3), 16),
+    g: parseInt(h.slice(3, 5), 16),
+    b: parseInt(h.slice(5, 7), 16),
+  };
+}
+
+function rgbaFromHex(hex, a) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return `rgba(0,0,0,${a})`;
+  return `rgba(${rgb.r},${rgb.g},${rgb.b},${a})`;
+}
+
+function darkenHex(hex, factor = 0.85) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+  const d = (n) => Math.max(0, Math.min(255, Math.round(n * factor)));
+  return '#' + [d(rgb.r), d(rgb.g), d(rgb.b)].map(n => n.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.logoDataUrl) THEME.logoDataUrl = data.logoDataUrl;
+    if (normalizeHex(data.green)) THEME.green = normalizeHex(data.green);
+    if (normalizeHex(data.blue)) THEME.blue = normalizeHex(data.blue);
+  } catch (e) {}
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+      logoDataUrl: THEME.logoDataUrl,
+      green: THEME.green,
+      blue: THEME.blue,
+    }));
+  } catch (e) {
+    // Quota exceeded (very large logo) — try without logo
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        logoDataUrl: null,
+        green: THEME.green,
+        blue: THEME.blue,
+      }));
+      alert('Logo is too large to save in this browser. Colors were saved; try a smaller image.');
+    } catch (e2) {}
+  }
+}
+
+function applyThemeColors() {
+  const root = document.documentElement;
+  const green = THEME.green || DEFAULT_GREEN;
+  const blue = THEME.blue || DEFAULT_BLUE;
+  root.style.setProperty('--brand', green);
+  root.style.setProperty('--brand-hover', darkenHex(green, 0.85));
+  root.style.setProperty('--brand-dim', rgbaFromHex(green, 0.12));
+  root.style.setProperty('--brand-dim2', rgbaFromHex(green, 0.06));
+  root.style.setProperty('--brand-shadow', rgbaFromHex(green, 0.30));
+  root.style.setProperty('--brand-blue', blue);
+  root.style.setProperty('--brand-blue-dim', rgbaFromHex(blue, 0.12));
+  root.style.setProperty('--blue', blue);
+
+  const gHex = document.getElementById('settings-green-hex');
+  const gSw = document.getElementById('settings-green-swatch');
+  const bHex = document.getElementById('settings-blue-hex');
+  const bSw = document.getElementById('settings-blue-swatch');
+  if (gHex && document.activeElement !== gHex) gHex.value = green;
+  if (gSw) gSw.value = green;
+  if (bHex && document.activeElement !== bHex) bHex.value = blue;
+  if (bSw) bSw.value = blue;
+}
+
+function applyLogo() {
+  const src = THEME.logoDataUrl || DEFAULT_LOGO;
+  document.querySelectorAll('img.app-logo').forEach(img => {
+    if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+  });
+}
+
+function applySettings() {
+  applyThemeColors();
+  applyLogo();
+}
+
+function openSettings() {
+  closeMenu();
+  document.getElementById('settings-overlay').classList.add('open');
+  document.getElementById('settings-panel').classList.add('open');
+  document.getElementById('settings-panel').setAttribute('aria-hidden', 'false');
+  applySettings();
+}
+
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('open');
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('settings-panel').setAttribute('aria-hidden', 'true');
+}
+
+function onColorPick(which, value) {
+  const hex = normalizeHex(value);
+  if (!hex) return;
+  if (which === 'green') THEME.green = hex;
+  else THEME.blue = hex;
+  applyThemeColors();
+  saveSettings();
+}
+
+function onColorHexInput(which, value) {
+  const hex = normalizeHex(value);
+  if (!hex) return; // wait until valid 3/6 digit hex
+  if (which === 'green') THEME.green = hex;
+  else THEME.blue = hex;
+  applyThemeColors();
+  saveSettings();
+}
+
+function resetThemeColors() {
+  THEME.green = DEFAULT_GREEN;
+  THEME.blue = DEFAULT_BLUE;
+  applyThemeColors();
+  saveSettings();
+}
+
+function resetLogo() {
+  THEME.logoDataUrl = null;
+  applyLogo();
+  saveSettings();
+  const file = document.getElementById('settings-logo-file');
+  if (file) file.value = '';
+}
+
+function resizeImageToDataUrl(file, maxEdge = 900, quality = 0.88) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Invalid image'));
+      img.onload = () => {
+        let { width, height } = img;
+        const scale = Math.min(1, maxEdge / Math.max(width, height));
+        width = Math.max(1, Math.round(width * scale));
+        height = Math.max(1, Math.round(height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        // Prefer PNG for transparency; JPEG for large photos
+        const isPng = (file.type === 'image/png') || (file.type === 'image/svg+xml');
+        try {
+          if (isPng) resolve(canvas.toDataURL('image/png'));
+          else resolve(canvas.toDataURL('image/jpeg', quality));
+        } catch (err) {
+          // SVG tainted or similar — fall back to original data URL
+          resolve(reader.result);
+        }
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function onLogoFileSelected(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    alert('Please choose an image file (PNG, JPG, etc.).');
+    return;
+  }
+  try {
+    // SVG: store raw data URL (canvas may not work well)
+    if (file.type === 'image/svg+xml' || file.size < 180000) {
+      const reader = new FileReader();
+      const dataUrl = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      THEME.logoDataUrl = dataUrl;
+    } else {
+      THEME.logoDataUrl = await resizeImageToDataUrl(file);
+    }
+    applyLogo();
+    saveSettings();
+  } catch (err) {
+    console.error(err);
+    alert('Could not load that image. Try another file.');
+  }
+}
+
+// ================================================================
 // FORMULAS
 // ================================================================
 
@@ -4042,6 +4434,7 @@ const SIDEBAR_ICONS = {
 };
 
 function openMenu() {
+  closeSettings();
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('sidebar-overlay').classList.add('open');
 }
@@ -5948,6 +6341,8 @@ function bindAll(id, fn) {
 
 function init() {
   loadS();
+  loadSettings();
+  applySettings();
   buildNav();
 
   // Math
