@@ -1,14 +1,15 @@
 {
   "name": "amped-frac-web",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js",
-    "build": "echo 'No build step required for static site'",
-    "lint": "echo 'No linting required'"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "echo 'No linting configured'"
   },
-  "dependencies": {
-    "express": "^4.19.2"
+  "devDependencies": {
+    "vite": "^6.0.0"
   }
 }
