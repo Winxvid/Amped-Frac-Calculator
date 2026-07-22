@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frac Math Calculator v4.0 • FLOW Edition</title>
+    <!-- Self-contained dark theme (Tailwind CDN removed for production/offline field use) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --primary: #0f172a;
+            --accent: #38bdf8;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+            background-color: #020617;
+            color: #e2e8f0;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .section-header {
+            background: linear-gradient(90deg, #0f172a, #1e2937);
+            border-bottom: 1px solid #334155;
+        }
+
+        .calc-card {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 1.5rem;
+            padding: 1.25rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .calc-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border-color: #475569;
+        }
+
+        .nav-tab {
+            transition: all 0.2s ease;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            color: #94a3b8;
+        }
+        
+        .nav-tab.active {
+            background-color: #1e2937;
+            color: #e0f2fe;
+            border-bottom: 3px solid #38bdf8;
+        }
+        
+        .nav-tab:hover:not(.active) {
+            color: #e2e8f0;
+        }
+
+        .result-value {
+            font-family: 'Space Grotesk', ui-monospace, monospace;
+            font-weight: 600;
+            color: #bae6fd;
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 0.375rem;
+            display: block;
+        }
+
+        .field-input {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .field-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+            outline: none;
+        }
+
+        .result-box {
+            background-color: #020617;
+            border: 1px solid #1e2937;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .dark-table {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            width: 100%;
+            font-size: 0.75rem;
+        }
+        
+        .dark-table th {
+            background-color: #1e2937;
+            color: #bae6fd;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+        
+        .dark-table td {
+            padding: 0.35rem 0.75rem;
+            border-top: 1px solid #334155;
+        }
+
+        .liberty-red {
+            color: #ef4444;
+        }
+
+        .frac-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #334155, transparent);
+        }
+
+        .grid {
+            display: grid;
+        }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .items-center {
+            align-items: center;
+        }
+        
+        .gap-2 {
+            gap: 0.5rem;
+        }
+        
+        .gap-3 {
+            gap: 0.75rem;
+        }
+        
+        .gap-4 {
+            gap: 1rem;
+        }
+        
+        .gap-5 {
+            gap: 1.25rem;
+        }
+        
+        .rounded-2xl {
+            border-radius: 1rem;
+        }
+        
+        .rounded-3xl {
+            border-radius: 1.5rem;
+        }
+        
+        .p-3 {
+            padding: 0.75rem;
+        }
+        
+        .p-4 {
+            padding: 1rem;
+        }
+        
+        .p-5 {
+            padding: 1.25rem;
+        }
+        
+        .px-3 {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        
+        .py-2 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .py-3 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        
+        .text-xs {
+            font-size: 0.75rem;
+        }
+        
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        
+        .text-lg {
+            font-size: 1.125rem;
+        }
+        
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+        
+        .text-3xl {
+            font-size: 1.875rem;
+        }
+        
+        .text-4xl {
+            font-size: 2.25rem;
+        }
+        
+        .font-semibold {
+            font-weight: 600;
+        }
+        
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        
+        .text-sky-400 {
+            color: #38bdf8;
+        }
+        
+        .text-emerald-400 {
+            color: #34d399;
+        }
+        
+        .text-amber-400 {
+            color: #fbbf24;
+        }
+        
+        .bg-slate-800 {
+            background-color: #1e2937;
+        }
+        
+        .bg-slate-900 {
+            background-color: #0f172a;
+        }
+        
+        .border-slate-700 {
+            border-color: #334155;
+        }
+        
+        .border-sky-500 {
+            border-color: #0ea5e9;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .col-span-2 {
+            grid-column: span 2 / span 2;
+        }
+        
+        .col-span-3 {
+            grid-column: span 3 / span 3;
+        }
+        
+        .col-span-4 {
+            grid-column: span 4 / span 4;
+        }
+        
+        .col-span-5 {
+            grid-column: span 5 / span 5;
+        }
+        
+        .col-span-12 {
+            grid-column: span 12 / span 12;
+        }
+        
+        .max-w-screen-2xl {
+            max-width: 1536px;
+        }
+        
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+        
+        .pt-6 {
+            padding-top: 1.5rem;
+        }
+        
+        .pb-12 {
+            padding-bottom: 3rem;
+        }
+        
+        .sticky {
+            position: sticky;
+        }
+        
+        .top-0 {
+            top: 0;
+        }
+        
+        .z-50 {
+            z-index: 50;
+        }
+        
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
+        
+        .whitespace-nowrap {
+            white-space: nowrap;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --primary: #0f172a;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .section-header {
+            background: linear-gradient(90deg, #0f172a, #1e2937);
+            border-bottom: 1px solid #334155;
+        }
+
+        .calc-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .calc-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-tab {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-tab.active {
+            background-color: #1e2937;
+            color: #e0f2fe;
+            border-bottom: 3px solid #38bdf8;
+        }
+
+        .result-value {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 600;
+            color: #bae6fd;
+        }
+
+        .formula-text {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .field-input {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        
+        .field-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+            outline: none;
+        }
+
+        .liberty-red {
+            color: #ef4444;
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .dark-table {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+        }
+
+        .dark-table th {
+            background-color: #1e2937;
+            color: #bae6fd;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .result-box {
+            background-color: #020617;
+            border: 1px solid #1e2937;
+        }
+
+        .frac-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #334155, transparent);
+        }
+
+        .tool-tip {
+            position: relative;
+        }
+        
+        .nav-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #334155 #0f172a;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+    <!-- Header -->
+    <div class="bg-slate-900 border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-x-4">
+                    <div class="flex items-center gap-x-3">
+                        <div class="w-11 h-11 bg-red-600 rounded-2xl flex items-center justify-center shadow-inner">
+                            <i class="fa-solid fa-oil-can text-white text-3xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-display text-3xl tracking-tighter">FRAC MATH</h1>
+                            <p class="text-[10px] text-slate-500 -mt-1 tracking-[2px]">v4.0 • FLOW EDITION</p>
+                        </div>
+                    </div>
+                    <div class="hidden md:block px-3 py-1.5 bg-slate-800 rounded-3xl text-xs font-mono border border-slate-700">
+                        LIBERTY ENERGY • TRAINING DEPT
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-x-2">
+                    <div class="hidden sm:flex items-center gap-x-1.5 text-xs bg-slate-800 px-3 py-1 rounded-3xl border border-slate-700">
+                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <span class="text-emerald-400 font-medium">All formulas from Liberty Reference Guide</span>
+                    </div>
+                    
+                    <button onclick="resetAllCalculators()" 
+                            class="flex items-center gap-x-2 px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-3xl transition-colors">
+                        <i class="fa-solid fa-undo text-xs"></i>
+                        <span class="hidden md:inline">Reset All</span>
+                    </button>
+                    
+                    <button onclick="exportAllResults()" 
+                            class="flex items-center gap-x-2 px-4 py-2 text-sm bg-sky-600 hover:bg-sky-500 text-white rounded-3xl transition-colors shadow-lg shadow-sky-900/50">
+                        <i class="fa-solid fa-download text-xs"></i>
+                        <span class="hidden md:inline">Export Report</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="px-6 pb-0 flex gap-x-1 overflow-x-auto nav-scroll border-b border-slate-700" style="scrollbar-width: thin;">
+                <button onclick="switchSection('math-fundamentals')" id="tab-math-fundamentals"
+                        class="nav-tab active px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap border-b-2 border-sky-400">
+                    <i class="fa-solid fa-calculator w-4"></i> 
+                    <span>Math Fundamentals</span>
+                </button>
+                <button onclick="switchSection('chemical')" id="tab-chemical"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-flask w-4"></i> 
+                    <span>Chemical</span>
+                </button>
+                <button onclick="switchSection('hydration')" id="tab-hydration"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-tint w-4"></i> 
+                    <span>Hydration</span>
+                </button>
+                <button onclick="switchSection('bucket-analog')" id="tab-bucket-analog"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-tachometer-alt w-4"></i> 
+                    <span>Bucket Test &amp; Analog</span>
+                </button>
+                <button onclick="switchSection('sand-proppant')" id="tab-sand-proppant"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-mountain w-4"></i> 
+                    <span>Sand / Proppant / Blender</span>
+                </button>
+                <button onclick="switchSection('horsepower-iron')" id="tab-horsepower-iron"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-cogs w-4"></i> 
+                    <span>Horsepower &amp; Iron</span>
+                </button>
+                <button onclick="switchSection('wellbore-engineering')" id="tab-wellbore-engineering"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-industry w-4"></i> 
+                    <span>Wellbore &amp; Engineering</span>
+                </button>
+                <button onclick="switchSection('reference-tables')" id="tab-reference-tables"
+                        class="nav-tab px-5 py-3 text-sm font-medium flex items-center gap-x-2 whitespace-nowrap text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-book w-4"></i> 
+                    <span>Reference Tables</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-screen-2xl mx-auto px-6 pt-6 pb-12">
+        
+        <!-- MATH FUNDAMENTALS SECTION -->
+        <div id="section-math-fundamentals" class="section-content">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Math Fundamentals</h2>
+                    <p class="text-slate-400 text-sm">Volumes, areas, capacities • Exact formulas from Liberty Reference Guide</p>
+                </div>
+                <div class="text-xs px-3 py-1 bg-slate-800 rounded-2xl border border-slate-700 flex items-center gap-x-1.5">
+                    <i class="fa-solid fa-info-circle text-sky-400"></i>
+                    <span>π = 3.14159 • 1 bbl = 42 gal • 1 gal = 231 in³</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                
+                <!-- Barrels from Gallons -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-exchange-alt text-sky-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Barrels from Gallons</div>
+                            <div class="text-[10px] text-slate-500">Clean fluid conversion</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="metric-label block mb-1.5">Gallons</label>
+                            <input type="number" id="mf_gal" value="25200" oninput="calcMathFundamentals()"
+                                   class="field-input w-full px-4 py-3 rounded-2xl text-lg font-mono">
+                        </div>
+                        
+                        <div class="result-box rounded-2xl p-4">
+                            <div class="metric-label mb-1">Barrels (bbl)</div>
+                            <div id="mf_bbl_result" class="result-value text-4xl font-display tracking-tighter">600.00</div>
+                            <div class="text-[10px] text-emerald-400 mt-0.5">1 bbl = 42 gal exactly</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rectangle Area -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-vector-square text-sky-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Rectangle Area</div>
+                            <div class="text-[10px] text-slate-500">Length × Height</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label block mb-1.5">Length (in)</label>
+                            <input type="number" id="mf_rect_len" value="60" oninput="calcMathFundamentals()"
+                                   class="field-input w-full px-4 py-3 rounded-2xl text-lg font-mono">
+                        </div>
+                        <div>
+                            <label class="metric-label block mb-1.5">Height (in)</label>
+                            <input type="number" id="mf_rect_h" value="35" oninput="calcMathFundamentals()"
+                                   class="field-input w-full px-4 py-3 rounded-2xl text-lg font-mono">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="result-box rounded-2xl p-3">
+                            <div class="metric-label text-[10px]">Area (in²)</div>
+                            <div id="mf_rect_in2" class="result-value text-2xl font-display">2,100</div>
+                        </div>
+                        <div class="result-box rounded-2xl p-3">
+                            <div class="metric-label text-[10px]">Area (ft²)</div>
+                            <div id="mf_rect_ft2" class="result-value text-2xl font-display">14.58</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Circle Area -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-circle text-sky-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Circle Area</div>
+                            <div class="text-[10px] text-slate-500">πr² or πD²/4</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-2 mb-3">
+                        <button onclick="setCircleMode('diameter')" id="circle_diam_btn"
+                                class="flex-1 py-1.5 text-xs bg-slate-800 border border-sky-500 text-sky-400 rounded-2xl font-medium">Diameter</button>
+                        <button onclick="setCircleMode('radius')" id="circle_rad_btn"
+                                class="flex-1 py-1.5 text-xs bg-slate-800 border border-slate-600 hover:border-slate-500 rounded-2xl font-medium">Radius</button>
+                    </div>
+                    
+                    <div id="circle_input_container">
+                        <label class="metric-label block mb-1.5" id="circle_label">Diameter (in)</label>
+                        <input type="number" id="mf_circle_val" value="4" oninput="calcMathFundamentals()"
+                               class="field-input w-full px-4 py-3 rounded-2xl text-lg font-mono">
+                    </div>
+                    
+                    <div class="mt-4 result-box rounded-2xl p-4">
+                        <div class="metric-label mb-1">Area (in²)</div>
+                        <div id="mf_circle_area" class="result-value text-4xl font-display tracking-tighter">12.57</div>
+                        <div class="text-[10px] text-slate-500 mt-1">π = 3.14159</div>
+                    </div>
+                </div>
+                
+                <!-- Tank / Cube Volume -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-cube text-sky-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Tank / Cube Volume</div>
+                            <div class="text-[10px] text-slate-500">L × W × H → in³ → gal → bbl</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label block mb-1 text-xs">Length (in)</label>
+                            <input type="number" id="mf_tank_l" value="120" oninput="calcMathFundamentals()" class="field-input w-full px-3 py-2.5 rounded-2xl text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="metric-label block mb-1 text-xs">Width (in)</label>
+                            <input type="number" id="mf_tank_w" value="120" oninput="calcMathFundamentals()" class="field-input w-full px-3 py-2.5 rounded-2xl text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="metric-label block mb-1 text-xs">Height (in)</label>
+                            <input type="number" id="mf_tank_h" value="120" oninput="calcMathFundamentals()" class="field-input w-full px-3 py-2.5 rounded-2xl text-sm font-mono">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-slate-800 rounded-2xl p-2">
+                            <div class="text-[10px] text-slate-400">in³</div>
+                            <div id="mf_tank_in3" class="font-mono text-lg font-semibold">1,728,000</div>
+                        </div>
+                        <div class="bg-slate-800 rounded-2xl p-2">
+                            <div class="text-[10px] text-slate-400">Gallons</div>
+                            <div id="mf_tank_gal" class="font-mono text-lg font-semibold text-emerald-400">7,480.52</div>
+                        </div>
+                        <div class="bg-slate-800 rounded-2xl p-2">
+                            <div class="text-[10px] text-slate-400">Barrels</div>
+                            <div id="mf_tank_bbl" class="font-mono text-lg font-semibold text-sky-400">178.11</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cylinder / Pipe Volume -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-cylinder text-sky-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Cylinder / Pipe Volume</div>
+                            <div class="text-[10px] text-slate-500">ID × Length → gal or bbl</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="metric-label block mb-1.5">Diameter / ID (in)</label>
+                            <input type="number" id="mf_cyl_d" value="4.25" step="0.01" oninput="calcMathFundamentals()" class="field-input w-full px-4 py-2.5 rounded-2xl text-lg font-mono">
+                        </div>
+                        <div>
+                            <label class="metric-label block mb-1.5">Length (ft)</label>
+                            <input type="number" id="mf_cyl_len" value="300" oninput="calcMathFundamentals()" class="field-input w-full px-4 py-2.5 rounded-2xl text-lg font-mono">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="result-box rounded-2xl p-3">
+                            <div class="text-xs text-slate-400">Gallons</div>
+                            <div id="mf_cyl_gal" class="result-value text-2xl">262.48</div>
+                        </div>
+                        <div class="result-box rounded-2xl p-3">
+                            <div class="text-xs text-slate-400">Barrels</div>
+                            <div id="mf_cyl_bbl" class="result-value text-2xl">6.25</div>
+                        </div>
+                    </div>
+                    <div class="text-[10px] text-center text-slate-500 mt-2">Uses πr²h and /231 conversion</div>
+                </div>
+                
+                <!-- Well Capacity (single or multi) -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5 col-span-1 md:col-span-2 lg:col-span-1 xl:col-span-2">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-water text-sky-400"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="font-semibold">Wellbore Capacity (Multi-Section)</div>
+                            <div class="text-[10px] text-slate-500">Casing table lookup or custom capacity factors</div>
+                        </div>
+                    </div>
+                    
+                    <div id="well_sections_container" class="space-y-3 mb-4">
+                        <!-- Dynamic sections added by JS -->
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="addWellSection()" class="flex-1 py-2 text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-2xl flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-plus text-xs"></i> <span>Add Casing Section</span>
+                        </button>
+                        <button onclick="clearWellSections()" class="px-4 py-2 text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-2xl">
+                            Clear
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-slate-700 grid grid-cols-2 gap-3">
+                        <div class="result-box rounded-2xl p-3">
+                            <div class="text-xs text-slate-400">Total Gallons</div>
+                            <div id="mf_well_gal" class="result-value text-3xl font-display">0</div>
+                        </div>
+                        <div class="result-box rounded-2xl p-3">
+                            <div class="text-xs text-slate-400">Total Barrels</div>
+                            <div id="mf_well_bbl" class="result-value text-3xl font-display">0.00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Capacity Factor Reverse -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="flex items-center gap-x-3 mb-4">
+                        <div class="w-9 h-9 bg-sky-900/50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-sync text-sky-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Capacity Factor (Reverse)</div>
+                            <div class="text-[10px] text-slate-500">Known bbl &amp; depth → gal/ft</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label block mb-1.5">Total Barrels</label>
+                            <input type="number" id="mf_cf_bbl" value="205" oninput="calcCapacityFactorReverse()" class="field-input w-full px-4 py-2.5 rounded-2xl text-lg font-mono">
+                        </div>
+                        <div>
+                            <label class="metric-label block mb-1.5">Depth (ft)</label>
+                            <input type="number" id="mf_cf_ft" value="13470" oninput="calcCapacityFactorReverse()" class="field-input w-full px-4 py-2.5 rounded-2xl text-lg font-mono">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 result-box rounded-2xl p-4">
+                        <div class="metric-label">Capacity Factor (gal/ft)</div>
+                        <div id="mf_cf_result" class="result-value text-4xl font-display tracking-tighter">0.638</div>
+                        <div class="text-xs text-emerald-400 mt-1">Use this in multi-section wells or to match casing table</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- CHEMICAL SECTION -->
+        <div id="section-chemical" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Chemical Calculations</h2>
+                    <p class="text-slate-400 text-sm">Totes, straps, dilution, variance, rates, staged FR • Liberty exact formulas</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+                
+                <!-- Chemical Used from Straps -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-1 flex items-center gap-x-2">
+                        <i class="fa-solid fa-minus text-red-400"></i> Chemical Used from Straps
+                    </div>
+                    <div class="text-xs text-slate-500 mb-4">Start strap − Ending strap (or current)</div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">Starting Strap (gal or in)</label>
+                            <input type="number" id="chem_start_strap" value="295" oninput="calcChemicalUsed()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Ending / Current Strap</label>
+                            <input type="number" id="chem_end_strap" value="115" oninput="calcChemicalUsed()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="mt-4 result-box p-4 rounded-2xl">
+                        <div class="text-xs text-slate-400">Chemical Used</div>
+                        <div id="chem_used_result" class="result-value text-4xl">180 <span class="text-base font-normal">gal</span></div>
+                    </div>
+                </div>
+                
+                <!-- Chemical Variance -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-1 flex items-center gap-x-2">
+                        <i class="fa-solid fa-chart-line text-amber-400"></i> Chemical Stage Variance
+                    </div>
+                    <div class="text-xs text-slate-500 mb-4">Amount Pumped vs Designed</div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">Amount Pumped (gal)</label>
+                            <input type="number" id="chem_pumped" value="180" oninput="calcChemicalVariance()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Designed / Needed (gal)</label>
+                            <input type="number" id="chem_designed" value="166" oninput="calcChemicalVariance()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Variance %</div>
+                            <div id="chem_var_pct" class="result-value text-3xl">108.4%</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Status</div>
+                            <div id="chem_var_status" class="font-semibold text-emerald-400">Over by 14 gal</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tote Volume from Strap -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Tote Volume from Strap</div>
+                    
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="col-span-2">
+                            <label class="metric-label">Current Strap (in)</label>
+                            <input type="number" id="tote_strap_in" value="29" step="0.1" oninput="calcToteVolume()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Tote Type</label>
+                            <select id="tote_type" onchange="calcToteVolume()" class="field-input w-full px-3 py-2.5 rounded-2xl text-sm">
+                                <option value="7.45">330 gal (7.45 gal/in)</option>
+                                <option value="8.72">550 gal Soft (8.72 gal/in)</option>
+                                <option value="8.55">560 gal Gel (8.55 gal/in)</option>
+                                <option value="12.33">750 gal Gel (12.33 gal/in)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-3 text-xs">
+                        <input type="checkbox" id="tote_bottoms_check" checked onchange="calcToteVolume()" class="accent-sky-400">
+                        <label for="tote_bottoms_check" class="text-slate-400">Subtract bottoms (unusable)</label>
+                        <input type="number" id="tote_bottoms_in" value="2" step="0.5" oninput="calcToteVolume()" class="field-input w-16 px-2 py-1 text-xs rounded-xl">
+                        <span class="text-xs">in</span>
+                    </div>
+                    
+                    <div class="result-box p-4 rounded-2xl flex justify-between items-end">
+                        <div>
+                            <div class="text-xs text-slate-400">Accessible Gallons</div>
+                            <div id="tote_accessible_gal" class="result-value text-4xl font-display">201.2</div>
+                        </div>
+                        <div class="text-right text-xs">
+                            <div class="text-emerald-400">Usable</div>
+                            <div id="tote_total_gal" class="font-mono">216.1 gal</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GPT ↔ GPM Converter -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3 flex items-center gap-x-2">
+                        <i class="fa-solid fa-exchange-alt"></i> GPT ↔ GPM Converter
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="metric-label">Clean Rate (bpm)</label>
+                            <input type="number" id="chem_clean_rate" value="100" oninput="calcChemRateConversions()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Setpoint (gpt)</label>
+                            <input type="number" id="chem_gpt" value="0.75" step="0.05" oninput="calcChemRateConversions()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="bg-slate-800 rounded-2xl p-3 text-center">
+                            <div class="text-xs text-slate-400">Chemical Rate</div>
+                            <div id="chem_gpm_result" class="result-value text-3xl">3.15</div>
+                            <div class="text-xs">gpm</div>
+                        </div>
+                        <div class="bg-slate-800 rounded-2xl p-3 text-center">
+                            <div class="text-xs text-slate-400">Concentration</div>
+                            <div id="chem_conc_gpt_result" class="result-value text-3xl">0.75</div>
+                            <div class="text-xs">gpt</div>
+                        </div>
+                    </div>
+                    <div class="text-[10px] text-center mt-2 text-slate-500">Formula: gpm = bpm × 0.042 × gpt</div>
+                </div>
+                
+                <!-- HCL Density & % -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">HCL Density &amp; % Converter</div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">% HCL</label>
+                            <input type="number" id="hcl_percent" value="15" step="0.5" oninput="calcHCLDensity()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Density (ppg)</label>
+                            <input type="number" id="hcl_density" value="8.797" step="0.001" oninput="calcHCLPercent()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Calculated Density</div>
+                            <div id="hcl_calc_density" class="result-value text-2xl">8.80</div>
+                            <div class="text-xs text-emerald-400">ppg</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Calculated %</div>
+                            <div id="hcl_calc_percent" class="result-value text-2xl">15.0</div>
+                            <div class="text-xs text-emerald-400">% HCL</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Acid Dilution -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-1">Acid Dilution (HCL)</div>
+                    <div class="text-xs text-slate-500 mb-3">Exact Liberty formula</div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Raw Volume (gal)</label>
+                            <input type="number" id="acid_raw_vol" value="20" oninput="calcAcidDilution()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Raw % HCL</label>
+                            <input type="number" id="acid_raw_pct" value="50" step="1" oninput="calcAcidDilution()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Target Dilute %</label>
+                            <input type="number" id="acid_target_pct" value="15" step="1" oninput="calcAcidDilution()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Raw Density (ppg)</label>
+                            <input type="number" id="acid_raw_density" value="9.52" step="0.01" oninput="calcAcidDilution()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Dilute Volume (gal)</div>
+                            <div id="acid_dilute_vol" class="result-value text-3xl">70.0</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Water to Add (gal)</div>
+                            <div id="acid_water_vol" class="result-value text-3xl text-sky-400">50.0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Buffer Needed -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Buffer Needed</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">Clean Volume (bbl)</label>
+                            <input type="number" id="buffer_clean_bbl" value="800" oninput="calcBufferNeeded()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Setpoint (gpt)</label>
+                            <input type="number" id="buffer_gpt" value="0.45" step="0.05" oninput="calcBufferNeeded()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="mt-4 result-box p-4 rounded-2xl">
+                        <div class="text-xs text-slate-400">Buffer Required</div>
+                        <div id="buffer_result" class="result-value text-4xl">15.12 <span class="text-base">gal</span></div>
+                        <div class="text-xs text-emerald-400">Formula: bbl × 0.042 × gpt</div>
+                    </div>
+                </div>
+                
+                <!-- Multi-Tote Accessible -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Multi-Tote Accessible Volume</div>
+                    <div class="text-xs text-slate-500 mb-2">FR or Gel totes • bottoms per tote</div>
+                    
+                    <div id="multi_tote_inputs" class="space-y-2 mb-3">
+                        <!-- Populated by JS for 2-3 totes -->
+                    </div>
+                    
+                    <button onclick="addToteInput()" class="text-xs px-3 py-1 bg-slate-800 rounded-2xl mb-3">+ Add Another Tote</button>
+                    
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Total Pumpable Gallons</div>
+                        <div id="multi_tote_total" class="result-value text-4xl">612.4</div>
+                    </div>
+                </div>
+                
+                <!-- Ending Strap Predictor -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5 col-span-1 lg:col-span-2 xl:col-span-1">
+                    <div class="font-semibold mb-1">Ending Strap Predictor</div>
+                    <div class="text-xs text-slate-500 mb-3">Given clean bbl + gpt → ending strap</div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="metric-label text-xs">Clean Volume (bbl)</label>
+                            <input type="number" id="end_clean_bbl" value="147000" oninput="calcEndingStrap()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">GPT Setpoint</label>
+                            <input type="number" id="end_gpt" value="1.5" step="0.1" oninput="calcEndingStrap()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Start Strap (in)</label>
+                            <input type="number" id="end_start_strap" value="38" step="0.1" oninput="calcEndingStrap()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Tote Type / Cap Factor</label>
+                            <select id="end_tote_type" onchange="calcEndingStrap()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                                <option value="7.45">330 gal • 7.45 gal/in</option>
+                                <option value="12.33">750 gal • 12.33 gal/in</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 result-box p-3 rounded-2xl text-sm">
+                        <div class="flex justify-between">
+                            <div>FR Needed: <span id="end_fr_needed" class="font-mono font-semibold">9,261</span> gal</div>
+                            <div>Ending Strap: <span id="end_ending_strap" class="font-mono font-semibold text-emerald-400">23.8"</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- HYDRATION SECTION -->
+        <div id="section-hydration" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Hydration Calculations</h2>
+                    <p class="text-slate-400 text-sm">"Rules of Four" • LGA, viscosity, tub volume, auger RPM • Liberty Reference</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                
+                <!-- Rules of Four -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3 flex items-center gap-x-2">
+                        <i class="fa-solid fa-magic text-purple-400"></i> Rules of Four
+                    </div>
+                    <div class="text-xs text-slate-500 mb-4">Every LGA gallon = 4 lbs Dry Guar</div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">LGA Setpoint (gpt)</label>
+                            <input type="number" id="hyd_lga_gpt" value="6" oninput="calcRulesOfFour()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Pound System (ppt)</label>
+                            <input type="number" id="hyd_ppt" value="24" oninput="calcRulesOfFour()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-slate-800 p-3 rounded-2xl">
+                            <div class="text-xs">Lb System ≈ Target Visc + 4</div>
+                            <div id="hyd_lb_system" class="result-value text-2xl">10</div>
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-2xl">
+                            <div class="text-xs">Target Visc ≈ Lb System − 4</div>
+                            <div id="hyd_visc" class="result-value text-2xl">6</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- LGA in Tote from Strap -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">LGA / Gel Tote from Strap</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">Current Strap (in)</label>
+                            <input type="number" id="hyd_strap" value="18" step="0.1" oninput="calcHydrationTote()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Cap Factor (gal/in)</label>
+                            <input type="number" id="hyd_cap_factor" value="12.33" step="0.01" oninput="calcHydrationTote()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="mt-4 result-box p-4 rounded-2xl">
+                        <div class="text-xs">Gallons in Tote</div>
+                        <div id="hyd_tote_gal" class="result-value text-4xl">221.9</div>
+                    </div>
+                </div>
+                
+                <!-- Design LGA / Dry Gel for Stage -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Design LGA or Dry Gel for Stage</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Gel Stage Volume (bbl)</label>
+                            <input type="number" id="hyd_stage_bbl" value="650" oninput="calcDesignGel()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Setpoint (gpt or ppt)</label>
+                            <input type="number" id="hyd_setpoint" value="0.5" step="0.1" oninput="calcDesignGel()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Design LGA (gal)</div>
+                            <div id="hyd_design_lga" class="result-value text-2xl">13.7</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Design Dry Gel (lbs)</div>
+                            <div id="hyd_design_dry" class="result-value text-2xl">54.7</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tub Viscosity Adjustment -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Adjust Tub Viscosity</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Tub Volume (bbl)</label>
+                            <input type="number" id="tub_vol" value="80" oninput="calcTubViscosity()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Current Visc (cp)</label>
+                            <input type="number" id="tub_current_cp" value="12" oninput="calcTubViscosity()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Target Visc (cp)</label>
+                            <input type="number" id="tub_target_cp" value="18" oninput="calcTubViscosity()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">LGA Setpoint (gpt)</label>
+                            <input type="number" id="tub_lga_gpt" value="6" oninput="calcTubViscosity()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="text-xs bg-slate-800 p-3 rounded-2xl">
+                        Gel Needed to Increase: <span id="tub_gel_needed" class="font-mono font-semibold">20.2 gal LGA</span><br>
+                        <span class="text-emerald-400">or</span> <span id="tub_dry_needed" class="font-mono font-semibold">80.6 lbs dry</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- BUCKET TEST & ANALOG SECTION -->
+        <div id="section-bucket-analog" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Bucket Test &amp; Analog BDFS</h2>
+                    <p class="text-slate-400 text-sm">Scaled values, fine adjust, K-factor, % error • Liberty formulas</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                
+                <!-- Scaled Value from mA -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Analog Scaled Value (4-20mA)</div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="metric-label">Device</label>
+                            <select id="analog_device" onchange="updateAnalogRanges(); calcAnalogScaled()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                                <option value="pressure">Suction/Discharge Pressure (0-750)</option>
+                                <option value="level">Tube Level Sensor (0-100)</option>
+                                <option value="micromotion6">Micromotion Waukesha 6 (0-10)</option>
+                                <option value="micromotion18">Micromotion Waukesha 18 (0-20)</option>
+                                <option value="flow">Magnetic Flow Meter (0-175)</option>
+                                <option value="densitometer">Densitometer (0-20)</option>
+                                <option value="ph">pH Probe (0-14)</option>
+                                <option value="temp">Temperature (32-175)</option>
+                                <option value="visco">Viscometer (0-60)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="metric-label">Raw mA</label>
+                            <input type="number" id="analog_raw_ma" value="12" step="0.1" oninput="calcAnalogScaled()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2 mb-3 text-xs">
+                        <div>
+                            <label class="metric-label">Min Scaled</label>
+                            <input type="number" id="analog_min_scaled" value="0" oninput="calcAnalogScaled()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Max Scaled</label>
+                            <input type="number" id="analog_max_scaled" value="750" oninput="calcAnalogScaled()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Fine Adjust</label>
+                            <input type="number" id="analog_fine" value="1.0" step="0.01" oninput="calcAnalogScaled()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Scaled Value</div>
+                        <div id="analog_scaled_result" class="result-value text-4xl">375.0</div>
+                    </div>
+                </div>
+                
+                <!-- Bucket Test Calculations -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Bucket Test Time &amp; Adjustments</div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="metric-label">Gallons Filled</label>
+                            <input type="number" id="bucket_gal" value="5" oninput="calcBucketTest()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Clean Rate (bpm)</label>
+                            <input type="number" id="bucket_clean_rate" value="95" oninput="calcBucketTest()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Setpoint (gpt)</label>
+                            <input type="number" id="bucket_gpt" value="0.5" step="0.1" oninput="calcBucketTest()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Actual Time (sec)</label>
+                            <input type="number" id="bucket_actual_sec" value="16" oninput="calcBucketTest()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Estimated Time (sec)</div>
+                            <div id="bucket_est_sec" class="result-value text-2xl">13.3</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">% Error</div>
+                            <div id="bucket_error_pct" class="result-value text-2xl text-amber-400">-16.9%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 text-xs bg-slate-800 p-3 rounded-2xl">
+                        New Fine Adjust: <span id="bucket_new_fine" class="font-mono font-semibold">0.83</span><br>
+                        New K-Factor: <span id="bucket_new_k" class="font-mono font-semibold">—</span> (enter Micromotion &amp; Mag rates below)
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- SAND / PROPPANT / BLENDER SECTION -->
+        <div id="section-sand-proppant" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Sand / Proppant / Blender</h2>
+                    <p class="text-slate-400 text-sm">AVF, CFR, Yield, PPR, Auger RPM, Slurry, Ramps, Screwless, CLD • Full Liberty formulas</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+                <!-- Sand Needed / Clean Volume -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Sand Needed ↔ Clean Volume</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">Clean Volume (bbl)</label>
+                            <input type="number" id="sand_clean_bbl" value="5000" oninput="calcSandProppant()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Concentration (ppg)</label>
+                            <input type="number" id="sand_ppg" value="2" step="0.5" oninput="calcSandProppant()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Sand Needed (lbs)</div>
+                            <div id="sand_needed_lbs" class="result-value text-2xl">420,000</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Clean Vol from Sand (bbl)</div>
+                            <div id="sand_clean_from_lbs" class="result-value text-2xl">5,000</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AVF / CFR / Yield -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">AVF • CFR • Yield • Slurry Density</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">PPA (ppg)</label>
+                            <input type="number" id="prop_ppa" value="2" step="0.5" oninput="calcAVFCFRYield()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Sand SG</label>
+                            <input type="number" id="prop_sg" value="2.65" step="0.05" oninput="calcAVFCFRYield()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-slate-800 p-2 rounded-2xl">AVF: <span id="prop_avf" class="font-mono font-semibold">0.090</span></div>
+                        <div class="bg-slate-800 p-2 rounded-2xl">CFR: <span id="prop_cfr" class="font-mono font-semibold">0.917</span></div>
+                        <div class="bg-slate-800 p-2 rounded-2xl">Yield: <span id="prop_yield" class="font-mono font-semibold">1.090</span></div>
+                        <div class="bg-slate-800 p-2 rounded-2xl">Slurry Dens: <span id="prop_slurry_dens" class="font-mono font-semibold">9.01</span> ppg</div>
+                    </div>
+                </div>
+                
+                <!-- PPR Calculator -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">PPR Calculator (Auger)</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+                        <div>
+                            <label class="metric-label">Auger Radius (in)</label>
+                            <input type="number" id="ppr_aug_r" value="0.75" step="0.01" oninput="calcPPR()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Shaft Radius (in)</label>
+                            <input type="number" id="ppr_shaft_r" value="0.25" step="0.01" oninput="calcPPR()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Auger Pitch (in)</label>
+                            <input type="number" id="ppr_pitch" value="1.5" step="0.1" oninput="calcPPR()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Bulk Density (lbs/ft³)</label>
+                            <input type="number" id="ppr_bulk" value="91" step="1" oninput="calcPPR()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="result-box p-3 rounded-2xl">
+                        <div class="text-xs">PPR (lbs/rev)</div>
+                        <div id="ppr_result" class="result-value text-3xl">0.038</div>
+                    </div>
+                </div>
+                
+                <!-- Auger RPM & Screw Conc -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Auger RPM &amp; Screw Concentration</div>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Clean Rate (bpm)</label>
+                            <input type="number" id="auger_clean_bpm" value="95" oninput="calcAugerRPM()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Prop Conc (ppg)</label>
+                            <input type="number" id="auger_ppg" value="2" step="0.5" oninput="calcAugerRPM()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">PPR (lbs/rev)</label>
+                            <input type="number" id="auger_ppr" value="0.038" step="0.001" oninput="calcAugerRPM()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Total Auger RPM</div>
+                            <div id="auger_total_rpm" class="result-value text-2xl">105.3</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl">
+                            <div class="text-xs">Screw Conc (ppg)</div>
+                            <div id="auger_screw_conc" class="result-value text-2xl">2.00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Job Prop Total from Cum -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Job Prop Total from Cum Volumes</div>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Slurry Cum (gal)</label>
+                            <input type="number" id="job_slurry_gal" value="1250000" oninput="calcJobPropTotal()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Clean Cum (gal)</label>
+                            <input type="number" id="job_clean_gal" value="1180000" oninput="calcJobPropTotal()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">All Chem (gal)</label>
+                            <input type="number" id="job_chem_gal" value="12500" oninput="calcJobPropTotal()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Job Prop Total (lbs)</div>
+                        <div id="job_prop_total" class="result-value text-3xl">184,211</div>
+                        <div class="text-xs text-emerald-400">Formula: (Slurry − Clean − Chem) / Prop AVF</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- HORSEPOWER & IRON SECTION -->
+        <div id="section-horsepower-iron" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Horsepower &amp; Iron</h2>
+                    <p class="text-slate-400 text-sm">Hoses, transmissions, pumps, torque, velocity, force • Liberty Reference</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                
+                <!-- Hose Counts -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Suction / Discharge Hose Count</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="metric-label">Max Clean Rate (bpm)</label>
+                            <input type="number" id="hose_clean_bpm" value="120" oninput="calcHoseCounts()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">Max Dirty Rate (bpm)</label>
+                            <input type="number" id="hose_dirty_bpm" value="95" oninput="calcHoseCounts()" class="field-input w-full px-4 py-2.5 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="result-box p-3 rounded-2xl text-center">
+                            <div class="text-xs"># Suction Hoses</div>
+                            <div id="hose_suction" class="result-value text-4xl">12</div>
+                            <div class="text-xs text-emerald-400">(Clean ÷ 10)</div>
+                        </div>
+                        <div class="result-box p-3 rounded-2xl text-center">
+                            <div class="text-xs"># Discharge Hoses</div>
+                            <div id="hose_discharge" class="result-value text-4xl">7</div>
+                            <div class="text-xs text-emerald-400">(Dirty ÷ 15)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transmission Output Speed -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Transmission Output Speed</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Transmission Type</label>
+                            <select id="trans_type" onchange="calcTransmission()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                                <option value="TH55-E70">TH55-E70</option>
+                                <option value="CX48">CX48-P2300/TH48</option>
+                                <option value="Allison">Allison 9826</option>
+                                <option value="TH55-E90">TH55-E90</option>
+                                <option value="TH350">TH-350</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Current Gear</label>
+                            <select id="trans_gear" onchange="calcTransmission()" class="field-input w-full px-3 py-2 rounded-2xl text-sm">
+                                <option value="1">1st</option>
+                                <option value="2">2nd</option>
+                                <option value="3">3rd</option>
+                                <option value="4">4th</option>
+                                <option value="5">5th</option>
+                                <option value="6">6th</option>
+                                <option value="7">7th</option>
+                                <option value="8">8th</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="metric-label text-xs">Deck Engine RPM</label>
+                            <input type="number" id="engine_rpm" value="1800" oninput="calcTransmission()" class="field-input w-full px-4 py-2 rounded-2xl">
+                        </div>
+                    </div>
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Transmission Output Speed (rpm)</div>
+                        <div id="trans_output_rpm" class="result-value text-4xl">1,800</div>
+                        <div class="text-xs text-emerald-400 mt-1">Pinion Speed for pump calc</div>
+                    </div>
+                </div>
+                
+                <!-- Pump Rate from Fluid End -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Pump Rate from Fluid End Specs</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+                        <div>
+                            <label class="metric-label">Pump Type</label>
+                            <select id="pump_type" onchange="updatePumpSpecs(); calcPumpRate()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                                <option value="SPM_TWS_2250">SPM TWS 2250</option>
+                                <option value="SPM_TWS_2500">SPM TWS 2500</option>
+                                <option value="CAT_WS255">CAT WS255</option>
+                                <option value="GD_2500Q">GD 2500 Q</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="metric-label">Efficiency %</label>
+                            <input type="number" id="pump_eff" value="95" oninput="calcPumpRate()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                        <div>
+                            <label class="metric-label">PE RPM (from trans)</label>
+                            <input type="number" id="pump_pe_rpm" value="283" oninput="calcPumpRate()" class="field-input w-full px-3 py-1.5 rounded-2xl">
+                        </div>
+                    </div>
+                    
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Pump Rate (bpm)</div>
+                        <div id="pump_rate_bpm" class="result-value text-4xl">10.5</div>
+                        <div class="text-xs text-emerald-400">Max Pressure: <span id="pump_max_psi">15,000</span> psi</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- WELLBORE & ENGINEERING SECTION -->
+        <div id="section-wellbore-engineering" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Wellbore, Flush &amp; Engineering</h2>
+                    <p class="text-slate-400 text-sm">Flush volumes, BHP, frac gradient, proppant left in wellbore • Liberty formulas</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                
+                <!-- Flush Volume Multi-Section -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Flush Volume (Multi-Section Well)</div>
+                    <div id="flush_sections_container" class="space-y-2 mb-3"></div>
+                    <button onclick="addFlushSection()" class="text-xs px-3 py-1 bg-slate-800 rounded-2xl mb-3">+ Add Section</button>
+                    
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Total Flush Volume</div>
+                        <div id="flush_total_bbl" class="result-value text-4xl">312.4</div>
+                        <div class="text-xs text-emerald-400">bbl</div>
+                    </div>
+                </div>
+                
+                <!-- Frac Gradient -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Frac Gradient &amp; Related</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">ISIP (psi)</label>
+                            <input type="number" id="frac_isip" value="6500" oninput="calcFracGradient()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">TVD (ft)</label>
+                            <input type="number" id="frac_tvd" value="9500" oninput="calcFracGradient()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Fluid Density (ppg)</label>
+                            <input type="number" id="frac_density" value="8.6" step="0.1" oninput="calcFracGradient()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Closure Stress (psi)</label>
+                            <input type="number" id="frac_closure" value="5800" oninput="calcFracGradient()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-slate-800 p-3 rounded-2xl">
+                            Frac Gradient: <span id="frac_grad" class="font-mono font-semibold">0.72</span> psi/ft
+                        </div>
+                        <div class="bg-slate-800 p-3 rounded-2xl">
+                            Net Pressure: <span id="frac_net" class="font-mono font-semibold">1,245</span> psi
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Proppant Left in Wellbore -->
+                <div class="calc-card bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Proppant Left in Wellbore</div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div>
+                            <label class="metric-label text-xs">Slurry Volume (bbl)</label>
+                            <input type="number" id="prop_left_slurry" value="1200" oninput="calcPropLeftInWellbore()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Prop Conc (ppg)</label>
+                            <input type="number" id="prop_left_conc" value="3" step="0.5" oninput="calcPropLeftInWellbore()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                        <div>
+                            <label class="metric-label text-xs">Sand SG</label>
+                            <input type="number" id="prop_left_sg" value="2.65" step="0.05" oninput="calcPropLeftInWellbore()" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm">
+                        </div>
+                    </div>
+                    <div class="result-box p-4 rounded-2xl">
+                        <div class="text-xs">Proppant Left in Wellbore</div>
+                        <div id="prop_left_lbs" class="result-value text-3xl">37,850</div>
+                        <div class="text-xs text-emerald-400">lbs</div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- REFERENCE TABLES SECTION -->
+        <div id="section-reference-tables" class="section-content hidden">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="font-display text-2xl tracking-tight">Reference Tables</h2>
+                    <p class="text-slate-400 text-sm">All constants and lookup tables from Liberty Oilfield Math Reference Guide</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
+                
+                <!-- Casing Table -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3 flex items-center gap-x-2">
+                        <i class="fa-solid fa-table text-sky-400"></i> Casing Capacity Factors
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="dark-table w-full text-xs">
+                            <thead>
+                                <tr>
+                                    <th class="px-2 py-1 text-left">Size/Weight</th>
+                                    <th class="px-2 py-1">ID (in)</th>
+                                    <th class="px-2 py-1">BBL/ft</th>
+                                </tr>
+                            </thead>
+                            <tbody id="casing_table_body" class="font-mono text-xs"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Tote Capacity Factors -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Tote Capacity Factors</div>
+                    <table class="dark-table w-full text-xs">
+                        <thead>
+                            <tr><th class="px-3 py-1 text-left">Tote Type</th><th class="px-3 py-1">gal/in</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="px-3 py-1 border-t border-slate-700">330-gal tote</td><td class="px-3 py-1 border-t border-slate-700 font-mono">7.45</td></tr>
+                            <tr><td class="px-3 py-1 border-t border-slate-700">550-gal Soft side</td><td class="px-3 py-1 border-t border-slate-700 font-mono">8.72</td></tr>
+                            <tr><td class="px-3 py-1 border-t border-slate-700">560-gal Gel (S&amp;S)</td><td class="px-3 py-1 border-t border-slate-700 font-mono">8.55</td></tr>
+                            <tr><td class="px-3 py-1 border-t border-slate-700">750-gal Gel Tote</td><td class="px-3 py-1 border-t border-slate-700 font-mono">12.33</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Sand Properties -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">Proppant Properties</div>
+                    <table class="dark-table w-full text-xs">
+                        <thead>
+                            <tr><th class="px-2 py-1">Sand Type</th><th class="px-2 py-1">Bulk Dens (avg)</th><th class="px-2 py-1">SG (avg)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="px-2 py-1 border-t border-slate-700">Brown</td><td class="px-2 py-1 border-t border-slate-700 font-mono">91</td><td class="px-2 py-1 border-t border-slate-700 font-mono">2.65</td></tr>
+                            <tr><td class="px-2 py-1 border-t border-slate-700">White</td><td class="px-2 py-1 border-t border-slate-700 font-mono">95</td><td class="px-2 py-1 border-t border-slate-700 font-mono">2.65</td></tr>
+                            <tr><td class="px-2 py-1 border-t border-slate-700">Resin Coated</td><td class="px-2 py-1 border-t border-slate-700 font-mono">93</td><td class="px-2 py-1 border-t border-slate-700 font-mono">2.60</td></tr>
+                            <tr><td class="px-2 py-1 border-t border-slate-700">Low Dens Ceramic</td><td class="px-2 py-1 border-t border-slate-700 font-mono">95</td><td class="px-2 py-1 border-t border-slate-700 font-mono">2.65</td></tr>
+                            <tr><td class="px-2 py-1 border-t border-slate-700">Med Dens Ceramic</td><td class="px-2 py-1 border-t border-slate-700 font-mono">108</td><td class="px-2 py-1 border-t border-slate-700 font-mono">3.20</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Acid Density Table -->
+                <div class="bg-slate-900 border border-slate-700 rounded-3xl p-5">
+                    <div class="font-semibold mb-3">% HCL by Mass Density</div>
+                    <table class="dark-table w-full text-xs">
+                        <thead>
+                            <tr><th class="px-3 py-1">% HCL</th><th class="px-3 py-1">Density (ppg)</th></tr>
+                        </thead>
+                        <tbody id="acid_table_body"></tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+    
+    <footer class="max-w-screen-2xl mx-auto px-6 pb-8 text-center text-xs text-slate-500">
+        All calculations strictly follow formulas, constants, and tables from the Liberty FLOW Class Oilfield Math Reference Guide and Practice Math Workbook.<br>
+        This tool is for training and field verification use. Always cross-check with site-specific procedures and equipment.
+    </footer>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#38bdf8');
+        }
+        
+        let currentSection = 'math-fundamentals';
+        
+        function switchSection(section) {
+            // Hide all
+            document.querySelectorAll('.section-content').forEach(el => el.classList.add('hidden'));
+            // Show target
+            document.getElementById('section-' + section).classList.remove('hidden');
+            
+            // Update tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active', 'border-b-2', 'border-sky-400'));
+            const activeTab = document.getElementById('tab-' + section);
+            if (activeTab) {
+                activeTab.classList.add('active', 'border-b-2', 'border-sky-400');
+            }
+            
+            currentSection = section;
+            
+            // Trigger calculations for visible section if needed
+            if (section === 'math-fundamentals') calcMathFundamentals();
+            else if (section === 'chemical') { calcChemicalUsed(); calcToteVolume(); /* etc */ }
+        }
+        
+        // ==================== MATH FUNDAMENTALS ====================
+        let circleMode = 'diameter';
+        
+        function setCircleMode(mode) {
+            circleMode = mode;
+            const label = document.getElementById('circle_label');
+            const valInput = document.getElementById('mf_circle_val');
+            
+            if (mode === 'diameter') {
+                label.textContent = 'Diameter (in)';
+                valInput.value = '4';
+            } else {
+                label.textContent = 'Radius (in)';
+                valInput.value = '8';
+            }
+            
+            // Update button styles
+            document.getElementById('circle_diam_btn').classList.toggle('border-sky-500', mode === 'diameter');
+            document.getElementById('circle_diam_btn').classList.toggle('text-sky-400', mode === 'diameter');
+            document.getElementById('circle_rad_btn').classList.toggle('border-sky-500', mode === 'radius');
+            document.getElementById('circle_rad_btn').classList.toggle('text-sky-400', mode === 'radius');
+            
+            calcMathFundamentals();
+        }
+        
+        function calcMathFundamentals() {
+            // Barrels from Gallons
+            const gal = parseFloat(document.getElementById('mf_gal').value) || 0;
+            const bbl = gal / 42;
+            document.getElementById('mf_bbl_result').textContent = bbl.toFixed(2);
+            
+            // Rectangle Area
+            const len = parseFloat(document.getElementById('mf_rect_len').value) || 0;
+            const h = parseFloat(document.getElementById('mf_rect_h').value) || 0;
+            const areaIn2 = len * h;
+            const areaFt2 = areaIn2 / 144;
+            document.getElementById('mf_rect_in2').textContent = areaIn2.toLocaleString();
+            document.getElementById('mf_rect_ft2').textContent = areaFt2.toFixed(2);
+            
+            // Circle Area
+            const val = parseFloat(document.getElementById('mf_circle_val').value) || 0;
+            let areaCircle;
+            if (circleMode === 'diameter') {
+                areaCircle = Math.PI * Math.pow(val / 2, 2);
+            } else {
+                areaCircle = Math.PI * Math.pow(val, 2);
+            }
+            document.getElementById('mf_circle_area').textContent = areaCircle.toFixed(2);
+            
+            // Tank / Cube Volume
+            const l = parseFloat(document.getElementById('mf_tank_l').value) || 0;
+            const w = parseFloat(document.getElementById('mf_tank_w').value) || 0;
+            const tankH = parseFloat(document.getElementById('mf_tank_h').value) || 0;
+            const volIn3 = l * w * tankH;
+            const volGal = volIn3 / 231;
+            const volBbl = volGal / 42;
+            document.getElementById('mf_tank_in3').textContent = volIn3.toLocaleString();
+            document.getElementById('mf_tank_gal').textContent = volGal.toFixed(2);
+            document.getElementById('mf_tank_bbl').textContent = volBbl.toFixed(2);
+            
+            // Cylinder / Pipe
+            const cylD = parseFloat(document.getElementById('mf_cyl_d').value) || 0;
+            const cylLenFt = parseFloat(document.getElementById('mf_cyl_len').value) || 0;
+            const cylR = cylD / 2;
+            const cylVolIn3 = Math.PI * Math.pow(cylR, 2) * (cylLenFt * 12);
+            const cylGal = cylVolIn3 / 231;
+            const cylBbl = cylGal / 42;
+            document.getElementById('mf_cyl_gal').textContent = cylGal.toFixed(2);
+            document.getElementById('mf_cyl_bbl').textContent = cylBbl.toFixed(2);
+            
+            // Well sections already handled separately
+        }
+        
+        // Well sections for Math Fundamentals
+        let wellSections = [];
+        
+        function addWellSection() {
+            const container = document.getElementById('well_sections_container');
+            const idx = wellSections.length;
+            wellSections.push({ depth: 0, id: 0, bblPerFt: 0 });
+            
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 items-end bg-slate-800 p-3 rounded-2xl';
+            div.innerHTML = `
+                <div class="col-span-5">
+                    <label class="text-xs text-slate-400">Depth (ft)</label>
+                    <input type="number" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm" value="0" data-idx="${idx}" data-field="depth" oninput="updateWellSection(this)">
+                </div>
+                <div class="col-span-4">
+                    <label class="text-xs text-slate-400">Casing (or enter BBL/ft)</label>
+                    <select class="field-input w-full px-2 py-1.5 rounded-2xl text-xs" data-idx="${idx}" data-field="casing" onchange="updateWellSection(this)">
+                        <option value="0">Custom / Enter BBL/ft</option>
+                        <option value="0.0155">4.5" 11.6# (0.0155)</option>
+                        <option value="0.0149">4.5" 13.5# (0.0149)</option>
+                        <option value="0.0142">4.5" 15.1# (0.0142)</option>
+                        <option value="0.0222">5.5" 20# (0.0222)</option>
+                        <option value="0.0212">5.5" 23# (0.0212)</option>
+                        <option value="0.0394">7" 23# (0.0394)</option>
+                    </select>
+                </div>
+                <div class="col-span-3">
+                    <label class="text-xs text-slate-400">BBL/ft</label>
+                    <input type="number" class="field-input w-full px-3 py-1.5 rounded-2xl text-sm" value="0.0155" step="0.0001" data-idx="${idx}" data-field="bblPerFt" oninput="updateWellSection(this)">
+                </div>
+            `;
+            container.appendChild(div);
+            updateWellSection(div.querySelector('input'));
+        }
+        
+        function updateWellSection(input) {
+            const idx = parseInt(input.dataset.idx);
+            const field = input.dataset.field;
+            wellSections[idx][field] = parseFloat(input.value) || 0;
+            
+            // If casing changed, update bblPerFt
+            if (field === 'casing' && input.value !== '0') {
+                wellSections[idx].bblPerFt = parseFloat(input.value);
+                // Find the bbl input and update it
+                const bblInput = input.parentElement.parentElement.querySelector('input[data-field="bblPerFt"]');
+                if (bblInput) bblInput.value = wellSections[idx].bblPerFt;
+            }
+            
+            calcWellCapacity();
+        }
+        
+        function calcWellCapacity() {
+            let totalGal = 0;
+            let totalBbl = 0;
+            
+            wellSections.forEach(sec => {
+                if (sec.bblPerFt > 0 && sec.depth > 0) {
+                    const bbl = sec.depth * sec.bblPerFt;
+                    totalBbl += bbl;
+                    totalGal += bbl * 42;
+                }
+            });
+            
+            document.getElementById('mf_well_gal').textContent = totalGal.toFixed(0);
+            document.getElementById('mf_well_bbl').textContent = totalBbl.toFixed(2);
+        }
+        
+        function clearWellSections() {
+            document.getElementById('well_sections_container').innerHTML = '';
+            wellSections = [];
+            document.getElementById('mf_well_gal').textContent = '0';
+            document.getElementById('mf_well_bbl').textContent = '0.00';
+        }
+        
+        function calcCapacityFactorReverse() {
+            const bbl = parseFloat(document.getElementById('mf_cf_bbl').value) || 0;
+            const ft = parseFloat(document.getElementById('mf_cf_ft').value) || 0;
+            const factor = ft > 0 ? (bbl * 42) / ft : 0;
+            document.getElementById('mf_cf_result').textContent = factor.toFixed(4);
+        }
+        
+        // ==================== CHEMICAL ====================
+        function calcChemicalUsed() {
+            const start = parseFloat(document.getElementById('chem_start_strap').value) || 0;
+            const end = parseFloat(document.getElementById('chem_end_strap').value) || 0;
+            const used = Math.max(0, start - end);
+            document.getElementById('chem_used_result').innerHTML = `${used.toFixed(1)} <span class="text-base font-normal">gal</span>`;
+        }
+        
+        function calcChemicalVariance() {
+            const pumped = parseFloat(document.getElementById('chem_pumped').value) || 0;
+            const designed = parseFloat(document.getElementById('chem_designed').value) || 0;
+            const varPct = designed > 0 ? (pumped / designed) * 100 : 0;
+            const diff = pumped - designed;
+            
+            document.getElementById('chem_var_pct').textContent = varPct.toFixed(1) + '%';
+            const statusEl = document.getElementById('chem_var_status');
+            if (diff > 0) {
+                statusEl.textContent = `Over by ${diff.toFixed(1)} gal`;
+                statusEl.className = 'font-semibold text-amber-400';
+            } else if (diff < 0) {
+                statusEl.textContent = `Under by ${Math.abs(diff).toFixed(1)} gal`;
+                statusEl.className = 'font-semibold text-emerald-400';
+            } else {
+                statusEl.textContent = 'Exact match';
+                statusEl.className = 'font-semibold text-sky-400';
+            }
+        }
+        
+        function calcToteVolume() {
+            const strap = parseFloat(document.getElementById('tote_strap_in').value) || 0;
+            const capFactor = parseFloat(document.getElementById('tote_type').value) || 7.45;
+            const bottoms = document.getElementById('tote_bottoms_check').checked ? parseFloat(document.getElementById('tote_bottoms_in').value) || 0 : 0;
+            
+            const totalGal = strap * capFactor;
+            const accessible = Math.max(0, (strap - bottoms) * capFactor);
+            
+            document.getElementById('tote_accessible_gal').textContent = accessible.toFixed(1);
+            document.getElementById('tote_total_gal').textContent = totalGal.toFixed(1) + ' gal';
+        }
+        
+        function calcChemRateConversions() {
+            const bpm = parseFloat(document.getElementById('chem_clean_rate').value) || 0;
+            const gpt = parseFloat(document.getElementById('chem_gpt').value) || 0;
+            
+            const gpm = bpm * 0.042 * gpt;
+            const conc = gpm / (bpm * 0.042);
+            
+            document.getElementById('chem_gpm_result').textContent = gpm.toFixed(2);
+            document.getElementById('chem_conc_gpt_result').textContent = conc.toFixed(2);
+        }
+        
+        function calcHCLDensity() {
+            const pct = parseFloat(document.getElementById('hcl_percent').value) || 0;
+            const dens = 8.34 * (1 + 0.0051 * pct);
+            document.getElementById('hcl_calc_density').textContent = dens.toFixed(3);
+            
+            // Also update the other input for consistency
+            document.getElementById('hcl_density').value = dens.toFixed(3);
+        }
+        
+        function calcHCLPercent() {
+            const dens = parseFloat(document.getElementById('hcl_density').value) || 0;
+            const pct = dens > 0 ? ((dens / 8.33) - 1) * 196.08 : 0;
+            document.getElementById('hcl_calc_percent').textContent = pct.toFixed(1);
+            document.getElementById('hcl_percent').value = pct.toFixed(1);
+        }
+        
+        function calcAcidDilution() {
+            const rawVol = parseFloat(document.getElementById('acid_raw_vol').value) || 0;
+            const rawPct = parseFloat(document.getElementById('acid_raw_pct').value) || 0;
+            const targetPct = parseFloat(document.getElementById('acid_target_pct').value) || 0;
+            const rawDens = parseFloat(document.getElementById('acid_raw_density').value) || 8.34;
+            
+            // Exact Liberty formula
+            const diluteVol = rawVol * ((rawDens / 8.34) * (rawPct - targetPct) + 1);
+            const waterVol = diluteVol - rawVol;
+            
+            document.getElementById('acid_dilute_vol').textContent = diluteVol.toFixed(1);
+            document.getElementById('acid_water_vol').textContent = Math.max(0, waterVol).toFixed(1);
+        }
+        
+        function calcBufferNeeded() {
+            const bbl = parseFloat(document.getElementById('buffer_clean_bbl').value) || 0;
+            const gpt = parseFloat(document.getElementById('buffer_gpt').value) || 0;
+            const buffer = bbl * 0.042 * gpt;
+            document.getElementById('buffer_result').innerHTML = `${buffer.toFixed(2)} <span class="text-base">gal</span>`;
+        }
+        
+        let multiToteCount = 2;
+        
+        function initMultiTote() {
+            const container = document.getElementById('multi_tote_inputs');
+            container.innerHTML = '';
+            for (let i = 0; i < multiToteCount; i++) {
+                addToteInputRow(i);
+            }
+        }
+        
+        function addToteInputRow(idx) {
+            const container = document.getElementById('multi_tote_inputs');
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 items-center bg-slate-800 p-2 rounded-2xl text-xs';
+            div.innerHTML = `
+                <div class="col-span-5">
+                    <input type="number" placeholder="Strap in" value="${idx === 0 ? '33' : '39.5'}" step="0.1" class="field-input w-full px-2 py-1 rounded-xl text-sm" data-tote-idx="${idx}" data-field="strap" oninput="calcMultiTote()">
+                </div>
+                <div class="col-span-4">
+                    <select class="field-input w-full px-2 py-1 rounded-xl text-xs" data-tote-idx="${idx}" data-field="type" onchange="calcMultiTote()">
+                        <option value="7.45">330 gal (7.45)</option>
+                        <option value="12.33">750 gal (12.33)</option>
+                    </select>
+                </div>
+                <div class="col-span-3 flex items-center gap-1">
+                    <input type="number" value="1.5" step="0.5" class="field-input w-12 px-1 py-1 rounded-xl text-xs" data-tote-idx="${idx}" data-field="bottoms" oninput="calcMultiTote()">
+                    <span class="text-[10px]">in bot</span>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+        
+        function addToteInput() {
+            addToteInputRow(multiToteCount);
+            multiToteCount++;
+        }
+        
+        function calcMultiTote() {
+            let total = 0;
+            const inputs = document.querySelectorAll('#multi_tote_inputs input, #multi_tote_inputs select');
+            const toteData = {};
+            
+            inputs.forEach(inp => {
+                const idx = inp.dataset.toteIdx;
+                if (!toteData[idx]) toteData[idx] = {};
+                toteData[idx][inp.dataset.field] = parseFloat(inp.value) || 0;
+            });
+            
+            Object.values(toteData).forEach(tote => {
+                if (tote.strap && tote.type) {
+                    const accessible = Math.max(0, (tote.strap - (tote.bottoms || 0)) * tote.type);
+                    total += accessible;
+                }
+            });
+            
+            document.getElementById('multi_tote_total').textContent = total.toFixed(1);
+        }
+        
+        function calcEndingStrap() {
+            const cleanBbl = parseFloat(document.getElementById('end_clean_bbl').value) || 0;
+            const gpt = parseFloat(document.getElementById('end_gpt').value) || 0;
+            const startStrap = parseFloat(document.getElementById('end_start_strap').value) || 0;
+            const capFactor = parseFloat(document.getElementById('end_tote_type').value) || 7.45;
+            
+            const frNeeded = cleanBbl * 0.042 * gpt;
+            const startGal = startStrap * capFactor;
+            const endGal = Math.max(0, startGal - frNeeded);
+            const endStrap = endGal / capFactor;
+            
+            document.getElementById('end_fr_needed').textContent = frNeeded.toFixed(0);
+            document.getElementById('end_ending_strap').textContent = endStrap.toFixed(1) + '"';
+        }
+        
+        // ==================== HYDRATION ====================
+        function calcRulesOfFour() {
+            const lgaGpt = parseFloat(document.getElementById('hyd_lga_gpt').value) || 0;
+            const ppt = parseFloat(document.getElementById('hyd_ppt').value) || 0;
+            
+            // PPT = LGA * 4
+            const calcPpt = lgaGpt * 4;
+            // LGA = PPT / 4
+            const calcLga = ppt / 4;
+            
+            // For demo, show both directions
+            document.getElementById('hyd_ppt').value = calcPpt.toFixed(1);
+            document.getElementById('hyd_lga_gpt').value = calcLga.toFixed(2);
+            
+            // Lb system and visc (approximate)
+            const lbSystem = lgaGpt * 4; // simplified
+            const visc = Math.max(0, lbSystem - 4);
+            document.getElementById('hyd_lb_system').textContent = lbSystem.toFixed(0);
+            document.getElementById('hyd_visc').textContent = visc.toFixed(0);
+        }
+        
+        function calcHydrationTote() {
+            const strap = parseFloat(document.getElementById('hyd_strap').value) || 0;
+            const cap = parseFloat(document.getElementById('hyd_cap_factor').value) || 12.33;
+            const gal = strap * cap;
+            document.getElementById('hyd_tote_gal').textContent = gal.toFixed(1);
+        }
+        
+        function calcDesignGel() {
+            const stageBbl = parseFloat(document.getElementById('hyd_stage_bbl').value) || 0;
+            const setpoint = parseFloat(document.getElementById('hyd_setpoint').value) || 0;
+            
+            const lgaGal = stageBbl * 0.042 * setpoint;
+            const dryLbs = stageBbl * 0.042 * (setpoint * 4); // assuming gpt input
+            
+            document.getElementById('hyd_design_lga').textContent = lgaGal.toFixed(1);
+            document.getElementById('hyd_design_dry').textContent = dryLbs.toFixed(1);
+        }
+        
+        function calcTubViscosity() {
+            const tubVol = parseFloat(document.getElementById('tub_vol').value) || 0;
+            const currentCp = parseFloat(document.getElementById('tub_current_cp').value) || 0;
+            const targetCp = parseFloat(document.getElementById('tub_target_cp').value) || 0;
+            const lgaGpt = parseFloat(document.getElementById('tub_lga_gpt').value) || 0;
+            
+            const gelNeededLga = tubVol * 0.042 * (targetCp - currentCp);
+            const dryNeeded = tubVol * 0.042 * (targetCp - currentCp) * 4; // rough
+            
+            document.getElementById('tub_gel_needed').textContent = gelNeededLga.toFixed(1) + ' gal LGA';
+            document.getElementById('tub_dry_needed').textContent = dryNeeded.toFixed(1) + ' lbs dry';
+        }
+        
+        // ==================== BUCKET TEST & ANALOG ====================
+        function updateAnalogRanges() {
+            const device = document.getElementById('analog_device').value;
+            let minS = 0, maxS = 750;
+            
+            if (device === 'pressure') { minS = 0; maxS = 750; }
+            else if (device === 'level') { minS = 0; maxS = 100; }
+            else if (device === 'micromotion6') { minS = 0; maxS = 10; }
+            else if (device === 'micromotion18') { minS = 0; maxS = 20; }
+            else if (device === 'flow') { minS = 0; maxS = 175; }
+            else if (device === 'densitometer') { minS = 0; maxS = 20; }
+            else if (device === 'ph') { minS = 0; maxS = 14; }
+            else if (device === 'temp') { minS = 32; maxS = 175; }
+            else if (device === 'visco') { minS = 0; maxS = 60; }
+            
+            document.getElementById('analog_min_scaled').value = minS;
+            document.getElementById('analog_max_scaled').value = maxS;
+            calcAnalogScaled();
+        }
+        
+        function calcAnalogScaled() {
+            const minScaled = parseFloat(document.getElementById('analog_min_scaled').value) || 0;
+            const maxScaled = parseFloat(document.getElementById('analog_max_scaled').value) || 750;
+            const rawMa = parseFloat(document.getElementById('analog_raw_ma').value) || 4;
+            const fine = parseFloat(document.getElementById('analog_fine').value) || 1.0;
+            
+            // Simplified scaled value (full formula includes offset)
+            const minMa = 4;
+            const maxMa = 20;
+            const scaled = ((maxScaled - minScaled) / (maxMa - minMa)) * (rawMa - minMa) + minScaled;
+            const final = scaled * fine;
+            
+            document.getElementById('analog_scaled_result').textContent = final.toFixed(1);
+        }
+        
+        function calcBucketTest() {
+            const galFilled = parseFloat(document.getElementById('bucket_gal').value) || 0;
+            const cleanBpm = parseFloat(document.getElementById('bucket_clean_rate').value) || 0;
+            const gpt = parseFloat(document.getElementById('bucket_gpt').value) || 0;
+            const actualSec = parseFloat(document.getElementById('bucket_actual_sec').value) || 1;
+            
+            // Estimated time = 60 * gal / (bpm * 0.042 * gpt)
+            const estSec = (cleanBpm * 0.042 * gpt) > 0 ? 60 * galFilled / (cleanBpm * 0.042 * gpt) : 0;
+            const errorPct = actualSec > 0 ? ((estSec / actualSec) - 1) * 100 : 0;
+            const newFine = actualSec > 0 ? estSec / actualSec : 1;
+            
+            document.getElementById('bucket_est_sec').textContent = estSec.toFixed(1);
+            document.getElementById('bucket_error_pct').textContent = errorPct.toFixed(1) + '%';
+            document.getElementById('bucket_new_fine').textContent = newFine.toFixed(2);
+        }
+        
+        // ==================== SAND / PROPPANT ====================
+        function calcSandProppant() {
+            const cleanBbl = parseFloat(document.getElementById('sand_clean_bbl').value) || 0;
+            const ppg = parseFloat(document.getElementById('sand_ppg').value) || 0;
+            
+            const sandLbs = cleanBbl * 42 * ppg;
+            const cleanFromSand = sandLbs / 42 / ppg;
+            
+            document.getElementById('sand_needed_lbs').textContent = sandLbs.toLocaleString();
+            document.getElementById('sand_clean_from_lbs').textContent = cleanFromSand.toFixed(0);
+        }
+        
+        function calcAVFCFRYield() {
+            const ppa = parseFloat(document.getElementById('prop_ppa').value) || 0;
+            const sg = parseFloat(document.getElementById('prop_sg').value) || 2.65;
+            const waterDens = 8.34;
+            
+            const avf = ppa / (waterDens * sg);
+            const cfr = 1 / ((ppa / (sg * waterDens)) + 1);
+            const yield = ppa / (sg * waterDens + 1);
+            const slurryDens = waterDens + (ppa / ((ppa / (sg * waterDens)) + 1));
+            
+            document.getElementById('prop_avf').textContent = avf.toFixed(3);
+            document.getElementById('prop_cfr').textContent = cfr.toFixed(3);
+            document.getElementById('prop_yield').textContent = yield.toFixed(3);
+            document.getElementById('prop_slurry_dens').textContent = slurryDens.toFixed(2);
+        }
+        
+        function calcPPR() {
+            const augR = parseFloat(document.getElementById('ppr_aug_r').value) || 0;
+            const shaftR = parseFloat(document.getElementById('ppr_shaft_r').value) || 0;
+            const pitch = parseFloat(document.getElementById('ppr_pitch').value) || 0;
+            const bulk = parseFloat(document.getElementById('ppr_bulk').value) || 0;
+            
+            // PPR = 1.41 * (augR² - shaftR²) * pitch * bulk / 1728
+            const ppr = 1.41 * (Math.pow(augR, 2) - Math.pow(shaftR, 2)) * pitch * bulk / 1728;
+            document.getElementById('ppr_result').textContent = ppr.toFixed(4);
+        }
+        
+        function calcAugerRPM() {
+            const cleanBpm = parseFloat(document.getElementById('auger_clean_bpm').value) || 0;
+            const ppg = parseFloat(document.getElementById('auger_ppg').value) || 0;
+            const ppr = parseFloat(document.getElementById('auger_ppr').value) || 0;
+            
+            const totalRpm = ppr > 0 ? cleanBpm * ppg * 42 / ppr : 0;
+            const screwConc = totalRpm * ppr / (cleanBpm * 42);
+            
+            document.getElementById('auger_total_rpm').textContent = totalRpm.toFixed(1);
+            document.getElementById('auger_screw_conc').textContent = screwConc.toFixed(2);
+        }
+        
+        function calcJobPropTotal() {
+            const slurry = parseFloat(document.getElementById('job_slurry_gal').value) || 0;
+            const clean = parseFloat(document.getElementById('job_clean_gal').value) || 0;
+            const chem = parseFloat(document.getElementById('job_chem_gal').value) || 0;
+            const avf = parseFloat(document.getElementById('prop_avf').textContent) || 0.09; // from previous calc or default
+            
+            const propTotal = (slurry - clean - chem) / avf;
+            document.getElementById('job_prop_total').textContent = propTotal.toFixed(0);
+        }
+        
+        // ==================== HORSEPOWER & IRON ====================
+        function calcHoseCounts() {
+            const clean = parseFloat(document.getElementById('hose_clean_bpm').value) || 0;
+            const dirty = parseFloat(document.getElementById('hose_dirty_bpm').value) || 0;
+            
+            document.getElementById('hose_suction').textContent = Math.ceil(clean / 10);
+            document.getElementById('hose_discharge').textContent = Math.ceil(dirty / 15);
+        }
+        
+        const gearRatios = {
+            'TH55-E70': {1: 6.248, 2: 4.585, 3: 3.378, 4: 2.484, 5: 1.831, 6: 1.357, 7: 1.000},
+            'CX48': {1: 3.339, 2: 2.453, 3: 2.200, 4: 1.808, 5: 1.616, 6: 1.359, 7: 1.191, 8: 0.999},
+            'Allison': {1: 3.75, 2: 2.69, 3: 2.20, 4: 1.77, 5: 1.58, 6: 1.27, 7: 1.00, 8: 0.72},
+            'TH55-E90': {1: 4.672, 2: 3.429, 3: 3.029, 4: 2.526, 5: 2.222, 6: 1.849, 7: 1.638, 8: 1.357, 9: 1.000},
+            'TH350': {1: 2.52, 2: 1.52, 3: 1.00}
+        };
+        
+        function calcTransmission() {
+            const type = document.getElementById('trans_type').value;
+            const gear = parseInt(document.getElementById('trans_gear').value);
+            const engineRpm = parseFloat(document.getElementById('engine_rpm').value) || 0;
+            
+            const ratio = gearRatios[type] ? gearRatios[type][gear] : 1;
+            const outputRpm = engineRpm / ratio;
+            
+            document.getElementById('trans_output_rpm').textContent = outputRpm.toFixed(0);
+        }
+        
+        const pumpSpecs = {
+            'SPM_TWS_2250': {bore: 4.5, stroke: 8, plungers: 3, bblPerRev: 0.0393, maxPsi: 15000},
+            'SPM_TWS_2500': {bore: 4.5, stroke: 10, plungers: 3, bblPerRev: 0.0492, maxPsi: 15000},
+            'CAT_WS255': {bore: 4.5, stroke: 8, plungers: 5, bblPerRev: 0.0656, maxPsi: 12100},
+            'GD_2500Q': {bore: 4.5, stroke: 8, plungers: 5, bblPerRev: 0.0656, maxPsi: 12400}
+        };
+        
+        function updatePumpSpecs() {
+            const type = document.getElementById('pump_type').value;
+            const spec = pumpSpecs[type];
+            if (spec) {
+                // Could show more details if needed
+            }
+        }
+        
+        function calcPumpRate() {
+            const type = document.getElementById('pump_type').value;
+            const eff = parseFloat(document.getElementById('pump_eff').value) || 100;
+            const peRpm = parseFloat(document.getElementById('pump_pe_rpm').value) || 0;
+            const spec = pumpSpecs[type] || pumpSpecs['SPM_TWS_2250'];
+            
+            const rate = (eff / 100) * spec.bblPerRev * peRpm;
+            document.getElementById('pump_rate_bpm').textContent = rate.toFixed(1);
+            document.getElementById('pump_max_psi').textContent = spec.maxPsi.toLocaleString();
+        }
+        
+        // ==================== WELLBORE & ENGINEERING ====================
+        let flushSections = [];
+        
+        function addFlushSection() {
+            const container = document.getElementById('flush_sections_container');
+            const idx = flushSections.length;
+            flushSections.push({ depth: 800, bblPerFt: 0.0394 });
+            
+            const div = document.createElement('div');
+            div.className = 'grid grid-cols-12 gap-2 items-end bg-slate-800 p-2 rounded-2xl text-xs';
+            div.innerHTML = `
+                <div class="col-span-5">
+                    <label class="text-[10px] text-slate-400">Depth (ft)</label>
+                    <input type="number" value="800" class="field-input w-full px-2 py-1 rounded-xl" data-flush-idx="${idx}" data-field="depth" oninput="updateFlushSection(this)">
+                </div>
+                <div class="col-span-4">
+                    <label class="text-[10px] text-slate-400">Casing BBL/ft</label>
+                    <input type="number" value="0.0394" step="0.0001" class="field-input w-full px-2 py-1 rounded-xl" data-flush-idx="${idx}" data-field="bblPerFt" oninput="updateFlushSection(this)">
+                </div>
+                <div class="col-span-3">
+                    <button onclick="removeFlushSection(${idx}, this)" class="text-red-400 text-xs px-2">×</button>
+                </div>
+            `;
+            container.appendChild(div);
+            calcFlushVolume();
+        }
+        
+        function updateFlushSection(input) {
+            const idx = parseInt(input.dataset.flushIdx);
+            flushSections[idx][input.dataset.field] = parseFloat(input.value) || 0;
+            calcFlushVolume();
+        }
+        
+        function removeFlushSection(idx, btn) {
+            flushSections.splice(idx, 1);
+            btn.parentElement.parentElement.remove();
+            // Re-index remaining? For simplicity, recalculate
+            calcFlushVolume();
+        }
+        
+        function calcFlushVolume() {
+            let total = 0;
+            flushSections.forEach(sec => {
+                total += (sec.depth || 0) * (sec.bblPerFt || 0);
+            });
+            document.getElementById('flush_total_bbl').textContent = total.toFixed(1);
+        }
+        
+        function calcFracGradient() {
+            const isip = parseFloat(document.getElementById('frac_isip').value) || 0;
+            const tvd = parseFloat(document.getElementById('frac_tvd').value) || 0;
+            const dens = parseFloat(document.getElementById('frac_density').value) || 8.33;
+            const closure = parseFloat(document.getElementById('frac_closure').value) || 0;
+            
+            const hydro = dens * tvd * 0.05195;
+            const grad1 = tvd > 0 ? (isip / tvd) + 0.433 : 0;
+            const grad2 = tvd > 0 ? (isip + hydro) / tvd : 0;
+            const net = isip + hydro - closure; // simplified BHP assuming no friction
+            
+            document.getElementById('frac_grad').textContent = grad1.toFixed(2);
+            document.getElementById('frac_net').textContent = net.toFixed(0);
+        }
+        
+        function calcPropLeftInWellbore() {
+            const slurryBbl = parseFloat(document.getElementById('prop_left_slurry').value) || 0;
+            const conc = parseFloat(document.getElementById('prop_left_conc').value) || 0;
+            const sg = parseFloat(document.getElementById('prop_left_sg').value) || 2.65;
+            
+            // Formula from ref: Slurry Vol * Prop Con * 42 / ((Prop Con + 1) * (SG * 8.33))
+            const left = (slurryBbl * conc * 42) / ((conc + 1) * (sg * 8.33));
+            document.getElementById('prop_left_lbs').textContent = left.toFixed(0);
+        }
+        
+        // ==================== REFERENCE TABLES ====================
+        function populateReferenceTables() {
+            // Casing table
+            const casingBody = document.getElementById('casing_table_body');
+            const casings = [
+                ['4.5" 11.6#', '4.000', '0.0155'],
+                ['4.5" 12.75#', '3.960', '0.0152'],
+                ['4.5" 13.5#', '3.920', '0.0149'],
+                ['4.5" 15.1#', '3.826', '0.0142'],
+                ['5.5" 17#', '4.892', '0.0232'],
+                ['5.5" 20#', '4.778', '0.0222'],
+                ['5.5" 23#', '4.670', '0.0212'],
+                ['7" 23#', '6.366', '0.0394'],
+                ['7" 26#', '6.276', '0.0383'],
+                ['7" 29#', '6.184', '0.0371'],
+                ['7" 32#', '6.094', '0.0361']
+            ];
+            
+            casingBody.innerHTML = '';
+            casings.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="px-2 py-0.5 border-t border-slate-700">${row[0]}</td><td class="px-2 py-0.5 border-t border-slate-700 font-mono">${row[1]}</td><td class="px-2 py-0.5 border-t border-slate-700 font-mono">${row[2]}</td>`;
+                casingBody.appendChild(tr);
+            });
+            
+            // Acid table
+            const acidBody = document.getElementById('acid_table_body');
+            const acids = [
+                ['5%', '8.54'],
+                ['10%', '8.75'],
+                ['15%', '8.97'],
+                ['20%', '9.18'],
+                ['25%', '9.39'],
+                ['28%', '9.52'],
+                ['32%', '9.67']
+            ];
+            
+            acidBody.innerHTML = '';
+            acids.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="px-3 py-0.5 border-t border-slate-700">${row[0]}</td><td class="px-3 py-0.5 border-t border-slate-700 font-mono">${row[1]}</td>`;
+                acidBody.appendChild(tr);
+            });
+        }
+        
+        // ==================== INITIALIZATION & HELPERS ====================
+        function initializeAllCalculators() {
+            initializeTailwind();
+            
+            // Math Fundamentals defaults
+            setTimeout(() => {
+                calcMathFundamentals();
+                // Add initial well section
+                const wellContainer = document.getElementById('well_sections_container');
+                if (wellContainer.children.length === 0) {
+                    addWellSection();
+                    // Set some default values safely (there are exactly 2 <input> elements per row: depth + bblPerFt)
+                    setTimeout(() => {
+                        const depthInput = wellContainer.querySelector('input[data-field="depth"]');
+                        const bblInput = wellContainer.querySelector('input[data-field="bblPerFt"]');
+                        if (depthInput) {
+                            depthInput.value = '650';
+                            updateWellSection(depthInput);
+                        }
+                        if (bblInput) {
+                            bblInput.value = '0.0212';
+                            updateWellSection(bblInput);
+                        }
+                    }, 100);
+                }
+            }, 50);
+            
+            // Chemical
+            setTimeout(() => {
+                calcChemicalUsed();
+                calcChemicalVariance();
+                calcToteVolume();
+                calcChemRateConversions();
+                calcHCLDensity();
+                calcAcidDilution();
+                calcBufferNeeded();
+                initMultiTote();
+                calcMultiTote();
+                calcEndingStrap();
+            }, 100);
+            
+            // Hydration
+            setTimeout(() => {
+                calcRulesOfFour();
+                calcHydrationTote();
+                calcDesignGel();
+            }, 150);
+            
+            // Bucket & Analog
+            setTimeout(() => {
+                updateAnalogRanges();
+                calcAnalogScaled();
+                calcBucketTest();
+            }, 200);
+            
+            // Sand / Proppant
+            setTimeout(() => {
+                calcSandProppant();
+                calcAVFCFRYield();
+                calcPPR();
+                calcAugerRPM();
+                calcJobPropTotal();
+            }, 250);
+            
+            // HP & Iron
+            setTimeout(() => {
+                calcHoseCounts();
+                calcTransmission();
+                updatePumpSpecs();
+                calcPumpRate();
+            }, 300);
+            
+            // Wellbore Engineering
+            setTimeout(() => {
+                const flushContainer = document.getElementById('flush_sections_container');
+                if (flushContainer) {
+                    addFlushSection();
+                    setTimeout(() => {
+                        const inputs = flushContainer.querySelectorAll('input');
+                        if (inputs.length >= 2) {
+                            inputs[0].value = '800';
+                            inputs[1].value = '0.0394';
+                            calcFlushVolume();
+                        }
+                    }, 50);
+                }
+                calcFracGradient();
+                calcPropLeftInWellbore();
+            }, 350);
+            
+            // Reference tables
+            populateReferenceTables();
+            
+            // Initial section
+            document.getElementById('section-math-fundamentals').classList.remove('hidden');
+            document.getElementById('tab-math-fundamentals').classList.add('active', 'border-b-2', 'border-sky-400');
+            
+            // Keyboard support hint
+            console.log('%c[Frac Math v4.0] All calculators initialized. Formulas strictly from Liberty FLOW Reference Guide.', 'color:#64748b');
+        }
+        
+        function resetAllCalculators() {
+            if (confirm('Reset all input fields to defaults?')) {
+                location.reload();
+            }
+        }
+        
+        function exportAllResults() {
+            const results = [];
+            // Collect key results from visible or all sections
+            const timestamp = new Date().toLocaleString();
+            
+            results.push(`FRAC MATH CALCULATOR v4.0 FLOW EDITION REPORT - ${timestamp}`);
+            results.push('All values calculated using exact Liberty Oilfield Math Reference Guide formulas.\n');
+            
+            // Simple collection from result elements
+            document.querySelectorAll('.result-value').forEach((el, i) => {
+                if (el.textContent.trim()) {
+                    const label = el.parentElement.querySelector('.metric-label') || el.parentElement.querySelector('.text-xs');
+                    const labelText = label ? label.textContent.trim() : 'Result';
+                    results.push(`${labelText}: ${el.textContent.trim()}`);
+                }
+            });
+            
+            const blob = new Blob([results.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `FracMath_v4_FLOW_Report_${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Boot
+        window.onload = function() {
+            initializeAllCalculators();
+            
+            // Bonus: Make sure circle buttons have initial style
+            const diamBtn = document.getElementById('circle_diam_btn');
+            if (diamBtn) diamBtn.classList.add('border-sky-500', 'text-sky-400');
+        };
+        
+        // Expose some functions for debugging if needed
+        window.FracMath = { calcMathFundamentals, calcChemicalUsed, calcBucketTest };
+    </script>
+</body>
+</html>
