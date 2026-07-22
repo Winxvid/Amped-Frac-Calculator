@@ -13,15 +13,19 @@
       --card:      #FFFFFF;
       --border:    #E5E5EA;
       --surface:   #F2F2F7;
+      /* Amped green — primary UI / actions */
       --brand:     #2DC76D;
       --brand-dim: rgba(45,199,109,0.12);
       --brand-dim2: rgba(45,199,109,0.06);
+      /* Blue twin of brand green (same saturation/lightness, blue hue) — tool titles */
+      --brand-blue:     #2D7AC7;
+      --brand-blue-dim: rgba(45,122,199,0.12);
       --text:      #1C1C1E;
       --text2:     #6C6C70;
       --text3:     #AEAEB2;
       --red:       #FF3B30;
       --yellow:    #FF9F0A;
-      --blue:      #007AFF;
+      --blue:      #2D7AC7;
     }
 
     body {
@@ -96,11 +100,11 @@
       font-size: 14px;
       font-weight: 900;
       letter-spacing: 0.4px;
-      color: var(--text);
+      color: var(--brand-blue);
       line-height: 1.25;
     }
     .lbl-brand { color: var(--brand); }
-    .lbl-blue  { color: var(--blue); }
+    .lbl-blue  { color: var(--brand-blue); }
 
     /* ── Stat tile ── */
     .tile {
