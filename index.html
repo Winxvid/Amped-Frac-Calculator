@@ -34,6 +34,7 @@
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     .font-display { font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif; }
@@ -45,6 +46,9 @@
       border-radius: 20px;
       padding: 20px;
       box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      min-width: 0;
+      max-width: 100%;
+      overflow: visible;
     }
     .card-sm {
       background: var(--card);
@@ -52,17 +56,41 @@
       border-radius: 14px;
       padding: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      min-width: 0;
+      max-width: 100%;
     }
     .brand-card {
       background: var(--brand);
       border-radius: 16px;
       padding: 18px;
       box-shadow: 0 4px 20px rgba(16,185,129,0.3);
+      min-width: 0;
+      max-width: 100%;
+      gap: 12px;
+    }
+    .brand-card.flex { flex-wrap: wrap; align-items: center; }
+    .brand-card .font-display {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.1;
     }
     .surface-card {
       background: var(--surface);
       border-radius: 12px;
       padding: 14px;
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    /* Main content column — prevent edge clipping on small phones */
+    .app-content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+      width: 100%;
+      box-sizing: border-box;
+      min-width: 0;
     }
 
     /* ── Inputs ── */
@@ -72,16 +100,19 @@
       border-radius: 10px;
       padding: 10px 14px;
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
       color: var(--text);
       font-size: 16px;
       font-weight: 600;
       font-family: inherit;
       outline: none;
       transition: border-color 0.15s;
+      box-sizing: border-box;
     }
     .field:focus { border-color: var(--brand); }
     .field::placeholder { color: var(--text3); font-weight: 400; }
-    select.field { cursor: pointer; }
+    select.field { cursor: pointer; max-width: 100%; }
     input[type=number].field::-webkit-inner-spin-button { -webkit-appearance: none; }
 
     /* ── Labels ── */
@@ -93,6 +124,8 @@
       letter-spacing: 0.5px;
       color: var(--text2);
       margin-bottom: 6px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
     }
     /* Formula / tool card titles (not field labels, not dashboard icons) */
     .tool-title {
@@ -101,7 +134,13 @@
       font-weight: 900;
       letter-spacing: 0.4px;
       color: var(--brand-blue);
-      line-height: 1.25;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
+      min-width: 0;
+      flex: 1 1 auto;
+      max-width: 100%;
     }
     .lbl-brand { color: var(--brand); }
     .lbl-blue  { color: var(--brand-blue); }
@@ -111,13 +150,20 @@
       background: var(--border);
       border-radius: 12px;
       padding: 12px 14px;
-      flex: 1;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
     }
     .tile .val {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 24px;
+      font-size: clamp(16px, 5.5vw, 24px);
       font-weight: 900;
       margin-top: 2px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      min-width: 0;
     }
     .tile .unit {
       font-size: 10px;
@@ -125,6 +171,7 @@
       color: var(--text2);
       text-transform: uppercase;
       margin-top: 2px;
+      line-height: 1.2;
     }
 
     /* ── Buttons ── */
@@ -235,8 +282,21 @@
     .section.active { display: block; }
 
     /* ── Section header ── */
-    .sec-title { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
-    .sec-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+    .sec-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 6vw, 28px);
+      font-weight: 700;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .sec-sub {
+      font-size: 13px;
+      color: var(--text2);
+      margin-top: 4px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
 
     /* ── Dashboard nav cards ── */
     #dash-grid {
@@ -261,11 +321,28 @@
     }
     .nav-card:hover { border-color: var(--brand); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
     .nav-card-icon { font-size: 28px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; height: 34px; }
-    .nav-card-label { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+    .nav-card-label {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-width: 100%;
+      padding: 0 2px;
+    }
+    .nav-card-icon img {
+      max-width: 100%;
+      height: auto;
+      max-height: 34px;
+      object-fit: contain;
+    }
     @media (max-width: 520px) {
       #dash-grid { gap: 10px; }
       .nav-card { padding: 16px 8px; border-radius: 14px; min-height: 84px; }
       .nav-card-icon { font-size: 22px; height: 28px; margin-bottom: 4px; }
+      .nav-card-icon img { max-height: 28px; }
       .nav-card-label { font-size: 11px; letter-spacing: 0; }
     }
 
@@ -298,11 +375,37 @@
     .timer { font-family: 'Space Grotesk', monospace; font-size: 72px; font-weight: 900; letter-spacing: -3px; text-align: center; line-height: 1; }
 
     /* ── Table ── */
-    .tbl { width: 100%; border-collapse: collapse; }
-    .tbl th { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); padding: 6px 6px 8px; border-bottom: 1px solid var(--border); }
-    .tbl td { font-size: 13px; padding: 9px 6px; border-bottom: 1px solid rgba(0,0,0,0.07); }
+    .tbl-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 0 -2px;
+      padding: 0 2px;
+    }
+    .tbl { width: 100%; border-collapse: collapse; min-width: 0; }
+    .tbl th {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text2);
+      padding: 6px 6px 8px;
+      border-bottom: 1px solid var(--border);
+      white-space: normal;
+      line-height: 1.25;
+      vertical-align: bottom;
+    }
+    .tbl td {
+      font-size: 13px;
+      padding: 9px 6px;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      vertical-align: top;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
     .tbl tr:last-child td { border-bottom: none; }
-    .tbl-right { text-align: right; }
+    .tbl-right { text-align: right; white-space: nowrap; }
 
     /* ── Badges ── */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
@@ -311,8 +414,8 @@
     .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
 
     /* ── Helpers ── */
-    .flex { display: flex; }
-    .flex-col { display: flex; flex-direction: column; }
+    .flex { display: flex; min-width: 0; }
+    .flex-col { display: flex; flex-direction: column; min-width: 0; }
     .items-center { align-items: center; }
     .items-end { align-items: flex-end; }
     .items-start { align-items: flex-start; }
@@ -321,8 +424,46 @@
     .gap-2 { gap: 8px; }
     .gap-3 { gap: 12px; }
     .gap-4 { gap: 16px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    /* Card header: title + action button — wrap instead of overlap/clip */
+    .flex.justify-between {
+      flex-wrap: wrap;
+      gap: 10px;
+      row-gap: 10px;
+    }
+    .flex.justify-between > .tool-title,
+    .flex.justify-between > .lbl.tool-title {
+      flex: 1 1 12rem;
+      min-width: 0;
+    }
+    .flex.justify-between > .btn,
+    .flex.justify-between > .badge {
+      flex: 0 0 auto;
+    }
+    /* Field rows: stack cleanly when narrow */
+    .flex.gap-3, .flex.gap-2 {
+      flex-wrap: wrap;
+    }
+    .flex.gap-3 > .flex-1,
+    .flex.gap-2 > .flex-1,
+    .flex.gap-3 > .tile,
+    .flex.gap-2 > .tile {
+      flex: 1 1 8rem;
+      min-width: min(100%, 8rem);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .grid-2 > *,
+    .grid-3 > * {
+      min-width: 0;
+    }
     .w-full { width: 100%; }
     .flex-1 { flex: 1; min-width: 0; }
     .mb-3 { margin-bottom: 12px; }
@@ -335,6 +476,12 @@
     .divider { height: 1px; background: var(--border); margin: 10px 0; }
     .italic { font-style: italic; }
     .hidden { display: none !important; }
+
+    /* Formula notes under tool titles */
+    .card > div[style*="font-size:11px"] {
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
 
     /* ── Range input ── */
     input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; background: var(--border); border-radius: 3px; outline: none; cursor: pointer; }
@@ -357,11 +504,48 @@
     .alt-card:hover, .alt-card.sel { border-color: rgba(45,199,109,0.5); background: rgba(45,199,109,0.07); }
 
     /* ── Frac gradient pill ── */
-    .frac-pill { background: #fff8e1; border: 1px solid #ffe082; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; color: #795548; }
+    .frac-pill {
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: #795548;
+      min-width: 0;
+    }
+    .frac-pill > * { min-width: 0; overflow-wrap: anywhere; }
 
-    @media (max-width: 480px) {
-      .grid-3 { grid-template-columns: 1fr 1fr; }
-      .timer { font-size: 56px; }
+    .alt-card {
+      gap: 12px;
+      min-width: 0;
+    }
+    .alt-card > * { min-width: 0; overflow-wrap: anywhere; }
+
+    @media (max-width: 520px) {
+      .card { padding: 16px; border-radius: 16px; }
+      .card-sm { padding: 12px; }
+      .brand-card { padding: 14px; }
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .timer { font-size: 56px; letter-spacing: -2px; }
+      .tile { padding: 10px 12px; }
+      .app-content { padding: 16px 12px 48px; }
+    }
+    @media (max-width: 380px) {
+      .grid-2,
+      .grid-3 { grid-template-columns: minmax(0, 1fr); }
+      .flex.gap-3 > .flex-1,
+      .flex.gap-2 > .flex-1,
+      .flex.gap-3 > .tile,
+      .flex.gap-2 > .tile {
+        flex: 1 1 100%;
+        min-width: 100%;
+      }
+      .tool-title { font-size: 13px; }
+      .timer { font-size: 44px; }
     }
 
     /* ── Sidebar ── */
@@ -468,7 +652,7 @@
 <!-- ═══════════════════════════════════════════════════════════
      CONTENT
 ══════════════════════════════════════════════════════════════ -->
-<div style="max-width:680px; margin:0 auto; padding:20px 16px 60px;">
+<div class="app-content">
 
   <!-- ══════════════ DASHBOARD ══════════════ -->
   <div class="section" id="s-dashboard">
@@ -811,7 +995,7 @@
     <!-- Casing Capacity Factors -->
     <div class="card mb-4">
       <div class="lbl mb-3 tool-title">Casing Capacity Factors</div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <thead>
           <tr>
             <th style="text-align:left;">Casing</th>
@@ -820,15 +1004,15 @@
           </tr>
         </thead>
         <tbody id="casing-tbody"><!-- injected --></tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- Field Constants -->
     <div class="card mb-4">
       <div class="lbl mb-3 tool-title">Field Constants</div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <tbody id="const-tbody"><!-- injected --></tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- Complete Section 1 Unit Conversions Reference Table -->
@@ -837,7 +1021,7 @@
         <div class="lbl tool-title" style="margin:0;">Section 1 Unit Conversions Reference</div>
         <span class="badge badge-green" style="font-size:11px;">25 Standard Values</span>
       </div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <thead>
           <tr>
             <th style="text-align:left;">Unit Name</th>
@@ -846,7 +1030,7 @@
           </tr>
         </thead>
         <tbody id="unitref-tbody"><!-- injected by JS --></tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- Acronyms / Abbreviations Card -->
@@ -913,7 +1097,7 @@
         <div class="unit">LBS/FT³</div>
       </div>
       <div class="lbl mb-2" style="font-size:11px;">Standard Proppant Bulk Densities &amp; SG</div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <thead>
           <tr>
             <th style="text-align:left;">Proppant / Material Type</th>
@@ -922,7 +1106,7 @@
           </tr>
         </thead>
         <tbody id="proppant-tbody"><!-- injected by JS --></tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- Stage tabs -->
@@ -1645,19 +1829,19 @@
     <!-- Tote Capacity Factors -->
     <div class="card mb-4">
       <div class="lbl mb-3 tool-title">Tote Capacity Factors</div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th style="text-align:left;">Tote Type</th><th class="tbl-right">GAL/IN</th></tr></thead>
         <tbody id="totetype-tbody"><!-- injected --></tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- % HCL by Mass Density -->
     <div class="card">
       <div class="lbl mb-3 tool-title">% HCL by Mass Density</div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <thead><tr><th style="text-align:left;">% HCL</th><th class="tbl-right">Density (PPG)</th></tr></thead>
         <tbody id="hcltable-tbody"><!-- injected --></tbody>
-      </table>
+      </table></div>
     </div>
   </div>
 
@@ -3176,7 +3360,7 @@
     <!-- Iron velocity -->
     <div class="card mb-4">
       <div class="lbl mb-3 tool-title">Internal Iron Velocity</div>
-      <table class="tbl">
+      <div class="tbl-wrap"><table class="tbl">
         <thead>
           <tr>
             <th style="text-align:left;">Iron</th>
@@ -3185,7 +3369,7 @@
           </tr>
         </thead>
         <tbody id="iron-tbody"><!-- injected --></tbody>
-      </table>
+      </table></div>
       <div style="font-size:10px;color:var(--text2);font-weight:500;font-style:italic;margin-top:10px;">Recommended max: 20 ft/s for erosion control</div>
     </div>
 
@@ -3450,7 +3634,7 @@
       <div class="card mb-4">
         <div class="lbl mb-3 tool-title">Gear Assignment</div>
         <div style="overflow-x:auto;">
-          <table class="tbl">
+          <div class="tbl-wrap"><table class="tbl">
             <thead>
               <tr>
                 <th style="text-align:left;width:32%;">Gear</th>
@@ -3461,7 +3645,7 @@
               </tr>
             </thead>
             <tbody id="go-tbl"></tbody>
-          </table>
+          </table></div>
         </div>
       </div>
 
