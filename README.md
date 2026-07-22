@@ -42,4 +42,4 @@ Static images live in `public/` and are available at:
 
 - `/new-amped-logo.png`
 - `/Blender-icon.jpg`
-- `/icon-hydraulic-frac.png`
+- `/Horsepower.jpg`
