@@ -4029,59 +4029,115 @@ function wellCapRowHTML(row, i) {
   const chartOpts = TUBULAR_DATA.map((t, ti) =>
     `<option value="${ti}"${row.tubular === t.type ? ' selected' : ''}>${t.type} — ${t.factor.toFixed(4)} gal/ft (ID ${t.id})</option>`
   ).join('');
+  const depthVal = row.depth === 0 || row.depth == null ? '' : row.depth;
+  const odVal = row.odIn === 0 || row.odIn == null ? '' : row.odIn;
+  const idVal = row.idIn === 0 || row.idIn == null ? '' : row.idIn;
   return `
-    <div class="card-sm mb-3">
+    <div class="card-sm mb-3" data-wellcap-idx="${i}">
       <div class="flex gap-2 mb-2 items-end">
         <div class="flex-1">
           <label class="lbl">Section Depth / Length (FT)</label>
-          <input type="number" class="field" value="${row.depth ?? ''}" oninput="wellCapUpdate(${i},'depth',this.value)" placeholder="0">
+          <input type="number" class="field" data-field="depth" value="${depthVal}" oninput="wellCapUpdate(${i},'depth',this.value)" placeholder="0">
         </div>
         <button class="btn-danger" onclick="wellCapDel(${i})" title="Remove section">✕</button>
       </div>
       <div class="mb-2">
         <label class="lbl">Casing (Chart or Custom)</label>
-        <select class="field" onchange="wellCapUpdate(${i},'tubular',this.value)">
+        <select class="field" data-field="tubular" onchange="wellCapUpdate(${i},'tubular',this.value)">
           <option value="custom"${isCustom ? ' selected' : ''}>Custom casing (enter OD / ID)</option>
           ${chartOpts}
         </select>
       </div>
-      <div class="grid-2 mb-2" style="${isCustom ? '' : 'opacity:0.85;'}">
+      <div class="grid-2 mb-2" data-wellcap-dims style="${isCustom ? '' : 'opacity:0.85;'}">
         <div>
           <label class="lbl">Outer Diam OD (IN)${isCustom ? '' : ' — chart'}</label>
-          <input type="number" class="field" step="0.001" value="${row.odIn || ''}"
+          <input type="number" class="field" data-field="odIn" step="any" value="${odVal}"
             oninput="wellCapUpdate(${i},'odIn',this.value)" placeholder="${isCustom ? 'e.g. 5.500' : '—'}" ${isCustom ? '' : 'readonly'}>
         </div>
         <div>
           <label class="lbl">Inner Diam ID (IN)${isCustom ? ' — required' : ''}</label>
-          <input type="number" class="field" step="0.001" value="${row.idIn || ''}"
+          <input type="number" class="field" data-field="idIn" step="any" value="${idVal}"
             oninput="wellCapUpdate(${i},'idIn',this.value)" placeholder="${isCustom ? 'e.g. 4.778' : '—'}" ${isCustom ? '' : 'readonly'}>
         </div>
       </div>
-      ${isCustom ? `
-      <div class="mb-2">
+      <div class="mb-2" data-wellcap-label-wrap style="${isCustom ? '' : 'display:none;'}">
         <label class="lbl">Custom Label (optional)</label>
-        <input type="text" class="field" value="${esc(row.label || '')}"
+        <input type="text" class="field" data-field="label" value="${esc(row.label || '')}"
           oninput="wellCapUpdate(${i},'label',this.value)" placeholder="e.g. 5.5&quot; 20# special">
-      </div>` : ''}
+      </div>
       <div class="grid-2 mb-2">
         <div>
           <label class="lbl">Capacity (GAL/FT)</label>
-          <input type="number" class="field" step="0.0001" value="${(row.galPerFt ?? 0).toFixed(4)}"
+          <input type="number" class="field" data-field="galPerFt" step="any" value="${row.galPerFt ? Number(row.galPerFt).toFixed(4) : ''}"
             oninput="wellCapUpdate(${i},'galPerFt',this.value)" placeholder="0">
         </div>
         <div>
           <label class="lbl">Capacity (BBL/FT)</label>
-          <input type="number" class="field" step="0.0001" value="${(row.bblPerFt ?? 0).toFixed(4)}"
+          <input type="number" class="field" data-field="bblPerFt" step="any" value="${row.bblPerFt ? Number(row.bblPerFt).toFixed(4) : ''}"
             oninput="wellCapUpdate(${i},'bblPerFt',this.value)" placeholder="0">
         </div>
       </div>
       <div class="tile" style="padding:8px 12px;">
         <div class="lbl">Section Volume</div>
-        <div class="val" style="font-size:18px;color:var(--brand);">${((row.depth||0)*(row.bblPerFt||0)).toFixed(2)} <span class="unit">BBL</span>
+        <div class="val" style="font-size:18px;color:var(--brand);" data-wellcap-vol>
+          ${((row.depth||0)*(row.bblPerFt||0)).toFixed(2)} <span class="unit">BBL</span>
           <span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:8px;">${F.c((row.depth||0)*(row.galPerFt||0))} GAL</span>
         </div>
       </div>
     </div>`;
+}
+
+function wellCapUpdateTotals() {
+  let totalBbl = 0;
+  let totalGal = 0;
+  S.wellCapRows.forEach(r => {
+    totalBbl += (r.depth || 0) * (r.bblPerFt || 0);
+    totalGal += (r.depth || 0) * (r.galPerFt || 0);
+  });
+  if (totalGal > 0 && totalBbl === 0) totalBbl = totalGal / 42;
+  if (document.getElementById('wellcap-gal')) {
+    document.getElementById('wellcap-gal').textContent = F.c(totalGal > 0 ? totalGal : totalBbl * 42);
+  }
+  if (document.getElementById('wellcap-bbl')) {
+    document.getElementById('wellcap-bbl').textContent = totalBbl.toFixed(2);
+  }
+}
+
+/** Update section volume tile + totals without rebuilding inputs (keeps focus while typing). */
+function wellCapSoftUpdate(i, activeField) {
+  const row = S.wellCapRows[i];
+  if (!row) return;
+  const card = document.querySelector(`[data-wellcap-idx="${i}"]`);
+  if (!card) {
+    renderWellCap();
+    return;
+  }
+
+  const setIfNotFocused = (field, value) => {
+    const el = card.querySelector(`[data-field="${field}"]`);
+    if (!el || document.activeElement === el) return;
+    el.value = value;
+  };
+
+  // Keep linked capacity fields in sync when derived from ID or the other unit
+  if (activeField === 'idIn' && !row.manualFactor) {
+    setIfNotFocused('galPerFt', row.galPerFt ? row.galPerFt.toFixed(4) : '');
+    setIfNotFocused('bblPerFt', row.bblPerFt ? row.bblPerFt.toFixed(4) : '');
+  } else if (activeField === 'galPerFt') {
+    setIfNotFocused('bblPerFt', row.bblPerFt ? row.bblPerFt.toFixed(4) : '');
+  } else if (activeField === 'bblPerFt') {
+    setIfNotFocused('galPerFt', row.galPerFt ? row.galPerFt.toFixed(4) : '');
+  }
+
+  const volEl = card.querySelector('[data-wellcap-vol]');
+  if (volEl) {
+    const bbl = (row.depth || 0) * (row.bblPerFt || 0);
+    const gal = (row.depth || 0) * (row.galPerFt || 0);
+    volEl.innerHTML = `${bbl.toFixed(2)} <span class="unit">BBL</span>
+      <span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:8px;">${F.c(gal)} GAL</span>`;
+  }
+
+  wellCapUpdateTotals();
 }
 
 function renderWellCap() {
@@ -4092,16 +4148,7 @@ function renderWellCap() {
   c.innerHTML = rows.length === 0
     ? '<div style="color:var(--text2);text-align:center;padding:14px;font-size:13px;">No sections yet. Tap “+ Add Section” to build the well string.</div>'
     : rows.map((row, i) => wellCapRowHTML(row, i)).join('');
-  let totalBbl = 0;
-  let totalGal = 0;
-  rows.forEach(r => {
-    totalBbl += (r.depth || 0) * (r.bblPerFt || 0);
-    totalGal += (r.depth || 0) * (r.galPerFt || 0);
-  });
-  // Prefer sum of gal if available; keep bbl from bblPerFt for consistency
-  if (totalGal > 0 && totalBbl === 0) totalBbl = totalGal / 42;
-  if (document.getElementById('wellcap-gal')) document.getElementById('wellcap-gal').textContent = F.c(totalGal > 0 ? totalGal : totalBbl * 42);
-  if (document.getElementById('wellcap-bbl')) document.getElementById('wellcap-bbl').textContent = totalBbl.toFixed(2);
+  wellCapUpdateTotals();
 }
 
 function addWellCapRow() {
@@ -4128,11 +4175,15 @@ function wellCapUpdate(i, field, v) {
   if (!row) return;
   wellCapNormalizeRow(row);
 
+  // Only rebuild the whole form when casing type changes (layout differs).
+  // Typing into number/text fields uses a soft update so focus is kept.
+  let fullRender = false;
+
   if (field === 'tubular') {
+    fullRender = true;
     if (v === 'custom') {
       row.tubular = 'custom';
       row.manualFactor = false;
-      // keep existing ID/OD so user can edit
     } else {
       const t = TUBULAR_DATA[parseInt(v, 10)];
       if (t) {
@@ -4148,7 +4199,10 @@ function wellCapUpdate(i, field, v) {
   } else if (field === 'label') {
     row.label = v;
   } else if (field === 'idIn') {
-    row.idIn = parseFloat(v) || 0;
+    // Allow empty / partial input without forcing 0 mid-keystroke for display;
+    // still compute from numeric value when valid.
+    const n = v === '' || v === '.' || v === '-' ? NaN : parseFloat(v);
+    row.idIn = isNaN(n) ? 0 : n;
     row.tubular = 'custom';
     if (!row.manualFactor) {
       const caps = wellCapFromId(row.idIn);
@@ -4156,23 +4210,29 @@ function wellCapUpdate(i, field, v) {
       row.galPerFt = caps.galPerFt;
     }
   } else if (field === 'odIn') {
-    row.odIn = parseFloat(v) || 0;
+    const n = v === '' || v === '.' || v === '-' ? NaN : parseFloat(v);
+    row.odIn = isNaN(n) ? 0 : n;
     row.tubular = 'custom';
   } else if (field === 'galPerFt') {
-    row.galPerFt = parseFloat(v) || 0;
+    const n = v === '' || v === '.' || v === '-' ? NaN : parseFloat(v);
+    row.galPerFt = isNaN(n) ? 0 : n;
     row.bblPerFt = row.galPerFt / 42;
     row.manualFactor = true;
   } else if (field === 'bblPerFt') {
-    row.bblPerFt = parseFloat(v) || 0;
+    const n = v === '' || v === '.' || v === '-' ? NaN : parseFloat(v);
+    row.bblPerFt = isNaN(n) ? 0 : n;
     row.galPerFt = row.bblPerFt * 42;
     row.manualFactor = true;
   } else if (field === 'depth') {
-    row.depth = parseFloat(v) || 0;
+    const n = v === '' || v === '.' || v === '-' ? NaN : parseFloat(v);
+    row.depth = isNaN(n) ? 0 : n;
   } else {
     row[field] = parseFloat(v) || 0;
   }
+
   saveS();
-  renderWellCap();
+  if (fullRender) renderWellCap();
+  else wellCapSoftUpdate(i, field);
 }
 
 // ================================================================
