@@ -621,6 +621,136 @@
     .dashboard-header { text-align: center; display: block; }
     .dashboard-header .sec-title { color: var(--brand); font-weight: 900; }
     .dashboard-header .sec-sub { color: rgba(45,199,109,0.9); font-weight: 700; margin-top:4px; }
+
+    /* ── Wellbore Capacity (Multi-Section) layout only ── */
+    .wellcap-card .wellcap-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .wellcap-card .wellcap-head .tool-title {
+      margin: 0;
+      flex: 1 1 12rem;
+      padding-top: 2px;
+    }
+    .wellcap-card .wellcap-help {
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.45;
+      margin: 0 0 16px;
+      padding: 10px 12px;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .wellcap-card #wellcap-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .wellcap-card #wellcap-rows:empty,
+    .wellcap-card .wellcap-empty {
+      color: var(--text2);
+      text-align: center;
+      padding: 20px 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+    }
+    .wellcap-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: none;
+      margin: 0;
+    }
+    .wellcap-section-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .wellcap-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--brand-blue);
+      line-height: 1.2;
+    }
+    .wellcap-section-top .btn-danger {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      border: 1px solid rgba(255,59,48,0.2);
+      background: rgba(255,59,48,0.06);
+      opacity: 1;
+      font-size: 14px;
+    }
+    .wellcap-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .wellcap-fields .field-block {
+      min-width: 0;
+    }
+    .wellcap-fields .field-block .lbl,
+    .wellcap-fields .field-block label.lbl {
+      margin-bottom: 7px;
+    }
+    .wellcap-section .tile.wellcap-section-vol {
+      padding: 12px 14px;
+      margin-top: 2px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    .wellcap-section .tile.wellcap-section-vol .val {
+      font-size: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 6px 10px;
+    }
+    .wellcap-section .tile.wellcap-section-vol .val .unit {
+      display: inline;
+      margin: 0;
+      font-size: 11px;
+    }
+    .wellcap-section .tile.wellcap-section-vol .val .wellcap-gal-side {
+      font-size: 13px;
+      color: var(--text2);
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .wellcap-totals {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .wellcap-totals .tile {
+      padding: 14px;
+    }
+    @media (max-width: 380px) {
+      .wellcap-totals { grid-template-columns: 1fr; }
+      .wellcap-section { padding: 14px; }
+    }
   </style>
 </head>
 <body>
@@ -3192,23 +3322,25 @@
       </div>
     </div>
 
-    <!-- Wellbore Capacity (Multi-Section) — moved from Math; supports chart + custom casing -->
-    <div class="card mb-4">
-      <div class="flex justify-between items-center mb-3">
-        <div class="lbl tool-title" style="margin:0;">Wellbore Capacity (Multi-Section)</div>
-        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addWellCapRow()">+ Add Section</button>
+    <!-- Wellbore Capacity (Multi-Section) — chart + custom casing -->
+    <div class="card mb-4 wellcap-card">
+      <div class="wellcap-head">
+        <div class="tool-title">Wellbore Capacity (Multi-Section)</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:8px 14px;" onclick="addWellCapRow()">+ Add Section</button>
       </div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">
-        Pick a chart casing or enter custom OD/ID to compute capacity. Section volume = Depth × BBL/FT.
-        Custom: BBL/FT = ID² ÷ 1029.44 &nbsp;·&nbsp; GAL/FT = ID² ÷ 24.51
-      </div>
+      <p class="wellcap-help">
+        Pick a chart casing or enter custom OD/ID to compute capacity.
+        Section volume = Depth × BBL/FT.
+        Custom: BBL/FT = ID² ÷ 1029.44 · GAL/FT = ID² ÷ 24.51
+      </p>
       <div id="wellcap-rows"><!-- injected --></div>
-      <div class="flex gap-3 mt-3">
-        <div class="tile flex-1">
+      <div class="wellcap-totals">
+        <div class="tile">
           <div class="lbl">Total Gallons</div>
           <div class="val" id="wellcap-gal">0</div>
+          <div class="unit">GAL</div>
         </div>
-        <div class="tile flex-1">
+        <div class="tile">
           <div class="lbl">Total Barrels</div>
           <div class="val" style="color:var(--brand);" id="wellcap-bbl">0.00</div>
           <div class="unit">BBL</div>
@@ -4217,56 +4349,61 @@ function wellCapRowHTML(row, i) {
   const depthVal = row.depth === 0 || row.depth == null ? '' : row.depth;
   const odVal = row.odIn === 0 || row.odIn == null ? '' : row.odIn;
   const idVal = row.idIn === 0 || row.idIn == null ? '' : row.idIn;
+  const secBbl = ((row.depth || 0) * (row.bblPerFt || 0)).toFixed(2);
+  const secGal = F.c((row.depth || 0) * (row.galPerFt || 0));
   return `
-    <div class="card-sm mb-3" data-wellcap-idx="${i}">
-      <div class="flex gap-2 mb-2 items-end">
-        <div class="flex-1">
+    <div class="wellcap-section" data-wellcap-idx="${i}">
+      <div class="wellcap-section-top">
+        <div class="wellcap-section-label">Section ${i + 1}</div>
+        <button type="button" class="btn-danger" onclick="wellCapDel(${i})" title="Remove section" aria-label="Remove section">✕</button>
+      </div>
+      <div class="wellcap-fields">
+        <div class="field-block">
           <label class="lbl">Section Depth / Length (FT)</label>
           <input type="number" class="field" data-field="depth" value="${depthVal}" oninput="wellCapUpdate(${i},'depth',this.value)" placeholder="0">
         </div>
-        <button class="btn-danger" onclick="wellCapDel(${i})" title="Remove section">✕</button>
-      </div>
-      <div class="mb-2">
-        <label class="lbl">Casing (Chart or Custom)</label>
-        <select class="field" data-field="tubular" onchange="wellCapUpdate(${i},'tubular',this.value)">
-          <option value="custom"${isCustom ? ' selected' : ''}>Custom casing (enter OD / ID)</option>
-          ${chartOpts}
-        </select>
-      </div>
-      <div class="grid-2 mb-2" data-wellcap-dims style="${isCustom ? '' : 'opacity:0.85;'}">
-        <div>
-          <label class="lbl">Outer Diam OD (IN)${isCustom ? '' : ' — chart'}</label>
-          <input type="number" class="field" data-field="odIn" step="any" value="${odVal}"
-            oninput="wellCapUpdate(${i},'odIn',this.value)" placeholder="${isCustom ? 'e.g. 5.500' : '—'}" ${isCustom ? '' : 'readonly'}>
+        <div class="field-block">
+          <label class="lbl">Casing (Chart or Custom)</label>
+          <select class="field" data-field="tubular" onchange="wellCapUpdate(${i},'tubular',this.value)">
+            <option value="custom"${isCustom ? ' selected' : ''}>Custom casing (enter OD / ID)</option>
+            ${chartOpts}
+          </select>
         </div>
-        <div>
-          <label class="lbl">Inner Diam ID (IN)${isCustom ? ' — required' : ''}</label>
-          <input type="number" class="field" data-field="idIn" step="any" value="${idVal}"
-            oninput="wellCapUpdate(${i},'idIn',this.value)" placeholder="${isCustom ? 'e.g. 4.778' : '—'}" ${isCustom ? '' : 'readonly'}>
+        <div class="grid-2" data-wellcap-dims style="${isCustom ? '' : 'opacity:0.9;'}">
+          <div class="field-block">
+            <label class="lbl">Outer Diam OD (IN)${isCustom ? '' : ' — chart'}</label>
+            <input type="number" class="field" data-field="odIn" step="any" value="${odVal}"
+              oninput="wellCapUpdate(${i},'odIn',this.value)" placeholder="${isCustom ? 'e.g. 5.500' : '—'}" ${isCustom ? '' : 'readonly'}>
+          </div>
+          <div class="field-block">
+            <label class="lbl">Inner Diam ID (IN)${isCustom ? ' — required' : ''}</label>
+            <input type="number" class="field" data-field="idIn" step="any" value="${idVal}"
+              oninput="wellCapUpdate(${i},'idIn',this.value)" placeholder="${isCustom ? 'e.g. 4.778' : '—'}" ${isCustom ? '' : 'readonly'}>
+          </div>
         </div>
-      </div>
-      <div class="mb-2" data-wellcap-label-wrap style="${isCustom ? '' : 'display:none;'}">
-        <label class="lbl">Custom Label (optional)</label>
-        <input type="text" class="field" data-field="label" value="${esc(row.label || '')}"
-          oninput="wellCapUpdate(${i},'label',this.value)" placeholder="e.g. 5.5&quot; 20# special">
-      </div>
-      <div class="grid-2 mb-2">
-        <div>
-          <label class="lbl">Capacity (GAL/FT)</label>
-          <input type="number" class="field" data-field="galPerFt" step="any" value="${row.galPerFt ? Number(row.galPerFt).toFixed(4) : ''}"
-            oninput="wellCapUpdate(${i},'galPerFt',this.value)" placeholder="0">
+        <div class="field-block" data-wellcap-label-wrap style="${isCustom ? '' : 'display:none;'}">
+          <label class="lbl">Custom Label (optional)</label>
+          <input type="text" class="field" data-field="label" value="${esc(row.label || '')}"
+            oninput="wellCapUpdate(${i},'label',this.value)" placeholder='e.g. 5.5" 20# special'>
         </div>
-        <div>
-          <label class="lbl">Capacity (BBL/FT)</label>
-          <input type="number" class="field" data-field="bblPerFt" step="any" value="${row.bblPerFt ? Number(row.bblPerFt).toFixed(4) : ''}"
-            oninput="wellCapUpdate(${i},'bblPerFt',this.value)" placeholder="0">
+        <div class="grid-2">
+          <div class="field-block">
+            <label class="lbl">Capacity (GAL/FT)</label>
+            <input type="number" class="field" data-field="galPerFt" step="any" value="${row.galPerFt ? Number(row.galPerFt).toFixed(4) : ''}"
+              oninput="wellCapUpdate(${i},'galPerFt',this.value)" placeholder="0">
+          </div>
+          <div class="field-block">
+            <label class="lbl">Capacity (BBL/FT)</label>
+            <input type="number" class="field" data-field="bblPerFt" step="any" value="${row.bblPerFt ? Number(row.bblPerFt).toFixed(4) : ''}"
+              oninput="wellCapUpdate(${i},'bblPerFt',this.value)" placeholder="0">
+          </div>
         </div>
-      </div>
-      <div class="tile" style="padding:8px 12px;">
-        <div class="lbl">Section Volume</div>
-        <div class="val" style="font-size:18px;color:var(--brand);" data-wellcap-vol>
-          ${((row.depth||0)*(row.bblPerFt||0)).toFixed(2)} <span class="unit">BBL</span>
-          <span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:8px;">${F.c((row.depth||0)*(row.galPerFt||0))} GAL</span>
+        <div class="tile wellcap-section-vol">
+          <div class="lbl">Section Volume</div>
+          <div class="val" style="color:var(--brand);" data-wellcap-vol>
+            <span>${secBbl}</span> <span class="unit">BBL</span>
+            <span class="wellcap-gal-side">${secGal} GAL</span>
+          </div>
         </div>
       </div>
     </div>`;
@@ -4318,8 +4455,8 @@ function wellCapSoftUpdate(i, activeField) {
   if (volEl) {
     const bbl = (row.depth || 0) * (row.bblPerFt || 0);
     const gal = (row.depth || 0) * (row.galPerFt || 0);
-    volEl.innerHTML = `${bbl.toFixed(2)} <span class="unit">BBL</span>
-      <span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:8px;">${F.c(gal)} GAL</span>`;
+    volEl.innerHTML = `<span>${bbl.toFixed(2)}</span> <span class="unit">BBL</span>
+      <span class="wellcap-gal-side">${F.c(gal)} GAL</span>`;
   }
 
   wellCapUpdateTotals();
@@ -4331,7 +4468,7 @@ function renderWellCap() {
   S.wellCapRows.forEach(wellCapNormalizeRow);
   const rows = S.wellCapRows;
   c.innerHTML = rows.length === 0
-    ? '<div style="color:var(--text2);text-align:center;padding:14px;font-size:13px;">No sections yet. Tap “+ Add Section” to build the well string.</div>'
+    ? '<div class="wellcap-empty">No sections yet. Tap “+ Add Section” to build the well string.</div>'
     : rows.map((row, i) => wellCapRowHTML(row, i)).join('');
   wellCapUpdateTotals();
 }
