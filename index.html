@@ -5240,11 +5240,10 @@ function renderSand() {
   c.innerHTML = `
     <div class="card mb-4">
       <div class="flex items-center gap-2 mb-3">
-        <span style="color:var(--brand);">🏷</span>
         <input type="text" value="${esc(st.name)}"
           style="background:transparent;border:none;outline:none;font-size:15px;font-weight:700;color:var(--text);flex:1;"
-          oninput="stName(${S.stageIdx},this.value)">
-        ${S.stages.length > 1 ? `<button class="btn-danger" onclick="delStage(${S.stageIdx})">🗑</button>` : ''}
+          oninput="stName(${S.stageIdx},this.value)" aria-label="Stage name">
+        ${S.stages.length > 1 ? `<button type="button" class="btn-danger" onclick="delStage(${S.stageIdx})" title="Remove stage" aria-label="Remove stage">✕</button>` : ''}
       </div>
       <div class="divider"></div>
       <div class="flex gap-3 mt-3">
