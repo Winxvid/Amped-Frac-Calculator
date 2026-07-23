@@ -4355,7 +4355,7 @@ const COMPANY_PROFILES = {
   amped: {
     id: 'amped',
     name: 'Amped Energy Solutions',
-    short: 'Green titles/labels · blue field numbers',
+    short: 'Green titles/labels · blue buttons, fields & results',
     logo: '/new-amped-logo.png',
     green: '#2DC76D',
     blue: '#2D7AC7',
@@ -4519,28 +4519,32 @@ function applyThemeColors() {
   const profile = getActiveProfile();
   const green = THEME.green || profile.green;
   const blue = THEME.blue || profile.blue;
-  root.style.setProperty('--brand', green);
-  root.style.setProperty('--brand-hover', darkenHex(green, 0.85));
-  root.style.setProperty('--brand-dim', rgbaFromHex(green, 0.12));
-  root.style.setProperty('--brand-dim2', rgbaFromHex(green, 0.06));
-  root.style.setProperty('--brand-shadow', rgbaFromHex(green, 0.30));
+
+  // Primary UI brand (buttons, result highlights, focus rings, etc.)
+  // Amped uses blue for those accents; titles/labels stay green separately.
+  const brandAccent = THEME.profileId === 'amped' ? blue : green;
+
+  root.style.setProperty('--brand', brandAccent);
+  root.style.setProperty('--brand-hover', darkenHex(brandAccent, 0.85));
+  root.style.setProperty('--brand-dim', rgbaFromHex(brandAccent, 0.12));
+  root.style.setProperty('--brand-dim2', rgbaFromHex(brandAccent, 0.06));
+  root.style.setProperty('--brand-shadow', rgbaFromHex(brandAccent, 0.30));
   root.style.setProperty('--brand-blue', blue);
   root.style.setProperty('--brand-blue-dim', rgbaFromHex(blue, 0.12));
   root.style.setProperty('--blue', blue);
 
-  // Amped: titles + labels = green; numbers typed in fields = blue
-  // Default / Liberty: titles follow accent-blue; labels muted; fields body text
-  // (Liberty uses the same red for both slots, so titles stay red.)
+  // Amped: titles + labels = green; field numbers + buttons/results = blue
+  // Default: black titles/labels/fields
+  // Liberty: red for titles/labels/buttons (both slots are red)
   if (THEME.profileId === 'amped') {
     root.style.setProperty('--title-color', green);
     root.style.setProperty('--label-color', green);
     root.style.setProperty('--field-value-color', blue);
   } else if (THEME.profileId === 'default') {
-    root.style.setProperty('--title-color', blue);       // black
-    root.style.setProperty('--label-color', blue);       // black text
-    root.style.setProperty('--field-value-color', blue); // black numbers
+    root.style.setProperty('--title-color', blue);
+    root.style.setProperty('--label-color', blue);
+    root.style.setProperty('--field-value-color', blue);
   } else {
-    // liberty (and future brands): titles/labels use primary brand; field numbers use secondary
     root.style.setProperty('--title-color', green);
     root.style.setProperty('--label-color', green);
     root.style.setProperty('--field-value-color', blue);
