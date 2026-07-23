@@ -4419,10 +4419,10 @@ const COMPANY_PROFILES = {
   liberty: {
     id: 'liberty',
     name: 'Liberty Energy',
-    short: 'Liberty red branding',
+    short: 'Red titles/buttons · black numbers',
     logo: '/liberty-logo.png',
     green: '#E32400',
-    blue: '#E32400',
+    blue: '#1C1C1E', // field numbers & calculator results
   },
 };
 
@@ -4585,12 +4585,12 @@ function getColorRoleCopy() {
   }
   if (THEME.profileId === 'liberty') {
     return {
-      note: `Active profile: ${name}. Both pickers usually match (Liberty red), but you can set them separately.`,
+      note: `Active profile: ${name}. Color A is Liberty red; Color B defaults to black for numbers.`,
       greenLabel: 'Color A — titles, labels & buttons',
       greenHelp: 'Changes: page titles, tool titles, field labels, primary buttons, toggles, and focus highlights.',
       blueLabel: 'Color B — numbers & results',
-      blueHelp: 'Changes: all numbers typed in fields and calculator result values (including decimals).',
-      footer: 'Reset restores both colors to Liberty red (#E32400).',
+      blueHelp: 'Changes: all numbers typed in fields and calculator result values (including decimals). Default is black (#1C1C1E).',
+      footer: 'Reset restores Color A to Liberty red (#E32400) and Color B to black (#1C1C1E).',
     };
   }
   // default + any future neutral profiles
@@ -4642,9 +4642,9 @@ function applyThemeColors() {
   root.style.setProperty('--brand-blue-dim', rgbaFromHex(blue, 0.12));
   root.style.setProperty('--blue', blue);
 
-  // Amped: titles + labels = green; ALL numbers (fields + results, incl. decimals) = blue
+  // Amped: titles + labels = green; ALL numbers = blue
   // Default: black titles/labels/numbers
-  // Liberty: red for titles/labels/numbers (both slots are red)
+  // Liberty: titles/labels/buttons = red (Color A); numbers/results = black (Color B)
   let numberColor = blue;
   if (THEME.profileId === 'amped') {
     root.style.setProperty('--title-color', green);
@@ -4655,9 +4655,10 @@ function applyThemeColors() {
     root.style.setProperty('--label-color', blue);
     numberColor = blue; // black
   } else {
+    // liberty (+ similar brands)
     root.style.setProperty('--title-color', green);
     root.style.setProperty('--label-color', green);
-    numberColor = blue;
+    numberColor = blue; // black for Liberty default
   }
   root.style.setProperty('--field-value-color', numberColor);
   root.style.setProperty('--number-color', numberColor);
