@@ -819,6 +819,24 @@
       max-height: 100%;
       object-fit: contain;
     }
+    .profile-card-logo.empty {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text3);
+      letter-spacing: 0.3px;
+    }
+    .settings-logo-preview.empty {
+      color: var(--text3);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .nav-logo-center:has(img.app-logo[data-empty="1"]),
+    .sidebar-hdr:has(img.app-logo[data-empty="1"]) {
+      /* keep layout stable when logo hidden */
+    }
+    img.app-logo[data-empty="1"] {
+      display: none !important;
+    }
     .profile-card-meta { flex: 1; min-width: 0; }
     .profile-card-name {
       font-size: 14px;
@@ -989,7 +1007,7 @@
 <div id="sidebar-overlay" onclick="closeMenu()"></div>
 <div id="sidebar">
   <div class="sidebar-hdr">
-    <img class="app-logo" src="/new-amped-logo.png" alt="Company logo">
+    <img class="app-logo" alt="Company logo" data-empty="1">
     <button class="sidebar-close" onclick="closeMenu()">✕</button>
   </div>
   <div class="sidebar-section-lbl">Navigation</div>
@@ -1013,7 +1031,8 @@
     <div class="settings-block">
       <div class="settings-section-title">Header Logo</div>
       <div class="settings-logo-preview">
-        <img id="settings-logo-preview" class="app-logo" src="/new-amped-logo.png" alt="Logo preview">
+        <img id="settings-logo-preview" class="app-logo" alt="Logo preview" data-empty="1">
+        <span class="logo-empty-label">No logo</span>
       </div>
       <label class="btn btn-brand settings-file-btn">
         Upload custom logo
@@ -1056,7 +1075,7 @@
   <div class="nav-header">
     <button class="menu-btn" onclick="openMenu()" aria-label="Open menu">☰</button>
     <div class="nav-logo-center">
-      <img class="app-logo" src="/new-amped-logo.png" alt="Company logo">
+      <img class="app-logo" alt="Company logo" data-empty="1">
     </div>
     <button class="menu-btn settings-btn" onclick="openSettings()" aria-label="Open settings" title="Settings">⚙</button>
   </div>
@@ -4314,10 +4333,18 @@ function saveS() {
 const SETTINGS_KEY = 'ampdFrac_settings_v2';
 
 const COMPANY_PROFILES = {
+  default: {
+    id: 'default',
+    name: 'Default',
+    short: 'No logo · black text · grey accents',
+    logo: null,
+    green: '#6C6C70', // buttons, results, accents
+    blue: '#1C1C1E',  // tool titles / text emphasis
+  },
   amped: {
     id: 'amped',
     name: 'Amped Energy Solutions',
-    short: 'Default Amped branding',
+    short: 'Amped green & blue branding',
     logo: '/new-amped-logo.png',
     green: '#2DC76D',
     blue: '#2D7AC7',
@@ -4332,21 +4359,24 @@ const COMPANY_PROFILES = {
   },
 };
 
-const DEFAULT_PROFILE_ID = 'amped';
+const DEFAULT_PROFILE_ID = 'default';
 
 const THEME = {
   profileId: DEFAULT_PROFILE_ID,
-  logoDataUrl: null, // custom upload; null = use selected profile logo
-  green: COMPANY_PROFILES.amped.green,
-  blue: COMPANY_PROFILES.amped.blue,
+  logoDataUrl: null, // custom upload; null = use selected profile logo (or none)
+  green: COMPANY_PROFILES.default.green,
+  blue: COMPANY_PROFILES.default.blue,
 };
 
 function getActiveProfile() {
   return COMPANY_PROFILES[THEME.profileId] || COMPANY_PROFILES[DEFAULT_PROFILE_ID];
 }
 
+/** Effective logo URL, or null when the profile has no logo and no custom upload. */
 function profileLogoSrc() {
-  return THEME.logoDataUrl || getActiveProfile().logo;
+  if (THEME.logoDataUrl) return THEME.logoDataUrl;
+  const logo = getActiveProfile().logo;
+  return logo || null;
 }
 
 function normalizeHex(hex) {
@@ -4401,9 +4431,9 @@ function loadSettings() {
     if (normalizeHex(data.green)) THEME.green = normalizeHex(data.green);
     if (normalizeHex(data.blue)) THEME.blue = normalizeHex(data.blue);
 
-    // If only legacy colors/logo saved with no profile, keep Amped id
+    // Legacy saves without a profile: treat as Amped if they used Amped colors/logo
     if (!data.profileId && (data.green || data.blue || data.logoDataUrl)) {
-      THEME.profileId = DEFAULT_PROFILE_ID;
+      THEME.profileId = 'amped';
     }
   } catch (e) {}
 }
@@ -4433,11 +4463,20 @@ function saveSettings() {
 function renderProfileList() {
   const host = document.getElementById('settings-profile-list');
   if (!host) return;
-  host.innerHTML = Object.values(COMPANY_PROFILES).map(p => {
+  // Keep a stable order: Default → Amped → Liberty → any future profiles
+  const order = ['default', 'amped', 'liberty'];
+  const profiles = [
+    ...order.map(id => COMPANY_PROFILES[id]).filter(Boolean),
+    ...Object.values(COMPANY_PROFILES).filter(p => !order.includes(p.id)),
+  ];
+  host.innerHTML = profiles.map(p => {
     const active = THEME.profileId === p.id;
+    const logoHtml = p.logo
+      ? `<img src="${p.logo}" alt="">`
+      : 'None';
     return `
       <button type="button" class="profile-card${active ? ' active' : ''}" onclick="selectCompanyProfile('${p.id}')" aria-pressed="${active}">
-        <div class="profile-card-logo"><img src="${p.logo}" alt=""></div>
+        <div class="profile-card-logo${p.logo ? '' : ' empty'}">${logoHtml}</div>
         <div class="profile-card-meta">
           <div class="profile-card-name">${p.name}</div>
           <div class="profile-card-sub">${p.short}</div>
@@ -4490,8 +4529,28 @@ function applyThemeColors() {
 function applyLogo() {
   const src = profileLogoSrc();
   document.querySelectorAll('img.app-logo').forEach(img => {
-    if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+    if (!src) {
+      img.setAttribute('data-empty', '1');
+      img.removeAttribute('src');
+      img.alt = '';
+    } else {
+      img.removeAttribute('data-empty');
+      if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+      img.alt = 'Company logo';
+    }
   });
+
+  const previewWrap = document.querySelector('.settings-logo-preview');
+  if (previewWrap) {
+    const ph = previewWrap.querySelector('.logo-empty-label');
+    if (!src) {
+      previewWrap.classList.add('empty');
+      if (ph) ph.style.display = '';
+    } else {
+      previewWrap.classList.remove('empty');
+      if (ph) ph.style.display = 'none';
+    }
+  }
 }
 
 function applySettings() {
