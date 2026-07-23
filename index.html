@@ -26,6 +26,7 @@
       --title-color:       var(--brand-blue);
       --label-color:       var(--text2);
       --field-value-color: var(--text);
+      --number-color:      var(--field-value-color); /* all numeric values (inputs + results) */
       --text:      #1C1C1E;
       --text2:     #6C6C70;
       --text3:     #AEAEB2;
@@ -108,22 +109,42 @@
       width: 100%;
       max-width: 100%;
       min-width: 0;
-      color: var(--field-value-color);
+      color: var(--number-color);
+      -webkit-text-fill-color: var(--number-color);
+      caret-color: var(--number-color);
       font-size: 16px;
       font-weight: 600;
       font-family: inherit;
+      font-variant-numeric: tabular-nums;
       outline: none;
       transition: border-color 0.15s;
       box-sizing: border-box;
     }
     .field:focus { border-color: var(--brand); }
-    .field::placeholder { color: var(--text3); font-weight: 400; }
-    select.field { cursor: pointer; max-width: 100%; color: var(--field-value-color); }
+    .field::placeholder {
+      color: var(--text3);
+      font-weight: 400;
+      -webkit-text-fill-color: var(--text3);
+    }
+    select.field {
+      cursor: pointer;
+      max-width: 100%;
+      color: var(--number-color);
+      -webkit-text-fill-color: var(--number-color);
+    }
     input[type=number].field::-webkit-inner-spin-button { -webkit-appearance: none; }
-    /* Editable values that are not .field (stage names, etc.) */
-    input[type=text]:not(.field),
-    input[type=number]:not(.field) {
-      color: var(--field-value-color);
+    /* All number inputs (including those without .field) */
+    input[type=number] {
+      color: var(--number-color);
+      -webkit-text-fill-color: var(--number-color);
+      caret-color: var(--number-color);
+      font-variant-numeric: tabular-nums;
+    }
+    /* Other editable text that holds numeric-looking values */
+    input[type=text]:not(.settings-color-row .field) {
+      color: var(--number-color);
+      -webkit-text-fill-color: var(--number-color);
+      caret-color: var(--number-color);
     }
 
     /* ── Labels ── */
@@ -167,6 +188,9 @@
       max-width: 100%;
       box-sizing: border-box;
     }
+    /* Numeric result / display values — always use profile number color
+       (covers integers, decimals, commas; overrides missing inline colors) */
+    .val,
     .tile .val {
       font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(16px, 5.5vw, 24px);
@@ -176,14 +200,43 @@
       overflow-wrap: anywhere;
       word-break: break-word;
       min-width: 0;
+      color: var(--number-color) !important;
+      font-variant-numeric: tabular-nums;
     }
-    .tile .unit {
+    .tile .unit,
+    .val .unit {
       font-size: 10px;
       font-weight: 700;
-      color: var(--text2);
+      color: var(--text2) !important;
       text-transform: uppercase;
       margin-top: 2px;
       line-height: 1.2;
+      -webkit-text-fill-color: var(--text2);
+    }
+    /* Reference figures / display numbers outside .val */
+    .surface-card .font-display,
+    .card .font-display:not(.brand-card .font-display) {
+      color: var(--number-color);
+      font-variant-numeric: tabular-nums;
+    }
+    .surface-card .font-display span,
+    .card .font-display span {
+      /* unit suffixes next to numbers stay muted when already set */
+    }
+    /* Right-aligned table numbers (capacity factors, etc.) */
+    .tbl-right {
+      color: var(--number-color);
+      font-variant-numeric: tabular-nums;
+    }
+    .tbl th.tbl-right {
+      color: var(--label-color);
+    }
+    /* Keep brand-card white numbers on green/blue hero cards */
+    .brand-card .val,
+    .brand-card .font-display,
+    .brand-card .val .unit {
+      color: #fff !important;
+      -webkit-text-fill-color: #fff;
     }
 
     /* ── Buttons ── */
@@ -4533,22 +4586,25 @@ function applyThemeColors() {
   root.style.setProperty('--brand-blue-dim', rgbaFromHex(blue, 0.12));
   root.style.setProperty('--blue', blue);
 
-  // Amped: titles + labels = green; field numbers + buttons/results = blue
-  // Default: black titles/labels/fields
-  // Liberty: red for titles/labels/buttons (both slots are red)
+  // Amped: titles + labels = green; ALL numbers (fields + results, incl. decimals) = blue
+  // Default: black titles/labels/numbers
+  // Liberty: red for titles/labels/numbers (both slots are red)
+  let numberColor = blue;
   if (THEME.profileId === 'amped') {
     root.style.setProperty('--title-color', green);
     root.style.setProperty('--label-color', green);
-    root.style.setProperty('--field-value-color', blue);
+    numberColor = blue; // #2D7AC7
   } else if (THEME.profileId === 'default') {
     root.style.setProperty('--title-color', blue);
     root.style.setProperty('--label-color', blue);
-    root.style.setProperty('--field-value-color', blue);
+    numberColor = blue; // black
   } else {
     root.style.setProperty('--title-color', green);
     root.style.setProperty('--label-color', green);
-    root.style.setProperty('--field-value-color', blue);
+    numberColor = blue;
   }
+  root.style.setProperty('--field-value-color', numberColor);
+  root.style.setProperty('--number-color', numberColor);
 
   const gHex = document.getElementById('settings-green-hex');
   const gSw = document.getElementById('settings-green-swatch');
