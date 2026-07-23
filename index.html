@@ -6734,7 +6734,7 @@ function goDisplay(numPumps, target) {
   document.getElementById('go-notes').innerHTML = notes.map(n =>
     `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;">
        <span style="color:var(--brand);font-size:12px;flex-shrink:0;margin-top:1px;">✓</span>
-       <span style="font-size:12px;font-weight:500;color:#e4e4e7;">${n}</span>
+       <span style="font-size:12px;font-weight:500;color:var(--text);line-height:1.4;">${n}</span>
      </div>`).join('');
 }
 
