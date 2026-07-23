@@ -3859,22 +3859,6 @@
       </div>
     </div>
 
-    <!-- Iron velocity -->
-    <div class="card mb-4">
-      <div class="lbl mb-3 tool-title">Internal Iron Velocity</div>
-      <div class="tbl-wrap"><table class="tbl">
-        <thead>
-          <tr>
-            <th style="text-align:left;">Iron</th>
-            <th class="tbl-right">Velocity</th>
-            <th class="tbl-right">Status</th>
-          </tr>
-        </thead>
-        <tbody id="iron-tbody"><!-- injected --></tbody>
-      </table></div>
-      <div style="font-size:10px;color:var(--text2);font-weight:500;font-style:italic;margin-top:10px;">Recommended max: 20 ft/s for erosion control</div>
-    </div>
-
     <!-- Suction/Discharge Hose Count -->
     <div class="card mb-4">
       <div class="lbl mb-3 tool-title">Suction / Discharge Hose Count</div>
@@ -6536,17 +6520,6 @@ function renderHP() {
   if (document.getElementById('hp-locavailable')) document.getElementById('hp-locavailable').textContent = F.c(locAvailHhp);
   if (document.getElementById('hp-activeload')) document.getElementById('hp-activeload').textContent = activeLoad.toFixed(1) + '%';
   if (document.getElementById('hp-totalload')) document.getElementById('hp-totalload').textContent = totalLoad.toFixed(1) + '%';
-
-  const ironIDs = [{l:'2" Iron',id:2},{l:'3" Iron',id:3},{l:'4" Iron',id:4},{l:'5" Iron',id:5}];
-  document.getElementById('iron-tbody').innerHTML = ironIDs.map(ir => {
-    const v = F.ironVel(rate, ir.id);
-    const hi = v > 20;
-    return `<tr>
-      <td style="font-weight:600;">${ir.l}</td>
-      <td class="tbl-right font-display" style="font-weight:900;color:${hi?'var(--red)':'var(--brand)'};">${v.toFixed(1)} ft/s</td>
-      <td class="tbl-right"><span class="badge ${hi?'badge-red':'badge-green'}">${hi?'HIGH':'OK'}</span></td>
-    </tr>`;
-  }).join('');
 
   // Engine Torque ↔ HP
   const tRpm  = parseFloat(document.getElementById('torque-rpm')?.value)  || 0;
