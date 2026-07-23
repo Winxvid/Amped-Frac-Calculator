@@ -1108,21 +1108,24 @@
 
     <div class="settings-block">
       <div class="settings-section-title">Brand Colors</div>
+      <p class="settings-hint" id="settings-color-profile-note" style="margin-top:0;margin-bottom:12px;"></p>
       <div class="settings-color-row">
-        <input type="color" class="settings-swatch" id="settings-green-swatch" value="#2DC76D" oninput="onColorPick('green', this.value)" title="Accent color">
+        <input type="color" class="settings-swatch" id="settings-green-swatch" value="#2DC76D" oninput="onColorPick('green', this.value)" title="Color A">
         <div class="flex-1" style="min-width:0;">
-          <label class="lbl" for="settings-green-hex">Green (buttons, results, accents)</label>
+          <label class="lbl" for="settings-green-hex" id="settings-green-label">Color A</label>
           <input type="text" class="field" id="settings-green-hex" value="#2DC76D" maxlength="7" spellcheck="false" oninput="onColorHexInput('green', this.value)" placeholder="#2DC76D">
+          <div class="settings-hint" id="settings-green-help" style="margin-top:6px;"></div>
         </div>
       </div>
       <div class="settings-color-row">
-        <input type="color" class="settings-swatch" id="settings-blue-swatch" value="#2D7AC7" oninput="onColorPick('blue', this.value)" title="Title color">
+        <input type="color" class="settings-swatch" id="settings-blue-swatch" value="#2D7AC7" oninput="onColorPick('blue', this.value)" title="Color B">
         <div class="flex-1" style="min-width:0;">
-          <label class="lbl" for="settings-blue-hex">Blue (tool titles)</label>
+          <label class="lbl" for="settings-blue-hex" id="settings-blue-label">Color B</label>
           <input type="text" class="field" id="settings-blue-hex" value="#2D7AC7" maxlength="7" spellcheck="false" oninput="onColorHexInput('blue', this.value)" placeholder="#2D7AC7">
+          <div class="settings-hint" id="settings-blue-help" style="margin-top:6px;"></div>
         </div>
       </div>
-      <p class="settings-hint">Fine-tune colors for the active profile. Reset restores that company’s defaults.</p>
+      <p class="settings-hint" id="settings-color-footer-hint">Changes apply instantly. Reset restores this profile’s default colors.</p>
     </div>
 
     <div class="settings-actions">
@@ -4567,6 +4570,59 @@ function selectCompanyProfile(id) {
   saveSettings();
 }
 
+/** Copy for Settings → Brand Colors (what each picker controls for the active profile). */
+function getColorRoleCopy() {
+  const name = getActiveProfile().name;
+  if (THEME.profileId === 'amped') {
+    return {
+      note: `Active profile: ${name}. Color A and Color B control different parts of the UI.`,
+      greenLabel: 'Color A — titles & labels',
+      greenHelp: 'Changes: page titles, tool card titles, field labels, and section subtitles.',
+      blueLabel: 'Color B — numbers, buttons & results',
+      blueHelp: 'Changes: all numbers in input fields, calculator result values, primary buttons, toggles, progress bars, and focus highlights.',
+      footer: 'Amped uses two roles: Color A for text headings/labels, Color B for interactive accents and every numeric value.',
+    };
+  }
+  if (THEME.profileId === 'liberty') {
+    return {
+      note: `Active profile: ${name}. Both pickers usually match (Liberty red), but you can set them separately.`,
+      greenLabel: 'Color A — titles, labels & buttons',
+      greenHelp: 'Changes: page titles, tool titles, field labels, primary buttons, toggles, and focus highlights.',
+      blueLabel: 'Color B — numbers & results',
+      blueHelp: 'Changes: all numbers typed in fields and calculator result values (including decimals).',
+      footer: 'Reset restores both colors to Liberty red (#E32400).',
+    };
+  }
+  // default + any future neutral profiles
+  return {
+    note: `Active profile: ${name}. Neutral theme — both colors default to black/grey for a clean, unbranded look.`,
+    greenLabel: 'Color A — titles, labels & buttons',
+    greenHelp: 'Changes: page titles, tool titles, field labels, primary buttons, toggles, and focus highlights.',
+    blueLabel: 'Color B — numbers & results',
+    blueHelp: 'Changes: all numbers typed in fields and calculator result values (including decimals).',
+    footer: 'Reset restores this profile’s default neutral colors. Logo stays off unless you upload one.',
+  };
+}
+
+function updateColorRoleHelp() {
+  const copy = getColorRoleCopy();
+  const set = (id, text) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  };
+  set('settings-color-profile-note', copy.note);
+  set('settings-green-label', copy.greenLabel);
+  set('settings-green-help', copy.greenHelp);
+  set('settings-blue-label', copy.blueLabel);
+  set('settings-blue-help', copy.blueHelp);
+  set('settings-color-footer-hint', copy.footer);
+
+  const gSw = document.getElementById('settings-green-swatch');
+  const bSw = document.getElementById('settings-blue-swatch');
+  if (gSw) gSw.title = copy.greenLabel;
+  if (bSw) bSw.title = copy.blueLabel;
+}
+
 function applyThemeColors() {
   const root = document.documentElement;
   const profile = getActiveProfile();
@@ -4614,6 +4670,8 @@ function applyThemeColors() {
   if (gSw) gSw.value = green;
   if (bHex && document.activeElement !== bHex) bHex.value = blue;
   if (bSw) bSw.value = blue;
+
+  updateColorRoleHelp();
 }
 
 function applyLogo() {
