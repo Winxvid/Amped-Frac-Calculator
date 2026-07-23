@@ -19,9 +19,13 @@
       --brand-dim: rgba(45,199,109,0.12);
       --brand-dim2: rgba(45,199,109,0.06);
       --brand-shadow: rgba(45,199,109,0.30);
-      /* Blue twin — tool titles (overridable via Settings) */
+      /* Blue twin (overridable via Settings) */
       --brand-blue:     #2D7AC7;
       --brand-blue-dim: rgba(45,122,199,0.12);
+      /* Semantic theme roles (set per company profile) */
+      --title-color:       var(--brand-blue);
+      --label-color:       var(--text2);
+      --field-value-color: var(--text);
       --text:      #1C1C1E;
       --text2:     #6C6C70;
       --text3:     #AEAEB2;
@@ -104,7 +108,7 @@
       width: 100%;
       max-width: 100%;
       min-width: 0;
-      color: var(--text);
+      color: var(--field-value-color);
       font-size: 16px;
       font-weight: 600;
       font-family: inherit;
@@ -114,8 +118,13 @@
     }
     .field:focus { border-color: var(--brand); }
     .field::placeholder { color: var(--text3); font-weight: 400; }
-    select.field { cursor: pointer; max-width: 100%; }
+    select.field { cursor: pointer; max-width: 100%; color: var(--field-value-color); }
     input[type=number].field::-webkit-inner-spin-button { -webkit-appearance: none; }
+    /* Editable values that are not .field (stage names, etc.) */
+    input[type=text]:not(.field),
+    input[type=number]:not(.field) {
+      color: var(--field-value-color);
+    }
 
     /* ── Labels ── */
     .lbl {
@@ -124,18 +133,19 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--text2);
+      color: var(--label-color);
       margin-bottom: 6px;
       line-height: 1.3;
       overflow-wrap: anywhere;
     }
+    label.lbl { color: var(--label-color); }
     /* Formula / tool card titles (not field labels, not dashboard icons) */
     .tool-title {
       font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
       font-size: 14px;
       font-weight: 900;
       letter-spacing: 0.4px;
-      color: var(--brand-blue);
+      color: var(--title-color);
       line-height: 1.3;
       overflow-wrap: anywhere;
       word-break: break-word;
@@ -145,7 +155,7 @@
       max-width: 100%;
     }
     .lbl-brand { color: var(--brand); }
-    .lbl-blue  { color: var(--brand-blue); }
+    .lbl-blue  { color: var(--title-color); }
 
     /* ── Stat tile ── */
     .tile {
@@ -292,10 +302,11 @@
       line-height: 1.15;
       overflow-wrap: anywhere;
       word-break: break-word;
+      color: var(--title-color);
     }
     .sec-sub {
       font-size: 13px;
-      color: var(--text2);
+      color: var(--label-color);
       margin-top: 4px;
       line-height: 1.35;
       overflow-wrap: anywhere;
@@ -932,7 +943,7 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      color: var(--brand-blue);
+      color: var(--title-color);
       line-height: 1.2;
     }
     .wellcap-section-top .btn-danger {
@@ -4344,7 +4355,7 @@ const COMPANY_PROFILES = {
   amped: {
     id: 'amped',
     name: 'Amped Energy Solutions',
-    short: 'Amped green & blue branding',
+    short: 'Green titles/labels · blue field numbers',
     logo: '/new-amped-logo.png',
     green: '#2DC76D',
     blue: '#2D7AC7',
@@ -4505,8 +4516,9 @@ function selectCompanyProfile(id) {
 
 function applyThemeColors() {
   const root = document.documentElement;
-  const green = THEME.green || getActiveProfile().green;
-  const blue = THEME.blue || getActiveProfile().blue;
+  const profile = getActiveProfile();
+  const green = THEME.green || profile.green;
+  const blue = THEME.blue || profile.blue;
   root.style.setProperty('--brand', green);
   root.style.setProperty('--brand-hover', darkenHex(green, 0.85));
   root.style.setProperty('--brand-dim', rgbaFromHex(green, 0.12));
@@ -4515,6 +4527,24 @@ function applyThemeColors() {
   root.style.setProperty('--brand-blue', blue);
   root.style.setProperty('--brand-blue-dim', rgbaFromHex(blue, 0.12));
   root.style.setProperty('--blue', blue);
+
+  // Amped: titles + labels = green; numbers typed in fields = blue
+  // Default / Liberty: titles follow accent-blue; labels muted; fields body text
+  // (Liberty uses the same red for both slots, so titles stay red.)
+  if (THEME.profileId === 'amped') {
+    root.style.setProperty('--title-color', green);
+    root.style.setProperty('--label-color', green);
+    root.style.setProperty('--field-value-color', blue);
+  } else if (THEME.profileId === 'default') {
+    root.style.setProperty('--title-color', blue);       // black
+    root.style.setProperty('--label-color', blue);       // black text
+    root.style.setProperty('--field-value-color', blue); // black numbers
+  } else {
+    // liberty (and future brands): titles/labels use primary brand; field numbers use secondary
+    root.style.setProperty('--title-color', green);
+    root.style.setProperty('--label-color', green);
+    root.style.setProperty('--field-value-color', blue);
+  }
 
   const gHex = document.getElementById('settings-green-hex');
   const gSw = document.getElementById('settings-green-swatch');
