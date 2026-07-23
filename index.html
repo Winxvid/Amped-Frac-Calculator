@@ -774,6 +774,83 @@
       cursor: pointer;
     }
     .settings-file-btn input[type=file] { display: none; }
+    .profile-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    }
+    .profile-card:hover {
+      border-color: var(--brand);
+      background: var(--brand-dim2);
+    }
+    .profile-card.active {
+      border-color: var(--brand);
+      background: var(--brand-dim);
+      box-shadow: 0 0 0 1px var(--brand);
+    }
+    .profile-card-logo {
+      width: 56px;
+      height: 40px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+    }
+    .profile-card-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .profile-card-meta { flex: 1; min-width: 0; }
+    .profile-card-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .profile-card-sub {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+    .profile-swatches {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .profile-swatch-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+    .profile-check {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--brand);
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
 
     /* ── Wellbore Capacity (Multi-Section) layout only ── */
     .wellcap-card .wellcap-head {
@@ -928,39 +1005,45 @@
   </div>
   <div class="settings-body">
     <div class="settings-block">
+      <div class="settings-section-title">Company Profile</div>
+      <div class="profile-list" id="settings-profile-list"><!-- injected --></div>
+      <p class="settings-hint">Switch company branding instantly. Logo and colors update together and are saved on this device.</p>
+    </div>
+
+    <div class="settings-block">
       <div class="settings-section-title">Header Logo</div>
       <div class="settings-logo-preview">
         <img id="settings-logo-preview" class="app-logo" src="/new-amped-logo.png" alt="Logo preview">
       </div>
       <label class="btn btn-brand settings-file-btn">
-        Upload logo
+        Upload custom logo
         <input type="file" id="settings-logo-file" accept="image/*" onchange="onLogoFileSelected(event)">
       </label>
-      <button type="button" class="btn btn-ghost" style="width:100%;margin-top:8px;" onclick="resetLogo()">Use default logo</button>
-      <p class="settings-hint">Upload a PNG, JPG, or SVG from your device. Saved on this browser only.</p>
+      <button type="button" class="btn btn-ghost" style="width:100%;margin-top:8px;" onclick="resetLogo()">Use profile logo</button>
+      <p class="settings-hint">Optional override for the selected company. PNG, JPG, or SVG.</p>
     </div>
 
     <div class="settings-block">
       <div class="settings-section-title">Brand Colors</div>
       <div class="settings-color-row">
-        <input type="color" class="settings-swatch" id="settings-green-swatch" value="#2DC76D" oninput="onColorPick('green', this.value)" title="Green / accent color">
+        <input type="color" class="settings-swatch" id="settings-green-swatch" value="#2DC76D" oninput="onColorPick('green', this.value)" title="Accent color">
         <div class="flex-1" style="min-width:0;">
           <label class="lbl" for="settings-green-hex">Green (buttons, results, accents)</label>
           <input type="text" class="field" id="settings-green-hex" value="#2DC76D" maxlength="7" spellcheck="false" oninput="onColorHexInput('green', this.value)" placeholder="#2DC76D">
         </div>
       </div>
       <div class="settings-color-row">
-        <input type="color" class="settings-swatch" id="settings-blue-swatch" value="#2D7AC7" oninput="onColorPick('blue', this.value)" title="Blue / title color">
+        <input type="color" class="settings-swatch" id="settings-blue-swatch" value="#2D7AC7" oninput="onColorPick('blue', this.value)" title="Title color">
         <div class="flex-1" style="min-width:0;">
           <label class="lbl" for="settings-blue-hex">Blue (tool titles)</label>
           <input type="text" class="field" id="settings-blue-hex" value="#2D7AC7" maxlength="7" spellcheck="false" oninput="onColorHexInput('blue', this.value)" placeholder="#2D7AC7">
         </div>
       </div>
-      <p class="settings-hint">Changes apply instantly and are remembered on this device.</p>
+      <p class="settings-hint">Fine-tune colors for the active profile. Reset restores that company’s defaults.</p>
     </div>
 
     <div class="settings-actions">
-      <button type="button" class="btn btn-ghost" style="width:100%;" onclick="resetThemeColors()">Reset colors to default</button>
+      <button type="button" class="btn btn-ghost" style="width:100%;" onclick="resetThemeColors()">Reset colors to profile default</button>
       <button type="button" class="btn btn-brand" style="width:100%;" onclick="closeSettings()">Done</button>
     </div>
   </div>
@@ -4225,19 +4308,46 @@ function saveS() {
 }
 
 // ================================================================
-// SETTINGS — logo + brand colors (local to this browser)
+// SETTINGS — company profiles, logo + brand colors (this browser)
 // ================================================================
 
-const SETTINGS_KEY = 'ampdFrac_settings_v1';
-const DEFAULT_LOGO = '/new-amped-logo.png';
-const DEFAULT_GREEN = '#2DC76D';
-const DEFAULT_BLUE = '#2D7AC7';
+const SETTINGS_KEY = 'ampdFrac_settings_v2';
+
+const COMPANY_PROFILES = {
+  amped: {
+    id: 'amped',
+    name: 'Amped Energy Solutions',
+    short: 'Default Amped branding',
+    logo: '/new-amped-logo.png',
+    green: '#2DC76D',
+    blue: '#2D7AC7',
+  },
+  liberty: {
+    id: 'liberty',
+    name: 'Liberty Energy',
+    short: 'Liberty red branding',
+    logo: '/liberty-logo.png',
+    green: '#E32400',
+    blue: '#E32400',
+  },
+};
+
+const DEFAULT_PROFILE_ID = 'amped';
 
 const THEME = {
-  logoDataUrl: null, // null = default asset
-  green: DEFAULT_GREEN,
-  blue: DEFAULT_BLUE,
+  profileId: DEFAULT_PROFILE_ID,
+  logoDataUrl: null, // custom upload; null = use selected profile logo
+  green: COMPANY_PROFILES.amped.green,
+  blue: COMPANY_PROFILES.amped.blue,
 };
+
+function getActiveProfile() {
+  return COMPANY_PROFILES[THEME.profileId] || COMPANY_PROFILES[DEFAULT_PROFILE_ID];
+}
+
+function profileLogoSrc() {
+  return THEME.logoDataUrl || getActiveProfile().logo;
+}
 
 function normalizeHex(hex) {
   if (!hex) return null;
@@ -4275,39 +4385,89 @@ function darkenHex(hex, factor = 0.85) {
 
 function loadSettings() {
   try {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
+    // Prefer v2; migrate v1 if needed
+    let raw = localStorage.getItem(SETTINGS_KEY);
+    let data = raw ? JSON.parse(raw) : null;
+    if (!data) {
+      const legacy = localStorage.getItem('ampdFrac_settings_v1');
+      if (legacy) data = JSON.parse(legacy);
+    }
+    if (!data) return;
+
+    if (data.profileId && COMPANY_PROFILES[data.profileId]) {
+      THEME.profileId = data.profileId;
+    }
     if (data.logoDataUrl) THEME.logoDataUrl = data.logoDataUrl;
     if (normalizeHex(data.green)) THEME.green = normalizeHex(data.green);
     if (normalizeHex(data.blue)) THEME.blue = normalizeHex(data.blue);
+
+    // If only legacy colors/logo saved with no profile, keep Amped id
+    if (!data.profileId && (data.green || data.blue || data.logoDataUrl)) {
+      THEME.profileId = DEFAULT_PROFILE_ID;
+    }
   } catch (e) {}
 }
 
 function saveSettings() {
+  const payload = {
+    profileId: THEME.profileId,
+    logoDataUrl: THEME.logoDataUrl,
+    green: THEME.green,
+    blue: THEME.blue,
+  };
   try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-      logoDataUrl: THEME.logoDataUrl,
-      green: THEME.green,
-      blue: THEME.blue,
-    }));
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(payload));
   } catch (e) {
-    // Quota exceeded (very large logo) — try without logo
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        profileId: THEME.profileId,
         logoDataUrl: null,
         green: THEME.green,
         blue: THEME.blue,
       }));
-      alert('Logo is too large to save in this browser. Colors were saved; try a smaller image.');
+      alert('Logo is too large to save in this browser. Profile and colors were saved; try a smaller image.');
     } catch (e2) {}
   }
 }
 
+function renderProfileList() {
+  const host = document.getElementById('settings-profile-list');
+  if (!host) return;
+  host.innerHTML = Object.values(COMPANY_PROFILES).map(p => {
+    const active = THEME.profileId === p.id;
+    return `
+      <button type="button" class="profile-card${active ? ' active' : ''}" onclick="selectCompanyProfile('${p.id}')" aria-pressed="${active}">
+        <div class="profile-card-logo"><img src="${p.logo}" alt=""></div>
+        <div class="profile-card-meta">
+          <div class="profile-card-name">${p.name}</div>
+          <div class="profile-card-sub">${p.short}</div>
+        </div>
+        <div class="profile-swatches" aria-hidden="true">
+          <span class="profile-swatch-dot" style="background:${p.green}"></span>
+          <span class="profile-swatch-dot" style="background:${p.blue}"></span>
+        </div>
+        <div class="profile-check">${active ? '✓' : ''}</div>
+      </button>`;
+  }).join('');
+}
+
+function selectCompanyProfile(id) {
+  const profile = COMPANY_PROFILES[id];
+  if (!profile) return;
+  THEME.profileId = id;
+  THEME.logoDataUrl = null; // use company logo
+  THEME.green = profile.green;
+  THEME.blue = profile.blue;
+  const file = document.getElementById('settings-logo-file');
+  if (file) file.value = '';
+  applySettings();
+  saveSettings();
+}
+
 function applyThemeColors() {
   const root = document.documentElement;
-  const green = THEME.green || DEFAULT_GREEN;
-  const blue = THEME.blue || DEFAULT_BLUE;
+  const green = THEME.green || getActiveProfile().green;
+  const blue = THEME.blue || getActiveProfile().blue;
   root.style.setProperty('--brand', green);
   root.style.setProperty('--brand-hover', darkenHex(green, 0.85));
   root.style.setProperty('--brand-dim', rgbaFromHex(green, 0.12));
@@ -4328,7 +4488,7 @@ function applyThemeColors() {
 }
 
 function applyLogo() {
-  const src = THEME.logoDataUrl || DEFAULT_LOGO;
+  const src = profileLogoSrc();
   document.querySelectorAll('img.app-logo').forEach(img => {
     if (img.getAttribute('src') !== src) img.setAttribute('src', src);
   });
@@ -4337,6 +4497,7 @@ function applyLogo() {
 function applySettings() {
   applyThemeColors();
   applyLogo();
+  renderProfileList();
 }
 
 function openSettings() {
@@ -4364,7 +4525,7 @@ function onColorPick(which, value) {
 
 function onColorHexInput(which, value) {
   const hex = normalizeHex(value);
-  if (!hex) return; // wait until valid 3/6 digit hex
+  if (!hex) return;
   if (which === 'green') THEME.green = hex;
   else THEME.blue = hex;
   applyThemeColors();
@@ -4372,8 +4533,9 @@ function onColorHexInput(which, value) {
 }
 
 function resetThemeColors() {
-  THEME.green = DEFAULT_GREEN;
-  THEME.blue = DEFAULT_BLUE;
+  const p = getActiveProfile();
+  THEME.green = p.green;
+  THEME.blue = p.blue;
   applyThemeColors();
   saveSettings();
 }
@@ -4403,13 +4565,11 @@ function resizeImageToDataUrl(file, maxEdge = 900, quality = 0.88) {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        // Prefer PNG for transparency; JPEG for large photos
         const isPng = (file.type === 'image/png') || (file.type === 'image/svg+xml');
         try {
           if (isPng) resolve(canvas.toDataURL('image/png'));
           else resolve(canvas.toDataURL('image/jpeg', quality));
         } catch (err) {
-          // SVG tainted or similar — fall back to original data URL
           resolve(reader.result);
         }
       };
@@ -4427,7 +4587,6 @@ async function onLogoFileSelected(ev) {
     return;
   }
   try {
-    // SVG: store raw data URL (canvas may not work well)
     if (file.type === 'image/svg+xml' || file.size < 180000) {
       const reader = new FileReader();
       const dataUrl = await new Promise((resolve, reject) => {
