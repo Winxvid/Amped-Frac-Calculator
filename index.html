@@ -600,14 +600,46 @@
       flex: 1;
     }
     #sidebar-nav .tab-btn {
-      display: flex; align-items: center; gap: 11px;
-      width: 100%; text-align: left;
-      padding: 12px 14px; border-radius: 12px;
-      font-size: 14px; background: none; color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      min-height: 48px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: none;
+      color: var(--text2);
     }
     #sidebar-nav .tab-btn:hover { background: var(--brand-dim); color: var(--brand); }
     #sidebar-nav .tab-btn.active { background: var(--brand-dim); color: var(--brand); font-weight: 800; }
-    .snav-icon { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
+    .snav-icon {
+      width: 40px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+      line-height: 1;
+      overflow: hidden;
+    }
+    .snav-icon img {
+      max-height: 28px;
+      max-width: 38px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 4px;
+      display: block;
+    }
+    #sidebar-nav .tab-btn .snav-label {
+      flex: 1;
+      min-width: 0;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
     .sidebar-section-lbl {
       font-size: 9px; font-weight: 800; text-transform: uppercase;
       letter-spacing: 1.5px; color: var(--text3);
@@ -4120,15 +4152,40 @@ const TABS = [
   {id:'hp',label:'HP'},
 ];
 
+// Shared icons for dashboard cards + hamburger menu (same assets)
+const NAV_ICON_SRC = {
+  math: '/Math-icon.jpg',
+  sand: '/Sand-icon.jpg',
+  chem: '/Chem-icon.jpg',
+  hydration: '/Hydration-icon.jpg',
+  blender: '/Blender-icon.jpg',
+  lime: '/Lime-icon.jpg',
+  wellbore: '/Wellbore-icon.jpg',
+  hp: '/Horsepower.jpg',
+};
+
+function dashCardIcon(id) {
+  const src = NAV_ICON_SRC[id];
+  if (!src) return '';
+  return `<img src="${src}" alt="" style="height:32px;width:auto;max-width:96px;object-fit:contain;border-radius:5px;">`;
+}
+
+function sidebarIcon(id) {
+  if (id === 'dashboard') return '🏠';
+  const src = NAV_ICON_SRC[id];
+  if (!src) return '';
+  return `<img src="${src}" alt="">`;
+}
+
 const DASH_CARDS = [
-  {id:'math',     label:'Math',    icon:'<img src="/Math-icon.jpg" alt="" style="height:32px;width:auto;max-width:72px;object-fit:contain;border-radius:6px;">',  bg:'#dbeafe', tc:'#1e40af'},
-  {id:'sand',     label:'Sand',    icon:'<img src="/Sand-icon.jpg" alt="" style="height:32px;width:auto;max-width:72px;object-fit:contain;border-radius:5px;">', bg:'#fef3c7', tc:'#92400e'},
-  {id:'chem',     label:'Chem',    icon:'<img src="/Chem-icon.jpg" alt="" style="height:28px;width:auto;max-width:96px;object-fit:contain;border-radius:5px;">', bg:'#d1fae5', tc:'#065f46'},
-  {id:'hydration',label:'Hydration',icon:'<img src="/Hydration-icon.jpg" alt="" style="height:32px;width:auto;max-width:72px;object-fit:contain;border-radius:5px;">',bg:'#e0e7ff', tc:'#3730a3'},
-  {id:'blender',  label:'Blender', icon:'<img src="/Blender-icon.jpg" alt="" style="height:26px;width:auto;max-width:80px;object-fit:contain;border-radius:5px;">', bg:'#ede9fe', tc:'#5b21b6'},
-  {id:'lime',     label:'LIME',    icon:'<img src="/Lime-icon.jpg" alt="" style="height:28px;width:auto;max-width:96px;object-fit:contain;border-radius:5px;">', bg:'#fce7f3', tc:'#9d174d'},
-  {id:'wellbore', label:'Wellbore',icon:'<img src="/Wellbore-icon.jpg" alt="" style="height:32px;width:auto;max-width:96px;object-fit:contain;border-radius:5px;">', bg:'#e5e7eb', tc:'#374151'},
-  {id:'hp',       label:'Horsepower', icon:'<img src="/Horsepower.jpg" alt="" style="height:28px;width:auto;max-width:96px;object-fit:contain;border-radius:5px;">', bg:'#d1fae5', tc:'#065f46'},
+  {id:'math',     label:'Math',    icon: dashCardIcon('math'),     bg:'#dbeafe', tc:'#1e40af'},
+  {id:'sand',     label:'Sand',    icon: dashCardIcon('sand'),     bg:'#fef3c7', tc:'#92400e'},
+  {id:'chem',     label:'Chem',    icon: dashCardIcon('chem'),     bg:'#d1fae5', tc:'#065f46'},
+  {id:'hydration',label:'Hydration',icon: dashCardIcon('hydration'),bg:'#e0e7ff', tc:'#3730a3'},
+  {id:'blender',  label:'Blender', icon: dashCardIcon('blender'),  bg:'#ede9fe', tc:'#5b21b6'},
+  {id:'lime',     label:'LIME',    icon: dashCardIcon('lime'),     bg:'#fce7f3', tc:'#9d174d'},
+  {id:'wellbore', label:'Wellbore',icon: dashCardIcon('wellbore'), bg:'#e5e7eb', tc:'#374151'},
+  {id:'hp',       label:'Horsepower', icon: dashCardIcon('hp'),    bg:'#d1fae5', tc:'#065f46'},
 ];
 
 const BASE_GEARS  = [[1,4.2],[2,4.9],[3,5.7],[4,6.8],[5,7.9],[6,9.3],[7,10.7]];
@@ -4428,11 +4485,6 @@ const F = {
 // NAV
 // ================================================================
 
-const SIDEBAR_ICONS = {
-  dashboard:'🏠', math:'∫', sand:'📦', chem:'🧪',
-  hydration:'💧', blender:'⏱', lime:'⚙️', wellbore:'🕳', hp:'⚡'
-};
-
 function openMenu() {
   closeSettings();
   document.getElementById('sidebar').classList.add('open');
@@ -4455,10 +4507,10 @@ function nav(tab) {
 }
 
 function buildNav() {
-  // Sidebar nav
+  // Sidebar nav — same icons as dashboard cards
   document.getElementById('sidebar-nav').innerHTML = TABS.map(t =>
     `<button class="tab-btn${t.id===S.tab?' active':''}" data-tab="${t.id}" onclick="nav('${t.id}')">
-       <span class="snav-icon">${SIDEBAR_ICONS[t.id]||''}</span>${t.label}
+       <span class="snav-icon">${sidebarIcon(t.id)}</span><span class="snav-label">${t.label}</span>
      </button>`
   ).join('');
 
