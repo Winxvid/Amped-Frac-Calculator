@@ -719,52 +719,60 @@
     .menu-btn:hover { background: var(--brand-dim); color: var(--brand); border-color: var(--brand); }
     .dashboard-header { text-align: center; display: block; }
     /*
-      Metallic / shine title effect (profile-colored, not gold).
-      Uses active profile --title-color and --brand so Amped/Liberty/Default all adapt.
+      32 Gold-Foil effect on dashboard title, re-skinned with profile colors:
+      --ink   = main (title-color)  --ink-2 = primary accent (brand)
+      --ink-3 = secondary highlight (mix of brand + white)
     */
-    .dashboard-header .sec-title,
-    .dashboard-header .sec-sub {
+    .dashboard-header {
+      --ink: var(--title-color);
+      --ink-2: var(--brand);
+      --ink-3: color-mix(in srgb, var(--brand) 42%, white);
+    }
+    .dashboard-header .fx-foil {
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
       font-weight: 900;
-      letter-spacing: -0.02em;
-      background-image: linear-gradient(
-        110deg,
-        var(--title-color) 0%,
-        color-mix(in srgb, var(--title-color) 55%, white) 18%,
-        var(--brand) 42%,
-        color-mix(in srgb, var(--brand) 45%, white) 52%,
-        var(--title-color) 68%,
-        color-mix(in srgb, var(--title-color) 60%, white) 82%,
-        var(--brand) 100%
-      );
-      background-size: 220% 100%;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      color: transparent;
+      background:
+        linear-gradient(108deg,
+          color-mix(in srgb, var(--ink) 78%, black) 0%,
+          color-mix(in srgb, var(--ink-2) 70%, white) 18%,
+          var(--ink-3) 24%,
+          color-mix(in srgb, var(--ink) 55%, black) 36%,
+          color-mix(in srgb, var(--ink-2) 55%, white) 51%,
+          color-mix(in srgb, var(--ink) 72%, black) 68%,
+          var(--ink-3) 76%,
+          color-mix(in srgb, var(--ink-2) 65%, white) 100%
+        ) 0 0 / 230% 100%;
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;
       -webkit-text-fill-color: transparent;
-      animation: dash-title-shine 5.5s linear infinite;
-      filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--title-color) 35%, transparent));
+      text-shadow:
+        0 1px 0 color-mix(in srgb, var(--ink-3) 45%, transparent),
+        0 9px 20px rgba(0, 0, 0, 0.18);
+      animation: fx-foil 3.1s ease-in-out infinite;
     }
-    .dashboard-header .sec-title {
+    .dashboard-header .sec-title.fx-foil {
       font-size: clamp(26px, 7vw, 34px);
-      line-height: 1.15;
     }
-    .dashboard-header .sec-sub {
-      font-weight: 800;
-      margin-top: 6px;
+    .dashboard-header .sec-sub.fx-foil {
+      display: inline-block;
+      margin-top: 8px;
       font-size: clamp(14px, 3.8vw, 17px);
-      letter-spacing: 0.04em;
-      opacity: 0.95;
-      animation-delay: 0.35s;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      animation-delay: 0.2s;
     }
-    @keyframes dash-title-shine {
-      0%   { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
+    @keyframes fx-foil {
+      0%, 100% { background-position: 115% 0; filter: saturate(1.05); }
+      45%      { background-position: -35% 0; filter: saturate(1.35) brightness(1.12); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .dashboard-header .sec-title,
-      .dashboard-header .sec-sub {
+      .dashboard-header .fx-foil {
         animation: none;
-        background-position: 40% 50%;
+        background-position: 40% 0;
+        filter: none;
       }
     }
 
@@ -1205,8 +1213,8 @@
   <div class="section" id="s-dashboard">
     <div class="mb-4 dashboard-header">
       <div>
-        <div class="sec-title">Hydraulic Fracturing</div>
-        <div class="sec-sub">Field Calculator</div>
+        <div class="sec-title fx-foil">Hydraulic Fracturing</div>
+        <div class="sec-sub fx-foil">Field Calculator</div>
       </div>
     </div>
 
