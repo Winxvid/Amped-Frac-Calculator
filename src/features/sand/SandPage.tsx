@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 import { PROPPANT_DATA } from '../shared/fieldData';
@@ -124,10 +125,11 @@ export function SandPage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-sand">
-      <div className="mb-4">
-        <div className="sec-title">SAND CALCULATIONS</div>
-        <div className="sec-sub">SAND FUNDAMENTALS</div>
-      </div>
+      <SectionHeader
+        tab={TAB}
+        title="SAND CALCULATIONS"
+        subtitle="SAND FUNDAMENTALS"
+      />
 
       <ToolCard title="Sand Fundamentals Reference" tab={TAB}>
         <div className="grid-2 gap-2 mb-2">

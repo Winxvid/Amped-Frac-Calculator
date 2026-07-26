@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigation } from '../../context/NavigationContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 import { RULES_OF_FOUR } from '../shared/fieldData';
@@ -157,13 +158,11 @@ export function HydrationPage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-hydration">
-      <div className="mb-4">
-        <div className="sec-title">HYDRATION CALCULATIONS</div>
-        <div className="sec-sub">
-          Section 4 formulas — Rules of Four, LGA, tub volume, hydration time
-          &amp; gel loading
-        </div>
-      </div>
+      <SectionHeader
+        tab={TAB}
+        title="HYDRATION CALCULATIONS"
+        subtitle="Section 4 formulas — Rules of Four, LGA, tub volume, hydration time & gel loading"
+      />
 
       {/* Rules of Four reference grid */}
       <ToolCard

@@ -854,6 +854,13 @@
       letter-spacing: 0.4px;
       font-size: 14px;
     }
+    .tool-title-with-heart .smoky-tool-title {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .section-header {
+      overflow: visible;
+    }
     .tool-title-actions {
       display: flex;
       align-items: center;

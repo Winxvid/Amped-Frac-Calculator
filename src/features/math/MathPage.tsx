@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 import {
@@ -120,9 +121,7 @@ export function MathPage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-math">
-      <div className="mb-4">
-        <div className="sec-title">Fundamental Math</div>
-      </div>
+      <SectionHeader tab={TAB} title="Fundamental Math" />
 
       {/* PEMDAS */}
       <ToolCard

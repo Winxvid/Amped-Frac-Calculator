@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 import { TUBULAR_DATA } from '../shared/fieldData';
@@ -244,10 +245,11 @@ export function WellborePage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-wellbore">
-      <div className="mb-4">
-        <div className="sec-title">WELLBORE CALCULATIONS</div>
-        <div className="sec-sub">FLUSH VOLUME FORMULAS - FORMATION FORMULAS</div>
-      </div>
+      <SectionHeader
+        tab={TAB}
+        title="WELLBORE CALCULATIONS"
+        subtitle="FLUSH VOLUME FORMULAS - FORMATION FORMULAS"
+      />
 
       <ToolCard title="Tubular Capacity, Displacement & Metal Volume" tab={TAB}>
         <div className="grid-3 mb-3">

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
 import { useCalcState } from '../../context/CalcStateContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 import { BASE_GEARS, EXTRA_GEARS } from '../shared/fieldData';
@@ -269,10 +270,11 @@ export function HpPage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-hp">
-      <div className="mb-4">
-        <div className="sec-title">HORSEPOWER, HOSES &amp; IRON</div>
-        <div className="sec-sub">CALCULATIONS</div>
-      </div>
+      <SectionHeader
+        tab={TAB}
+        title="HORSEPOWER, HOSES & IRON"
+        subtitle="CALCULATIONS"
+      />
 
       <ToolCard title="Stage Energy Analysis" tab={TAB}>
         <div className="flex gap-3 mb-3">

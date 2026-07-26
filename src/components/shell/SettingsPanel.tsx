@@ -10,6 +10,7 @@ import {
 } from '../../lib/themeUtils';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '../../context/NavigationContext';
+import { SmokyText } from '../ui/SmokyText';
 
 function colorInputValue(hex: string) {
   // <input type="color"> is happiest with lowercase #rrggbb
@@ -48,7 +49,28 @@ export function SettingsPanel() {
         aria-hidden={!settingsOpen}
       >
         <div className="settings-hdr">
-          <div className="tool-title">Settings</div>
+          {settingsOpen ? (
+            <SmokyText
+              text="Settings"
+              color="var(--title-color)"
+              className="tool-title"
+              intensity={8}
+              duration={1.1}
+              delay={0.05}
+              animationMode="inPlace"
+              motionScale={0.12}
+              replayKey={`settings-${settingsOpen}-${theme.profileId}`}
+              as="span"
+              style={{
+                margin: 0,
+                fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
+                fontWeight: 900,
+                fontSize: 16,
+              }}
+            />
+          ) : (
+            <div className="tool-title">Settings</div>
+          )}
           <button
             type="button"
             className="sidebar-close"

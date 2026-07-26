@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 
@@ -155,10 +156,11 @@ export function BlenderPage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-blender">
-      <div className="mb-4">
-        <div className="sec-title">BLENDER CALCULATIONS</div>
-        <div className="sec-sub">CLEAN &amp; SLURRY FORMULAS</div>
-      </div>
+      <SectionHeader
+        tab={TAB}
+        title="BLENDER CALCULATIONS"
+        subtitle="CLEAN & SLURRY FORMULAS"
+      />
 
       <ToolCard title="Clean & Slurry Rate Conversion (CFR & Yield)" tab={TAB}>
         <div className="grid-2 mb-3">

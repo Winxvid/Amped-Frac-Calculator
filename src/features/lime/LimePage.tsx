@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
 import { ANALOG_DEVICES } from '../shared/fieldData';
@@ -83,10 +84,11 @@ export function LimePage() {
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-lime">
-      <div className="mb-4">
-        <div className="sec-title">LIME Calibration</div>
-        <div className="sec-sub">Liquid Additive Metering Equipment scaling &amp; correction</div>
-      </div>
+      <SectionHeader
+        tab={TAB}
+        title="LIME Calibration"
+        subtitle="Liquid Additive Metering Equipment scaling & correction"
+      />
 
       <ToolCard title="Correction Vectors" tab={TAB}>
         <div className="flex gap-3 mb-3">

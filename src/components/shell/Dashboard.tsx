@@ -15,10 +15,6 @@ export function Dashboard() {
   // Replay smoke when entering Home or when profile / appearance changes
   const smokeKey = `${active}-${theme.profileId}-${theme.green}-${theme.blue}-${resolvedMode}`;
 
-  if (!active) {
-    // Keep section mounted for CSS .section.active, but skip heavy smoke work off-tab
-  }
-
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-dashboard">
       <div className="mb-4 dashboard-header">
