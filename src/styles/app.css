@@ -1092,37 +1092,25 @@
       cursor: pointer;
     }
     .settings-file-btn input[type=file] { display: none; }
-    .profile-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .settings-profile-select {
+      margin-top: 2px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-weight: 700;
     }
-    .profile-card {
+    .profile-select-summary {
       display: flex;
       align-items: center;
-      gap: 12px;
-      width: 100%;
-      text-align: left;
-      padding: 12px;
+      gap: 10px;
+      padding: 10px 12px;
       border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: var(--card);
-      cursor: pointer;
-      font-family: inherit;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-    }
-    .profile-card:hover {
-      border-color: var(--brand);
-      background: var(--brand-dim2);
-    }
-    .profile-card.active {
-      border-color: var(--brand);
-      background: var(--brand-dim);
-      box-shadow: 0 0 0 1px var(--brand);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      margin-bottom: 4px;
     }
     .profile-card-logo {
-      width: 56px;
-      height: 40px;
+      width: 48px;
+      height: 34px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -1138,7 +1126,7 @@
       object-fit: contain;
     }
     .profile-card-logo.empty {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--text3);
       letter-spacing: 0.3px;
@@ -1156,17 +1144,10 @@
       display: none !important;
     }
     .profile-card-meta { flex: 1; min-width: 0; }
-    .profile-card-name {
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1.2;
-    }
     .profile-card-sub {
       font-size: 11px;
       color: var(--text2);
-      margin-top: 3px;
-      line-height: 1.3;
+      line-height: 1.35;
     }
     .profile-swatches {
       display: flex;
@@ -1180,6 +1161,7 @@
       border: 1px solid rgba(0,0,0,0.12);
     }
     .profile-check {
+      display: none;
       font-size: 14px;
       font-weight: 900;
       color: var(--brand);

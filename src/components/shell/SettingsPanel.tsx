@@ -44,43 +44,44 @@ export function SettingsPanel() {
         <div className="settings-body">
           <div className="settings-block">
             <div className="settings-section-title">Company Profile</div>
-            <div className="profile-list">
+            <label className="lbl" htmlFor="settings-profile-select">
+              Profile
+            </label>
+            <select
+              id="settings-profile-select"
+              className="field settings-profile-select"
+              value={theme.profileId}
+              onChange={(e) => selectProfile(e.target.value as CompanyProfileId)}
+            >
               {PROFILE_ORDER.map((id) => {
                 const p = COMPANY_PROFILES[id];
-                const active = theme.profileId === id;
                 return (
-                  <button
-                    key={id}
-                    type="button"
-                    className={`profile-card${active ? ' active' : ''}`}
-                    onClick={() => selectProfile(id as CompanyProfileId)}
-                    aria-pressed={active}
-                  >
-                    <div className={`profile-card-logo${p.logo ? '' : ' empty'}`}>
-                      {p.logo ? <img src={p.logo} alt="" /> : 'None'}
-                    </div>
-                    <div className="profile-card-meta">
-                      <div className="profile-card-name">{p.name}</div>
-                      <div className="profile-card-sub">{p.short}</div>
-                    </div>
-                    <div className="profile-swatches" aria-hidden="true">
-                      <span
-                        className="profile-swatch-dot"
-                        style={{ background: p.green }}
-                      />
-                      <span
-                        className="profile-swatch-dot"
-                        style={{ background: p.blue }}
-                      />
-                    </div>
-                    <div className="profile-check">{active ? '✓' : ''}</div>
-                  </button>
+                  <option key={id} value={id}>
+                    {p.name}
+                  </option>
                 );
               })}
+            </select>
+            <div className="profile-select-summary" aria-live="polite">
+              <div className={`profile-card-logo${profile.logo ? '' : ' empty'}`}>
+                {profile.logo ? <img src={profile.logo} alt="" /> : 'None'}
+              </div>
+              <div className="profile-card-meta">
+                <div className="profile-card-sub">{profile.short}</div>
+              </div>
+              <div className="profile-swatches" aria-hidden="true">
+                <span
+                  className="profile-swatch-dot"
+                  style={{ background: profile.green }}
+                />
+                <span
+                  className="profile-swatch-dot"
+                  style={{ background: profile.blue }}
+                />
+              </div>
             </div>
             <p className="settings-hint">
-              Switch company branding instantly. Logo and colors update together and are
-              saved on this device.
+              Logo and colors update together and are saved on this device.
             </p>
           </div>
 
