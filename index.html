@@ -776,6 +776,129 @@
       }
     }
 
+    /* ── Favorites ── */
+    #favorites-card .tool-title { margin-bottom: 8px; }
+    #favorites-empty {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.45;
+      padding: 8px 2px 4px;
+    }
+    #favorites-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .fav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.15s, background 0.15s, transform 0.12s;
+    }
+    .fav-item:hover {
+      border-color: var(--brand);
+      background: var(--brand-dim2);
+    }
+    .fav-item:active { transform: scale(0.99); }
+    .fav-item-body { flex: 1; min-width: 0; }
+    .fav-item-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--title-color);
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+    .fav-item-tab {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text2);
+      margin-top: 3px;
+    }
+    .fav-item-go {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+    .tool-title-with-heart {
+      display: flex !important;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .tool-title-with-heart .tool-title-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .fav-heart {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      margin: -6px -6px 0 0;
+      padding: 6px;
+      border: none;
+      background: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--text3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fav-heart:hover {
+      color: #e11d48;
+      background: rgba(225, 29, 72, 0.08);
+    }
+    .fav-heart.is-fav {
+      color: #e11d48;
+    }
+    .fav-heart.is-fav .heart-path {
+      fill: currentColor;
+      stroke: currentColor;
+    }
+    .fav-heart svg {
+      width: 22px;
+      height: 22px;
+      overflow: visible;
+      display: block;
+    }
+    .fav-heart .heart {
+      transform-origin: 50% 50%;
+      transform-box: fill-box;
+    }
+    .fav-heart.pulse .heart {
+      animation: fav-heart-beat 0.6s ease-out;
+    }
+    @keyframes fav-heart-beat {
+      0%   { transform: scale(1); }
+      20%  { transform: scale(1.15); }
+      40%  { transform: scale(1); }
+      60%  { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fav-heart.pulse .heart { animation: none; }
+    }
+    .card.tool-highlight,
+    .card-sm.tool-highlight {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px var(--brand-dim);
+      transition: outline 0.2s, box-shadow 0.2s;
+    }
+
     /* ── Settings panel (right drawer) ── */
     #settings-overlay {
       display: none;
@@ -1216,6 +1339,13 @@
         <div class="sec-title fx-foil">Hydraulic Fracturing</div>
         <div class="sec-sub fx-foil">Field Calculator</div>
       </div>
+    </div>
+
+    <!-- Favorites — quick access to hearted tools -->
+    <div class="card mb-4" id="favorites-card">
+      <div class="lbl mb-3 tool-title" style="pointer-events:none;">Favorites</div>
+      <div id="favorites-list"></div>
+      <div id="favorites-empty">Tap the ♡ on any calculator tool to pin it here for quick access.</div>
     </div>
 
     <!-- Nav grid -->
@@ -4433,6 +4563,196 @@ function saveS() {
 }
 
 // ================================================================
+// FAVORITES — pin tools from any page to the Home dashboard
+// ================================================================
+
+const FAVORITES_KEY = 'ampdFrac_favorites_v1';
+const TAB_LABELS = {
+  math: 'Math', sand: 'Sand', chem: 'Chem', hydration: 'Hydration',
+  blender: 'Blender', lime: 'LIME', wellbore: 'Wellbore', hp: 'Horsepower',
+  dashboard: 'Home',
+};
+
+/** @type {{id:string,label:string,tab:string}[]} */
+let favorites = [];
+
+const HEART_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       aria-hidden="true">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+    <path class="heart heart-path"
+      d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/>
+  </svg>`;
+
+function slugToolId(tab, label) {
+  const s = String(label || '')
+    .toLowerCase()
+    .replace(/&amp;/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return `${tab}__${s || 'tool'}`;
+}
+
+function loadFavorites() {
+  try {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (Array.isArray(data)) favorites = data.filter(f => f && f.id && f.label && f.tab);
+  } catch (e) {}
+}
+
+function saveFavorites() {
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  } catch (e) {}
+}
+
+function isFavorite(id) {
+  return favorites.some(f => f.id === id);
+}
+
+function pulseHeart(btn) {
+  if (!btn) return;
+  btn.classList.remove('pulse');
+  // reflow to restart animation
+  void btn.offsetWidth;
+  btn.classList.add('pulse');
+  setTimeout(() => btn.classList.remove('pulse'), 650);
+}
+
+function toggleFavorite(id, label, tab, btn) {
+  const idx = favorites.findIndex(f => f.id === id);
+  if (idx >= 0) {
+    favorites.splice(idx, 1);
+  } else {
+    favorites.unshift({ id, label, tab });
+  }
+  saveFavorites();
+  syncAllHeartButtons();
+  renderFavoritesPanel();
+  if (btn) pulseHeart(btn);
+}
+
+function syncAllHeartButtons() {
+  document.querySelectorAll('.fav-heart[data-tool-id]').forEach(btn => {
+    const on = isFavorite(btn.dataset.toolId);
+    btn.classList.toggle('is-fav', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.title = on ? 'Remove from favorites' : 'Add to favorites';
+    btn.setAttribute('aria-label', btn.title);
+  });
+}
+
+function renderFavoritesPanel() {
+  const list = document.getElementById('favorites-list');
+  const empty = document.getElementById('favorites-empty');
+  if (!list || !empty) return;
+
+  if (!favorites.length) {
+    list.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = favorites.map(f => {
+    const tabName = TAB_LABELS[f.tab] || f.tab;
+    return `
+      <button type="button" class="fav-item" onclick="openFavorite('${esc(f.id)}')">
+        <div class="fav-item-body">
+          <div class="fav-item-label">${esc(f.label)}</div>
+          <div class="fav-item-tab">${esc(tabName)}</div>
+        </div>
+        <span class="fav-item-go">Open →</span>
+      </button>`;
+  }).join('');
+}
+
+function openFavorite(toolId) {
+  const safeId = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(toolId) : String(toolId).replace(/"/g, '\\"');
+  // Prefer the tool card (scroll target), not the heart button which also has data-tool-id
+  const el = document.querySelector(`.card[data-tool-id="${safeId}"], .card-sm[data-tool-id="${safeId}"], [data-tool-id="${safeId}"]:not(.fav-heart)`);
+  if (!el) {
+    // Stale favorite — remove
+    favorites = favorites.filter(f => f.id !== toolId);
+    saveFavorites();
+    renderFavoritesPanel();
+    return;
+  }
+  const section = el.closest('.section');
+  if (!section || !section.id) return;
+  const tab = section.id.replace(/^s-/, '');
+  nav(tab);
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('tool-highlight');
+      setTimeout(() => el.classList.remove('tool-highlight'), 1600);
+    }, 40);
+  });
+}
+
+function ensureToolFavoriteUI() {
+  document.querySelectorAll('.section[id^="s-"] .tool-title').forEach(titleEl => {
+    if (titleEl.closest('#favorites-card')) return;
+    if (titleEl.closest('#settings-panel')) return;
+    if (titleEl.dataset.favBound === '1') return;
+
+    const section = titleEl.closest('.section');
+    if (!section || section.id === 's-dashboard') return;
+
+    // Prefer existing text content before we restructure
+    let label = (titleEl.querySelector('.tool-title-text')?.textContent || titleEl.textContent || '').trim();
+    label = label.replace(/\s+/g, ' ');
+    if (!label || label === 'Favorites') return;
+
+    const tab = section.id.replace(/^s-/, '');
+    const toolId = slugToolId(tab, label);
+
+    // Attach id to nearest card for scroll target
+    const card = titleEl.closest('.card, .card-sm');
+    if (card) {
+      card.dataset.toolId = toolId;
+      card.dataset.toolLabel = label;
+      card.dataset.toolTab = tab;
+    }
+
+    // Restructure title to include heart (once)
+    if (!titleEl.classList.contains('tool-title-with-heart')) {
+      const text = label;
+      titleEl.textContent = '';
+      titleEl.classList.add('tool-title-with-heart');
+      const span = document.createElement('span');
+      span.className = 'tool-title-text';
+      span.textContent = text;
+      titleEl.appendChild(span);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'fav-heart' + (isFavorite(toolId) ? ' is-fav' : '');
+      btn.dataset.toolId = toolId;
+      btn.innerHTML = HEART_SVG;
+      btn.title = isFavorite(toolId) ? 'Remove from favorites' : 'Add to favorites';
+      btn.setAttribute('aria-label', btn.title);
+      btn.setAttribute('aria-pressed', isFavorite(toolId) ? 'true' : 'false');
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleFavorite(toolId, label, tab, btn);
+      });
+      // Hover pulse (desktop) — mirrors the Motion heart beat
+      btn.addEventListener('mouseenter', () => pulseHeart(btn));
+      titleEl.appendChild(btn);
+    }
+
+    titleEl.dataset.favBound = '1';
+  });
+  syncAllHeartButtons();
+  renderFavoritesPanel();
+}
+
+// ================================================================
 // SETTINGS — company profiles, logo + brand colors (this browser)
 // ================================================================
 
@@ -5457,6 +5777,7 @@ function renderSand() {
         ? '<div style="color:var(--text2);text-align:center;padding:20px;font-size:13px;">No sand types yet.</div>'
         : st.inv.map((item,si) => sandCard(S.stageIdx,si,item)).join('')}
     </div>`;
+  ensureToolFavoriteUI();
 }
 
 function sandCard(si, ti, item) {
@@ -6789,7 +7110,9 @@ function init() {
   loadS();
   loadSettings();
   applySettings();
+  loadFavorites();
   buildNav();
+  ensureToolFavoriteUI();
 
   // Math
   updateConvUnits();
@@ -6934,6 +7257,9 @@ function init() {
   bindAll('go-pumps',  updateGORange);
   bindAll('go-extreme',updateGORange);
   updateGORange();
+
+  // Hearts on all tool cards (after dynamic sand UI is built)
+  ensureToolFavoriteUI();
 
   // Navigate
   nav(S.tab);
