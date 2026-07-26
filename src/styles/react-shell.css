@@ -28,8 +28,38 @@ body {
     height: 44px;
   }
   .menu-btn,
-  .settings-btn {
+  .settings-btn,
+  .theme-toggle-btn {
     width: 44px;
     height: 44px;
   }
+}
+
+/* Dark-mode chrome polish (brand colors stay via CSS vars from JS) */
+html[data-theme='dark'] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+html[data-theme='dark'] .field {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+html[data-theme='dark'] .tile {
+  background: var(--surface2);
+}
+
+html[data-theme='dark'] .profile-card-logo,
+html[data-theme='dark'] .settings-logo-preview {
+  background: #fff;
+}
+
+html[data-theme='dark'] .nav-card {
+  /* keep soft tinted card backgrounds from DASH_CARDS; slight lift */
+  box-shadow: 0 1px 8px var(--shadow);
+}
+
+html[data-theme='dark'] .fx-foil {
+  filter: saturate(1.15) brightness(1.08);
 }

@@ -4,14 +4,31 @@ import {
   PROFILE_ORDER,
   type CompanyProfileId,
 } from '../../lib/constants';
-import { getColorRoleCopy } from '../../lib/themeUtils';
+import {
+  getColorRoleCopy,
+  type ColorMode,
+} from '../../lib/themeUtils';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '../../context/NavigationContext';
 
+function colorInputValue(hex: string) {
+  // <input type="color"> is happiest with lowercase #rrggbb
+  return (hex || '#000000').toLowerCase();
+}
+
 export function SettingsPanel() {
   const fileRef = useRef<HTMLInputElement>(null);
-  const { theme, logoSrc, selectProfile, setColor, resetColors, uploadLogo, resetLogo } =
-    useTheme();
+  const {
+    theme,
+    logoSrc,
+    resolvedMode,
+    selectProfile,
+    setColor,
+    resetColors,
+    setColorMode,
+    uploadLogo,
+    resetLogo,
+  } = useTheme();
   const { settingsOpen, closeSettings } = useNavigation();
   const profile = COMPANY_PROFILES[theme.profileId];
   const copy = getColorRoleCopy(theme.profileId, profile.name);
@@ -43,6 +60,46 @@ export function SettingsPanel() {
         </div>
         <div className="settings-body">
           <div className="settings-block">
+            <div className="settings-section-title">Appearance</div>
+            <div
+              className="appearance-seg"
+              role="group"
+              aria-label="Color mode"
+            >
+              {(
+                [
+                  { id: 'light', label: 'Light', icon: '☀' },
+                  { id: 'dark', label: 'Dark', icon: '☾' },
+                  { id: 'system', label: 'System', icon: '◐' },
+                ] as const
+              ).map((opt) => {
+                const active = theme.colorMode === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    className={`appearance-seg-btn${active ? ' active' : ''}`}
+                    aria-pressed={active}
+                    onClick={() => setColorMode(opt.id as ColorMode)}
+                  >
+                    <span className="appearance-seg-icon" aria-hidden="true">
+                      {opt.icon}
+                    </span>
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="settings-hint">
+              Light &amp; dark only change page chrome (backgrounds, cards, text).
+              Company brand colors stay separate
+              {theme.colorMode === 'system'
+                ? ` · currently following system (${resolvedMode}).`
+                : '.'}
+            </p>
+          </div>
+
+          <div className="settings-block">
             <div className="settings-section-title">Company Profile</div>
             <label className="lbl" htmlFor="settings-profile-select">
               Profile
@@ -72,16 +129,16 @@ export function SettingsPanel() {
               <div className="profile-swatches" aria-hidden="true">
                 <span
                   className="profile-swatch-dot"
-                  style={{ background: profile.green }}
+                  style={{ background: theme.green }}
                 />
                 <span
                   className="profile-swatch-dot"
-                  style={{ background: profile.blue }}
+                  style={{ background: theme.blue }}
                 />
               </div>
             </div>
             <p className="settings-hint">
-              Logo and colors update together and are saved on this device.
+              Logo and brand colors update together and are saved on this device.
             </p>
           </div>
 
@@ -134,7 +191,7 @@ export function SettingsPanel() {
               <input
                 type="color"
                 className="settings-swatch"
-                value={theme.green}
+                value={colorInputValue(theme.green)}
                 title={copy.greenLabel}
                 onChange={(e) => setColor('green', e.target.value)}
               />
@@ -161,7 +218,7 @@ export function SettingsPanel() {
               <input
                 type="color"
                 className="settings-swatch"
-                value={theme.blue}
+                value={colorInputValue(theme.blue)}
                 title={copy.blueLabel}
                 onChange={(e) => setColor('blue', e.target.value)}
               />
@@ -185,17 +242,17 @@ export function SettingsPanel() {
               </div>
             </div>
             <p className="settings-hint">{copy.footer}</p>
-          </div>
-
-          <div className="settings-actions">
             <button
               type="button"
               className="btn btn-ghost"
-              style={{ width: '100%' }}
-              onClick={resetColors}
+              style={{ width: '100%', marginTop: 12 }}
+              onClick={() => resetColors()}
             >
               Reset colors to profile default
             </button>
+          </div>
+
+          <div className="settings-actions">
             <button
               type="button"
               className="btn btn-brand"

@@ -18,6 +18,31 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
+    <!-- Prevent light flash before React hydrates saved appearance -->
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('ampdFrac_settings_v2');
+          var mode = 'system';
+          if (raw) {
+            var d = JSON.parse(raw);
+            if (d && (d.colorMode === 'light' || d.colorMode === 'dark' || d.colorMode === 'system')) {
+              mode = d.colorMode;
+            }
+          }
+          var dark =
+            mode === 'dark' ||
+            (mode === 'system' &&
+              window.matchMedia &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) {
+            document.documentElement.dataset.theme = 'dark';
+            document.documentElement.style.colorScheme = 'dark';
+            document.documentElement.style.backgroundColor = '#0B0B0F';
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
