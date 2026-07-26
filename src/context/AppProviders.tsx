@@ -1,10 +1,14 @@
 import type { ReactNode } from 'react';
+import { ThemeProvider } from './ThemeContext';
+import { FavoritesProvider } from './FavoritesContext';
+import { NavigationProvider } from './NavigationContext';
 
-/**
- * Placeholder for React context providers (theme, favorites, app state).
- * Legacy engine still owns localStorage for theme/favorites today;
- * lift those into providers as shell components are rewritten.
- */
 export function AppProviders({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <ThemeProvider>
+      <FavoritesProvider>
+        <NavigationProvider>{children}</NavigationProvider>
+      </FavoritesProvider>
+    </ThemeProvider>
+  );
 }

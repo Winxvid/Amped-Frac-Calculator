@@ -1,0 +1,2979 @@
+  <div class="section" id="s-math">
+    <div class="mb-4">
+      <div class="sec-title">Fundamental Math</div>
+    </div>
+
+    <!-- Order of Operations (PEMDAS) Card -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Order of Operations</div>
+        <span class="badge badge-green" style="font-size:11px;">Remember PEMDAS</span>
+      </div>
+      <div class="grid-2 gap-2 mb-1">
+        <div class="surface-card flex items-center gap-3" style="padding:10px 14px;">
+          <div class="font-display" style="font-size:20px;font-weight:900;color:var(--brand);width:24px;">1</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;">Parentheses</div>
+            <div style="font-size:11px;color:var(--text2);">( ) Bracketed operations first</div>
+          </div>
+        </div>
+        <div class="surface-card flex items-center gap-3" style="padding:10px 14px;">
+          <div class="font-display" style="font-size:20px;font-weight:900;color:var(--brand);width:24px;">2</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;">Exponents &amp; Roots</div>
+            <div style="font-size:11px;color:var(--text2);">x², √x, powers &amp; roots</div>
+          </div>
+        </div>
+        <div class="surface-card flex items-center gap-3" style="padding:10px 14px;">
+          <div class="font-display" style="font-size:20px;font-weight:900;color:var(--brand);width:24px;">3</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;">Multiplication &amp; Division</div>
+            <div style="font-size:11px;color:var(--text2);">× and ÷ left to right</div>
+          </div>
+        </div>
+        <div class="surface-card flex items-center gap-3" style="padding:10px 14px;">
+          <div class="font-display" style="font-size:20px;font-weight:900;color:var(--brand);width:24px;">4</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;">Addition &amp; Subtraction</div>
+            <div style="font-size:11px;color:var(--text2);">+ and − left to right</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Category Dynamic Unit Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Interactive Multi-Unit Converter</div>
+      <div class="mb-3">
+        <label class="lbl">Dimension Category</label>
+        <select id="conv-cat" class="field" onchange="updateConvUnits()">
+          <option value="Volume">Volume (bbl, gal, ft³, in³, m³)</option>
+          <option value="Density">Density (lbs/gal, g/ml, kg/m³, lb/ft³)</option>
+          <option value="Weight">Weight (lb, kg)</option>
+          <option value="Length">Length (ft, in)</option>
+          <option value="Concentration">Concentration (ppt, g/L)</option>
+        </select>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Value</label>
+          <input type="number" id="conv-val" class="field" value="1" placeholder="1">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">From</label>
+          <select id="conv-from" class="field"></select>
+        </div>
+        <div class="flex-1">
+          <label class="lbl">To</label>
+          <select id="conv-to" class="field"></select>
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Converted Result</div>
+          <div class="font-display" style="font-size:32px;font-weight:900;color:#fff;" id="conv-result">42.0000</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.4);" id="conv-to-lbl">GAL</div>
+      </div>
+    </div>
+
+    <!-- Force on an Area Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Force on an Area</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Formula: Force (lbs) = Pressure (psi) × Surface Area (in²)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Pressure (PSI)</label>
+          <input type="number" id="force-psi" class="field" value="5000" placeholder="5000">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Surface Area (IN²)</label>
+          <input type="number" id="force-area" class="field" value="12.566" step="0.001" placeholder="12.566">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Total Force (LBS)</div>
+          <div class="val" style="color:var(--brand);" id="force-lbs">62,830</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Force (KIPS / 1000 lbs)</div>
+          <div class="val" id="force-kips">62.83</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fluid Velocity in a Pipe Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Fluid Velocity in a Pipe</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Formula: Fluid Velocity = Rate / (π × R²)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Rate (BPM)</label>
+          <input type="number" id="velpipe-rate" class="field" value="60" step="0.1" placeholder="60">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Pipe Inner Diameter (IN)</label>
+          <input type="number" id="velpipe-id" class="field" value="4.0" step="0.01" placeholder="4.0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Velocity (FT/SEC)</div>
+          <div class="val" style="color:var(--brand);" id="velpipe-fps">0.00</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Velocity (FT/MIN)</div>
+          <div class="val" id="velpipe-fpm">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hose Volume Factors & Hose Volume Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Hose Volume Factors &amp; Calculator</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Volume of Cylinder = πR² × Length. Standard hose benchmarks:</div>
+      <div class="grid-2 gap-2 mb-3">
+        <div class="surface-card">
+          <div class="lbl">1 in Hose</div>
+          <div class="font-display" style="font-size:15px;font-weight:800;color:var(--brand);">0.0408 <span style="font-size:10px;color:var(--text2);">gals/ft</span></div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">2 in Hose</div>
+          <div class="font-display" style="font-size:15px;font-weight:800;color:var(--brand);">0.1632 <span style="font-size:10px;color:var(--text2);">gals/ft</span></div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">4 in Hose</div>
+          <div class="font-display" style="font-size:15px;font-weight:800;color:var(--brand);">0.6528 <span style="font-size:10px;color:var(--text2);">gals/ft</span></div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">8 in Hose</div>
+          <div class="font-display" style="font-size:15px;font-weight:800;color:var(--brand);">2.6100 <span style="font-size:10px;color:var(--text2);">gals/ft</span></div>
+        </div>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Hose Size</label>
+          <select id="hosecalc-size" class="field" onchange="toggleCustomHoseSize()">
+            <option value="1">1 in Hose (0.0408 gal/ft)</option>
+            <option value="2">2 in Hose (0.1632 gal/ft)</option>
+            <option value="4" selected>4 in Hose (0.6528 gal/ft)</option>
+            <option value="8">8 in Hose (2.6100 gal/ft)</option>
+            <option value="custom">Custom Inner Diameter</option>
+          </select>
+        </div>
+        <div class="flex-1" id="hosecalc-custom-wrap" style="display:none;">
+          <label class="lbl">Custom ID (IN)</label>
+          <input type="number" id="hosecalc-id" class="field" value="3.0" step="0.1">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Hose Length (FT)</label>
+          <input type="number" id="hosecalc-len" class="field" value="50" placeholder="50">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Hose Volume</div>
+          <div class="val" style="color:var(--brand);" id="hosecalc-gal">32.64</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Barrels</div>
+          <div class="val" id="hosecalc-bbl">0.78</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rectangle Area -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Rectangle Area</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Length (IN)</label>
+          <input type="number" id="rect-len" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Height (IN)</label>
+          <input type="number" id="rect-h" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Area (in²)</div>
+          <div class="val" id="rect-in2">0</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Area (ft²)</div>
+          <div class="val" style="color:var(--brand);" id="rect-ft2">0.00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Circle Area -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Circle Area &amp; Radius</div>
+        <div class="flex gap-1">
+          <button class="quick-btn sel" id="circ-mode-d" onclick="setCircleMode('d')">Diameter</button>
+          <button class="quick-btn" id="circ-mode-r" onclick="setCircleMode('r')">Radius</button>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl" id="circ-lbl">Diameter (IN)</label>
+        <input type="number" id="circ-d" class="field" value="0" step="0.001" placeholder="0">
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Radius (R = D/2)</div>
+          <div class="val" id="circ-radius">0.0000</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Area (πR²)</div>
+          <div class="val" style="color:var(--brand);" id="circ-area">0.0000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tank / Cube Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tank / Cube Volume (Length × Width × Height)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Length (IN)</label>
+          <input type="number" id="tank-l" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Width (IN)</label>
+          <input type="number" id="tank-w" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Height (IN)</label>
+          <input type="number" id="tank-h" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="tile">
+          <div class="lbl">in³</div>
+          <div class="val" id="tank-in3">0</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Gallons</div>
+          <div class="val" id="tank-gal">0.00</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Barrels</div>
+          <div class="val" style="color:var(--brand);" id="tank-bbl">0.00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cylinder Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Cylinder Volume (πR² × Length)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Diameter (IN)</label>
+          <input type="number" id="cyl-d" class="field" value="0" step="0.001" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Length (IN)</label>
+          <input type="number" id="cyl-l" class="field" value="0" step="0.001" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Volume (in³)</div>
+          <div class="val" id="cyl-in3">0.0000</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Volume (ft³)</div>
+          <div class="val" style="color:var(--brand);" id="cyl-ft3">0.0000</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gallons</div>
+          <div class="val" id="cyl-gal">0.0000</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Barrels</div>
+          <div class="val" style="color:var(--brand);" id="cyl-bbl">0.0000</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Capacity Factor Reverse -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Capacity Factor (Reverse)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Total Barrels</label>
+          <input type="number" id="capfac-bbl" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Depth (FT)</label>
+          <input type="number" id="capfac-ft" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Capacity Factor (GAL/FT)</div>
+        <div class="val" style="color:var(--brand);" id="capfac-result">0.0000</div>
+      </div>
+    </div>
+
+    <!-- Casing Capacity Factors -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Casing Capacity Factors</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Casing</th>
+            <th class="tbl-right">ID (IN)</th>
+            <th class="tbl-right">BBL/FT</th>
+          </tr>
+        </thead>
+        <tbody id="casing-tbody"><!-- injected --></tbody>
+      </table></div>
+    </div>
+
+    <!-- Field Constants -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Field Constants</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <tbody id="const-tbody"><!-- injected --></tbody>
+      </table></div>
+    </div>
+
+    <!-- Complete Section 1 Unit Conversions Reference Table -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Section 1 Unit Conversions Reference</div>
+        <span class="badge badge-green" style="font-size:11px;">25 Standard Values</span>
+      </div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Unit Name</th>
+            <th style="text-align:center;">Symbol</th>
+            <th class="tbl-right">Conversion Factor</th>
+          </tr>
+        </thead>
+        <tbody id="unitref-tbody"><!-- injected by JS --></tbody>
+      </table></div>
+    </div>
+
+    <!-- Acronyms / Abbreviations Card -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Acronyms &amp; Abbreviations</div>
+        <span class="badge badge-green" style="font-size:11px;">Section 1 Reference</span>
+      </div>
+      <div class="grid-2 gap-2" id="acronyms-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SAND ══════════════ -->
+  <div class="section" id="s-sand">
+    <div class="mb-4">
+      <div class="sec-title">SAND CALCULATIONS</div>
+      <div class="sec-sub">SAND FUNDAMENTALS</div>
+    </div>
+
+    <!-- Sand Fundamentals Quick Reference -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Sand Fundamentals Reference</div>
+      <div class="grid-2 gap-2 mb-2">
+        <div class="surface-card">
+          <div class="lbl">Specific Gravity (SG)</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">SG = Sand Density / Water Density</div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">Abs. Volume Factor (AVF)</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">AVF = 1 / (8.33 × SG)</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px;">Nat. Sand (SG 2.65): 0.0453 gal/lb</div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">Slurry Yield</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">Yield = (PPA × AVF) + 1</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px;">Gal slurry / Gal clean fluid</div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">Standard Source Water</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">8.33 - 8.35 lbs/gal</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px;">Metric AVF = 0.00037736 m³/kg</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Density Calculator & Table -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Bulk Density Calculator &amp; Reference</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Measured Mass (LBS)</label>
+          <input type="number" id="bulkcalc-mass" class="field" value="91" placeholder="91">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Measured Volume (FT³)</label>
+          <input type="number" id="bulkcalc-vol" class="field" value="1.0" step="0.1" placeholder="1.0">
+        </div>
+      </div>
+      <div class="tile mb-3">
+        <div class="lbl">Calculated Bulk Density</div>
+        <div class="val" style="color:var(--brand);" id="bulkcalc-result">91.00</div>
+        <div class="unit">LBS/FT³</div>
+      </div>
+      <div class="lbl mb-2" style="font-size:11px;">Standard Proppant Bulk Densities &amp; SG</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Proppant / Material Type</th>
+            <th class="tbl-right">Bulk Density (lbs/ft³)</th>
+            <th class="tbl-right">Specific Gravity (SG)</th>
+          </tr>
+        </thead>
+        <tbody id="proppant-tbody"><!-- injected by JS --></tbody>
+      </table></div>
+    </div>
+
+    <!-- Stage tabs -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Stages (Design vs Actual Tracking)</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addStage()">+ Add Stage</button>
+      </div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;" id="stage-tabs"><!-- injected --></div>
+    </div>
+
+    <div id="sand-detail"><!-- injected --></div>
+
+    <!-- Sand Needed <-> Clean Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Sand Needed ↔ Clean Volume</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Clean Volume (BBL)</label>
+          <input type="number" id="sandneed-clean" class="field" value="5000" placeholder="5000">
+        </div>
+        <div>
+          <label class="lbl">Concentration (PPG)</label>
+          <input type="number" id="sandneed-ppg" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Sand Needed</div>
+          <div class="val" style="color:var(--brand);" id="sandneed-lbs">420,000</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Clean Vol from Sand</div>
+          <div class="val" id="sandneed-clean-out">5,000</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVF / CFR / Yield / Slurry Density -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">AVF • CFR • Yield • Slurry Density</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">PPA (PPG)</label>
+          <input type="number" id="propcalc-ppa" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="propcalc-sg" class="field" value="2.65" step="0.05" placeholder="2.65">
+        </div>
+      </div>
+      <div class="grid-2 gap-2">
+        <div class="tile"><div class="lbl">AVF</div><div class="val" id="propcalc-avf">0.090</div></div>
+        <div class="tile"><div class="lbl">CFR</div><div class="val" id="propcalc-cfr">0.917</div></div>
+        <div class="tile"><div class="lbl">Yield</div><div class="val" id="propcalc-yield">1.090</div></div>
+        <div class="tile"><div class="lbl">Slurry Dens (PPG)</div><div class="val" style="color:var(--brand);" id="propcalc-slurrydens">9.01</div></div>
+      </div>
+    </div>
+
+    <!-- Proppant Concentration Calculations -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Proppant Concentration (PPA) Calculators</div>
+      
+      <!-- Method 1: From Slurry Rate & Clean Rate -->
+      <div class="surface-card mb-3" style="padding:12px;">
+        <div class="lbl" style="color:var(--brand);margin-bottom:8px;">Method 1: From Slurry &amp; Clean Pump Rates</div>
+        <div class="grid-3 mb-3">
+          <div>
+            <label class="lbl">Slurry Rate (BPM)</label>
+            <input type="number" id="propconc-slurryrate" class="field" value="65" step="0.5" placeholder="65">
+          </div>
+          <div>
+            <label class="lbl">Clean Rate (BPM)</label>
+            <input type="number" id="propconc-cleanrate" class="field" value="60" step="0.5" placeholder="60">
+          </div>
+          <div>
+            <label class="lbl">Sand SG</label>
+            <input type="number" id="propconc-sg1" class="field" value="2.65" step="0.05" placeholder="2.65">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Prop Concentration (PPA)</div>
+          <div class="val" style="color:var(--brand);" id="propconc-res1">1.84</div>
+          <div class="unit">PPG</div>
+        </div>
+      </div>
+
+      <!-- Method 2: From Measured Slurry Density -->
+      <div class="surface-card" style="padding:12px;">
+        <div class="lbl" style="color:var(--brand);margin-bottom:8px;">Method 2: From Densitometer / Measured Fluid Density</div>
+        <div class="grid-3 mb-3">
+          <div>
+            <label class="lbl">Carrier Fluid Dens (PPG)</label>
+            <input type="number" id="propconc-carrier" class="field" value="8.33" step="0.01" placeholder="8.33">
+          </div>
+          <div>
+            <label class="lbl">Measured Slurry Dens (PPG)</label>
+            <input type="number" id="propconc-measured" class="field" value="9.20" step="0.05" placeholder="9.20">
+          </div>
+          <div>
+            <label class="lbl">Sand SG</label>
+            <input type="number" id="propconc-sg2" class="field" value="2.65" step="0.05" placeholder="2.65">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Prop Concentration (PPA)</div>
+          <div class="val" style="color:var(--brand);" id="propconc-res2">2.08</div>
+          <div class="unit">PPG</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sand Ramp Average PPA & Total Sand Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Sand Ramp Calculator</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Start PPA (PPG)</label>
+          <input type="number" id="ramp-start" class="field" value="0.5" step="0.1" placeholder="0.5">
+        </div>
+        <div>
+          <label class="lbl">End PPA (PPG)</label>
+          <input type="number" id="ramp-end" class="field" value="2.5" step="0.1" placeholder="2.5">
+        </div>
+        <div>
+          <label class="lbl">Ramp Clean Vol (BBL)</label>
+          <input type="number" id="ramp-vol" class="field" value="1000" placeholder="1000">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Average PPA</div>
+          <div class="val" id="ramp-avgppa">1.50</div>
+          <div class="unit">PPG</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Sand Pumped</div>
+          <div class="val" style="color:var(--brand);" id="ramp-totallbs">63,000</div>
+          <div class="unit">LBS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PPR Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">PPR Calculator (Auger Dimensions)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Auger Radius (IN)</label>
+          <input type="number" id="ppr-augr" class="field" value="0.75" step="0.01" placeholder="0.75">
+        </div>
+        <div>
+          <label class="lbl">Shaft Radius (IN)</label>
+          <input type="number" id="ppr-shaftr" class="field" value="0.25" step="0.01" placeholder="0.25">
+        </div>
+        <div>
+          <label class="lbl">Auger Pitch (IN)</label>
+          <input type="number" id="ppr-pitch" class="field" value="1.5" step="0.1" placeholder="1.5">
+        </div>
+        <div>
+          <label class="lbl">Bulk Density (LBS/FT³)</label>
+          <input type="number" id="ppr-bulk" class="field" value="91" placeholder="91">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">PPR</div>
+        <div class="val" style="color:var(--brand);" id="ppr-result">0.038</div>
+        <div class="unit">LBS/REV</div>
+      </div>
+    </div>
+
+    <!-- PPR Recalibration Tool -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">PPR Recalibration (Post-Stage Adjustment)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Old / Current PPR (LBS/REV)</label>
+          <input type="number" id="pprrecal-old" class="field" value="0.038" step="0.001" placeholder="0.038">
+        </div>
+        <div>
+          <label class="lbl">Actual Total Pumped (LBS)</label>
+          <input type="number" id="pprrecal-actual" class="field" value="210000" placeholder="210000">
+        </div>
+        <div>
+          <label class="lbl">Design / Metered Total (LBS)</label>
+          <input type="number" id="pprrecal-design" class="field" value="200000" placeholder="200000">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Calibrated New PPR</div>
+        <div class="val" style="color:var(--brand);" id="pprrecal-new">0.0399</div>
+        <div class="unit">LBS/REV</div>
+      </div>
+    </div>
+
+    <!-- Auger RPM, PPM & PPT Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Auger RPM, PPM &amp; PPT Rates</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="augerrpm-rate" class="field" value="95" placeholder="95">
+        </div>
+        <div>
+          <label class="lbl">Prop Conc (PPG)</label>
+          <input type="number" id="augerrpm-ppg" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+        <div>
+          <label class="lbl">PPR (LBS/REV)</label>
+          <input type="number" id="augerrpm-ppr" class="field" value="0.038" step="0.001" placeholder="0.038">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Total Auger RPM</div>
+          <div class="val" style="color:var(--brand);" id="augerrpm-total">105.3</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Pounds Per Min (PPM)</div>
+          <div class="val" id="augerrpm-ppm">7,980</div>
+          <div class="unit">LBS/MIN</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Pounds Per 1k Gal (PPT)</div>
+          <div class="val" id="augerrpm-ppt">2,000</div>
+          <div class="unit">PPT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Auger Priority RPM Allocator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Multi-Auger Priority RPM Allocation</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Total Prop RPM Required</label>
+          <input type="number" id="multiauger-totalrpm" class="field" value="120" placeholder="120">
+        </div>
+        <div>
+          <label class="lbl">Augers in Use</label>
+          <select id="multiauger-count" class="field">
+            <option value="2">2 Augers</option>
+            <option value="3" selected>3 Augers</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Priority RPM Threshold</label>
+          <input type="number" id="multiauger-threshold" class="field" value="50" placeholder="50">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-2" id="multiauger-results">
+        <!-- Injected by JS -->
+      </div>
+      <div style="font-size:11px;color:var(--text2);">Logic: Priority 1 fills to threshold, then Priority 2, then Priority 3. If Total RPM &gt; (Threshold × # Augers), all augers run equal RPM.</div>
+    </div>
+
+    <!-- Job Prop Total from Cum Volumes -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Job Prop Total from Cum Volumes</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Slurry Cum (GAL)</label>
+          <input type="number" id="jobprop-slurry" class="field" value="1250000" placeholder="1250000">
+        </div>
+        <div>
+          <label class="lbl">Clean Cum (GAL)</label>
+          <input type="number" id="jobprop-clean" class="field" value="1180000" placeholder="1180000">
+        </div>
+        <div>
+          <label class="lbl">All Chem (GAL)</label>
+          <input type="number" id="jobprop-chem" class="field" value="12500" placeholder="12500">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Job Prop Total</div>
+        <div class="val" style="color:var(--brand);" id="jobprop-total">184,211</div>
+        <div class="unit">LBS</div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-top:8px;">Formula: (Slurry − Clean − Chem) / Prop AVF</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ CHEM ══════════════ -->
+  <div class="section" id="s-chem">
+    <div class="mb-4">
+      <div class="sec-title">CHEMICAL CALCULATIONS</div>
+      <div class="sec-sub">CHEMICAL FUNDAMENTALS</div>
+    </div>
+
+    <!-- Total GPM -->
+    <div class="brand-card mb-4 text-center">
+      <div class="lbl" style="color:rgba(255,255,255,0.6);display:block;">Total Injection Synthesis</div>
+      <div class="font-display" style="font-size:52px;font-weight:900;color:#fff;" id="ch-total">0.00</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;" id="ch-count-lbl">0 active channels</div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:4px;">GPM_REQ</div>
+    </div>
+
+    <!-- Config -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Batch Config</div>
+      <div class="mb-3">
+        <label class="lbl">Clean Rate (BPM) <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--brand);">— shared with HP & Hydration</span></label>
+        <input type="number" id="ch-rate" class="field" value="0" step="0.1" placeholder="0">
+      </div>
+      <div class="flex gap-3 items-end">
+        <div class="flex-1">
+          <label class="lbl">Active Channels (1–10)</label>
+          <input type="number" id="ch-count" class="field" value="2" min="1" max="10">
+        </div>
+        <button class="btn btn-brand" style="white-space:nowrap;" onclick="initChannels()">Init</button>
+      </div>
+    </div>
+
+    <!-- Channel cards -->
+    <div class="grid-2 mb-4" id="ch-grid"><!-- injected --></div>
+
+    <!-- Chemical Used from Straps -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Used from Straps</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Starting Strap (GAL or IN)</label>
+          <input type="number" id="chemused-start" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Ending / Current Strap</label>
+          <input type="number" id="chemused-end" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Chemical Used</div>
+        <div class="val" style="color:var(--brand);" id="chemused-result">0.0</div>
+      </div>
+    </div>
+
+    <!-- Chemical Stage Variance -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Stage Variance</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Amount Pumped (GAL)</label>
+          <input type="number" id="chemvar-pumped" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Designed (GAL)</label>
+          <input type="number" id="chemvar-designed" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Variance</div>
+          <div class="val" style="color:var(--brand);" id="chemvar-pct">0.0%</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Status</div>
+          <div class="val" style="font-size:14px;" id="chemvar-status">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GPT <-> GPM Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">GPT ↔ GPM Converter</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="gptgpm-rate" class="field" value="0" step="0.1" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="gptgpm-gpt" class="field" value="0" step="0.05" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Chemical Rate</div>
+          <div class="val" style="color:var(--brand);" id="gptgpm-gpm">0.00</div>
+          <div class="unit">GPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Concentration</div>
+          <div class="val" id="gptgpm-conc">0.00</div>
+          <div class="unit">GPT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HCL Density & % Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">HCL Density &amp; % Converter</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">% HCL</label>
+          <input type="number" id="hcl-pct" class="field" value="15" step="0.5" placeholder="15">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Density (PPG)</label>
+          <input type="number" id="hcl-dens" class="field" value="8.797" step="0.001" placeholder="8.797">
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);">Edit either field — the other updates automatically.</div>
+    </div>
+
+    <!-- Acid Dilution -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Acid Dilution (HCL)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Raw Volume (GAL)</label>
+          <input type="number" id="acidd-vol" class="field" value="20" placeholder="20">
+        </div>
+        <div>
+          <label class="lbl">Raw % HCL</label>
+          <input type="number" id="acidd-rawpct" class="field" value="50" step="1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">Target Dilute %</label>
+          <input type="number" id="acidd-targetpct" class="field" value="15" step="1" placeholder="15">
+        </div>
+        <div>
+          <label class="lbl">Raw Density (PPG)</label>
+          <input type="number" id="acidd-density" class="field" value="9.52" step="0.01" placeholder="9.52">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Dilute Volume</div>
+          <div class="val" id="acidd-dilutevol">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Water to Add</div>
+          <div class="val" style="color:var(--brand);" id="acidd-watervol">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buffer Needed -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Buffer Needed</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Clean Volume (BBL)</label>
+          <input type="number" id="buffer-bbl" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="buffer-gpt" class="field" value="0" step="0.05" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Buffer Required</div>
+        <div class="val" style="color:var(--brand);" id="buffer-result">0.00</div>
+        <div class="unit">GAL</div>
+      </div>
+    </div>
+
+    <!-- Tote Volume from Strap -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tote Volume from Strap</div>
+      <div class="mb-3">
+        <label class="lbl">Current Strap (IN)</label>
+        <input type="number" id="tote-strap" class="field" value="48" step="0.1" placeholder="48">
+      </div>
+      <div class="flex gap-3 items-end mb-3">
+        <div class="flex-1">
+          <label class="lbl">Tote Type</label>
+          <select id="tote-type" class="field"><!-- injected --></select>
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Bottoms (IN)</label>
+          <input type="number" id="tote-bottoms" class="field" value="0" step="0.5" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Accessible</div>
+          <div class="val" style="color:var(--brand);" id="tote-accessible">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total</div>
+          <div class="val" id="tote-total">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Tote Accessible Volume -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Multi-Tote Accessible Volume</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addMultiToteRow()">+ Add Tote</button>
+      </div>
+      <div id="multitote-rows"><!-- injected --></div>
+      <div class="tile mt-3">
+        <div class="lbl">Total Pumpable</div>
+        <div class="val" style="color:var(--brand);" id="multitote-total">0.0</div>
+        <div class="unit">GAL</div>
+      </div>
+    </div>
+
+    <!-- Ending Strap Predictor -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Ending Strap Predictor</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Clean Volume (BBL)</label>
+          <input type="number" id="endstrap-clean" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">GPT Setpoint</label>
+          <input type="number" id="endstrap-gpt" class="field" value="0" step="0.1" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Start Strap (IN)</label>
+          <input type="number" id="endstrap-start" class="field" value="0" step="0.1" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Tote Type</label>
+          <select id="endstrap-type" class="field"><!-- injected --></select>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">FR Needed</div>
+          <div class="val" id="endstrap-fr">0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Ending Strap</div>
+          <div class="val" style="color:var(--brand);" id="endstrap-ending">0.0</div>
+          <div class="unit">IN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tote Refill Count Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tote Refill Count Calculator</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Stage Clean Vol (BBL)</label>
+          <input type="number" id="toterefill-clean" class="field" value="50000" placeholder="50000">
+        </div>
+        <div>
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="toterefill-gpt" class="field" value="1.5" step="0.1" placeholder="1.5">
+        </div>
+        <div>
+          <label class="lbl">Fill Height (IN)</label>
+          <input type="number" id="toterefill-fill" class="field" value="44" step="0.5" placeholder="44">
+        </div>
+        <div>
+          <label class="lbl">Bottoms (IN)</label>
+          <input type="number" id="toterefill-bottoms" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Tote Capacity Factor (GAL/IN)</label>
+        <input type="number" id="toterefill-factor" class="field" value="7.45" step="0.01" placeholder="7.45">
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Chem Needed</div>
+          <div class="val" id="toterefill-needed">3,150</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Accessible / Tote</div>
+          <div class="val" id="toterefill-accessible">312.9</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Tote Refills Needed</div>
+          <div class="val" style="color:var(--brand);" id="toterefill-count">11</div>
+          <div class="unit">TIMES</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chemical Setpoint & Clean Volume Back-Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Setpoint &amp; Clean Volume Back-Calculator</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Chemical Rate (GPM)</label>
+          <input type="number" id="chemcalc-gpm" class="field" value="12.0" step="0.1" placeholder="12.0">
+        </div>
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="chemcalc-bpm" class="field" value="60.0" step="0.1" placeholder="60.0">
+        </div>
+        <div>
+          <label class="lbl">Total Chem Used (GAL)</label>
+          <input type="number" id="chemcalc-totchem" class="field" value="1500" placeholder="1500">
+        </div>
+        <div>
+          <label class="lbl">Target Setpoint (GPT)</label>
+          <input type="number" id="chemcalc-targetgpt" class="field" value="2.0" step="0.1" placeholder="2.0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calculated Setpoint</div>
+          <div class="val" style="color:var(--brand);" id="chemcalc-outgpt">0.20</div>
+          <div class="unit">GPT</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Clean Fluid Treated</div>
+          <div class="val" style="color:var(--brand);" id="chemcalc-outcleanbbl">750</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liquid vs Dry Concentration Converter (GPT ↔ PPT) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Liquid vs Dry Concentration Converter (GPT ↔ PPT)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Liquid Setpoint (GPT)</label>
+          <input type="number" id="gptppt-gpt" class="field" value="1.5" step="0.1" placeholder="1.5">
+        </div>
+        <div>
+          <label class="lbl">Chemical Density (PPG)</label>
+          <input type="number" id="gptppt-density" class="field" value="9.2" step="0.1" placeholder="9.2">
+        </div>
+        <div>
+          <label class="lbl">Active Chemical (%)</label>
+          <input type="number" id="gptppt-activepct" class="field" value="100" step="1" placeholder="100">
+        </div>
+      </div>
+      <div class="tile mb-3">
+        <div class="lbl">Calculated Dry Concentration</div>
+        <div class="val" style="color:var(--brand);" id="gptppt-outppt">13.8</div>
+        <div class="unit">PPT (LBS/1000 GAL)</div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate GPT from PPT (LBS/1000 GAL)</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Dry Loading (PPT)</label>
+            <input type="number" id="gptppt-inppt" class="field" value="20.0" step="0.5" placeholder="20.0">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Equivalent Setpoint</div>
+            <div class="val" style="color:var(--brand);" id="gptppt-outbackgpt">2.17</div>
+            <div class="unit">GPT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strap Rate (IN/HR) & Chemical Flow Rate -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Strap Rate (IN/HR) &amp; Chemical Flow Rate</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Strap Rate (IN/HR)</label>
+          <input type="number" id="straprate-inhr" class="field" value="24.0" step="0.5" placeholder="24.0">
+        </div>
+        <div>
+          <label class="lbl">Tote Factor (GAL/IN)</label>
+          <input type="number" id="straprate-factor" class="field" value="7.45" step="0.01" placeholder="7.45">
+        </div>
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="straprate-cleanbpm" class="field" value="65.0" step="0.1" placeholder="65.0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Chemical Flow Rate</div>
+          <div class="val" style="color:var(--brand);" id="straprate-outgpm">2.98</div>
+          <div class="unit">GPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Achieved Setpoint</div>
+          <div class="val" style="color:var(--brand);" id="straprate-outgpt">0.046</div>
+          <div class="unit">GPT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chemical Specific Gravity (SG) & Tote Weight -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Specific Gravity (SG) &amp; Tote Weight</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Specific Gravity (SG)</label>
+          <input type="number" id="chemsg-sg" class="field" value="1.10" step="0.01" placeholder="1.10">
+        </div>
+        <div>
+          <label class="lbl">Volume (GAL)</label>
+          <input type="number" id="chemsg-vol" class="field" value="330" placeholder="330">
+        </div>
+        <div>
+          <label class="lbl">Water Density (PPG)</label>
+          <input type="number" id="chemsg-waterppg" class="field" value="8.34" step="0.01" placeholder="8.34">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Chemical Density</div>
+          <div class="val" style="color:var(--brand);" id="chemsg-outppg">9.17</div>
+          <div class="unit">PPG (LBS/GAL)</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Mass / Weight</div>
+          <div class="val" style="color:var(--brand);" id="chemsg-outlbs">3,027</div>
+          <div class="unit">LBS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tote Capacity Factors -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tote Capacity Factors</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th style="text-align:left;">Tote Type</th><th class="tbl-right">GAL/IN</th></tr></thead>
+        <tbody id="totetype-tbody"><!-- injected --></tbody>
+      </table></div>
+    </div>
+
+    <!-- % HCL by Mass Density -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">% HCL by Mass Density</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th style="text-align:left;">% HCL</th><th class="tbl-right">Density (PPG)</th></tr></thead>
+        <tbody id="hcltable-tbody"><!-- injected --></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HYDRATION ══════════════ -->
+  <div class="section" id="s-hydration">
+    <div class="mb-4">
+      <div class="sec-title">HYDRATION CALCULATIONS</div>
+      <div class="sec-sub">Section 4 formulas — Rules of Four, LGA, tub volume, hydration time &amp; gel loading</div>
+    </div>
+
+    <!-- Rules of Four reference -->
+    <div class="card mb-4" style="border-color:rgba(59,130,246,0.3);">
+      <div class="flex items-center gap-2 mb-1">
+        <span style="color:var(--blue);font-size:15px;">ℹ</span>
+        <span class="lbl lbl-blue" style="margin:0;">Rules of Four Reference</span>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;font-weight:500;">Every LGA gallon has 4 lbs of guar. Viscosity rules of thumb only — other factors affect viscosity. Dry guar bulk density ~34–48 lbs/ft³.</div>
+      <div class="grid-2" id="rof-grid"><!-- injected --></div>
+    </div>
+
+    <!-- Rules of Four Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Rules of Four Converter</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">LGA Set Point = PPT ÷ 4 &nbsp;·&nbsp; PPT = LGA × 4 &nbsp;·&nbsp; Lb System ≈ Target Visc + 4 &nbsp;·&nbsp; LGA Used = Guar lbs ÷ 4</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">LGA Set Point (GPT)</label>
+          <input type="number" id="rof-lga" class="field" value="6" step="0.1" placeholder="6" oninput="rofFromLga()">
+        </div>
+        <div>
+          <label class="lbl">PPT / Gel Loading (LB)</label>
+          <input type="number" id="rof-ppt" class="field" value="24" step="0.1" placeholder="24" oninput="rofFromPpt()">
+        </div>
+        <div>
+          <label class="lbl">Lb System</label>
+          <input type="number" id="rof-lbsystem-in" class="field" value="24" step="0.1" placeholder="24" oninput="rofFromLbSystem()">
+        </div>
+        <div>
+          <label class="lbl">Target Viscosity (CP)</label>
+          <input type="number" id="rof-visc-in" class="field" value="20" step="0.1" placeholder="20" oninput="rofFromVisc()">
+        </div>
+        <div>
+          <label class="lbl">Pounds of Guar Used (LBS)</label>
+          <input type="number" id="rof-guar-lbs" class="field" value="100" step="0.1" placeholder="100" oninput="rofFromGuarLbs()">
+        </div>
+        <div>
+          <label class="lbl">LGA Used (GAL)</label>
+          <input type="number" id="rof-lga-used" class="field" value="25" step="0.1" placeholder="25" oninput="rofFromLgaUsed()">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">PPT from LGA</div>
+          <div class="val" style="color:var(--brand);" id="rof-ppt-out">24.0</div>
+          <div class="unit">LBS / 1000 GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Target Visc ≈ Lb − 4</div>
+          <div class="val" id="rof-visc-out">20.0</div>
+          <div class="unit">CP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LGA GPM (flux) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Liquid Gel Automation (LGA) Rate</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">GPM = Rate (bpm) × 0.042 × LGA Set Point (gpt)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Hydration / Clean Rate (BPM)</label>
+          <input type="number" id="lga-rate" class="field" value="80" step="0.1" placeholder="80">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">LGA Set Point (GPT)</label>
+          <input type="number" id="lga-gpt" class="field" value="6" step="0.01" placeholder="6">
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center mb-3">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Required LGA Rate</div>
+          <div class="font-display" style="font-size:32px;font-weight:900;color:#fff;" id="lga-gpm">0.00</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.4);">GPM</div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Equivalent PPT</div>
+          <div class="val" id="lga-ppt-eq">24.0</div>
+          <div class="unit">PPT = LGA × 4</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Dry Gel Rate</div>
+          <div class="val" id="lga-ppm-eq">0.0</div>
+          <div class="unit">LBS/MIN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PPM & Guar Auger RPM -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pounds Per Minute &amp; Guar Auger RPM</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">PPM = Hydration Rate × 0.042 × PPT &nbsp;·&nbsp; Guar Auger RPM = PPM ÷ PPR &nbsp;·&nbsp; LGA GPM = PPM ÷ 4</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Hydration Rate (BPM)</label>
+          <input type="number" id="guar-rate" class="field" value="35" step="0.1" placeholder="35">
+        </div>
+        <div>
+          <label class="lbl">PPT / Gel Loading</label>
+          <input type="number" id="guar-ppt" class="field" value="24" step="0.1" placeholder="24">
+        </div>
+        <div>
+          <label class="lbl">Auger PPR (LBS/REV)</label>
+          <input type="number" id="guar-ppr" class="field" value="3" step="0.01" placeholder="3">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Pounds Per Minute</div>
+          <div class="val" style="color:var(--brand);" id="guar-ppm">35.3</div>
+          <div class="unit">LBS/MIN (PPM)</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Liquid Gel Rate</div>
+          <div class="val" id="guar-gpm">8.8</div>
+          <div class="unit">GPM LGA</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Guar Auger RPM</div>
+          <div class="val" style="color:var(--brand);" id="guar-rpm">11.8</div>
+          <div class="unit">RPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tub Volume & Hydration Time -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tub Volume &amp; Hydration Time</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Tub Volume (bbl) = Capacity × Level% ÷ 100 &nbsp;·&nbsp; Hydration Time (min) = Tub Volume ÷ Job Clean Rate</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tub Capacity (BBL)</label>
+          <input type="number" id="tub-cap" class="field" value="100" step="1" placeholder="100">
+        </div>
+        <div>
+          <label class="lbl">Job Clean Rate (BPM)</label>
+          <input type="number" id="tub-cleanrate" class="field" value="80" step="0.1" placeholder="80">
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="flex justify-between items-center mb-2">
+          <label class="lbl" style="margin:0;">Tub Level</label>
+          <span class="font-display" style="color:var(--brand);font-weight:900;" id="tub-pct-lbl">50%</span>
+        </div>
+        <input type="range" id="tub-level" min="0" max="100" value="50">
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Tub Volume</div>
+          <div class="val" id="tub-vol">50.0</div>
+          <div class="unit">BBL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Hydration Time</div>
+          <div class="val" style="color:var(--brand);" id="tub-res">–</div>
+          <div class="unit">MIN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LGA Needed for Tub -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">LGA Needed for Tub</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">LGA Needed (gal) = Tub Volume (bbl) × 0.042 × LGA Set Point (gpt)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tub Volume (BBL)</label>
+          <input type="number" id="lganeed-vol" class="field" value="50" step="0.1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">LGA Set Point (GPT)</label>
+          <input type="number" id="lganeed-gpt" class="field" value="6" step="0.1" placeholder="6">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">LGA Needed</div>
+          <div class="val" style="color:var(--brand);" id="lganeed-gal">12.6</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Dry Guar Equivalent</div>
+          <div class="val" id="lganeed-lbs">50.4</div>
+          <div class="unit">LBS</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost mt-3" style="width:100%;font-size:12px;" onclick="syncLgaNeedFromTub()">Use Tub Volume from Hydration Time tool</button>
+    </div>
+
+    <!-- Gel Used to Visc Up Tub -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Gel Used to Visc Up Tub</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Gel Used (lbs) = Tub Volume (bbl) × 0.042 × PPT</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tub Volume (BBL)</label>
+          <input type="number" id="viscup-vol" class="field" value="50" step="0.1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">PPT / Gel Loading</label>
+          <input type="number" id="viscup-ppt" class="field" value="24" step="0.1" placeholder="24">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gel Used (Dry)</div>
+          <div class="val" style="color:var(--brand);" id="viscup-lbs">50.4</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">LGA Equivalent</div>
+          <div class="val" id="viscup-lga">12.6</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Increase Tub Viscosity -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Gel Used to Increase Tub Viscosity</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Gel Used (lbs) = Tub Volume (bbl) × 0.042 × (Target cp − Current cp)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Tub Volume (BBL)</label>
+          <input type="number" id="tubvisc-vol" class="field" value="80" step="0.1" placeholder="80">
+        </div>
+        <div>
+          <label class="lbl">Current Visc (CP)</label>
+          <input type="number" id="tubvisc-current" class="field" value="12" step="0.1" placeholder="12">
+        </div>
+        <div>
+          <label class="lbl">Target Visc (CP)</label>
+          <input type="number" id="tubvisc-target" class="field" value="18" step="0.1" placeholder="18">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gel Needed (Dry)</div>
+          <div class="val" style="color:var(--brand);" id="tubvisc-dry">20.2</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">LGA Needed</div>
+          <div class="val" id="tubvisc-gel">5.0</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Gel for Stage -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Design Gel Used for Stage</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Design Gel Used (lbs) = Gel Stage Volume (bbl) × 0.042 × PPT</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Gel Stage Volume (BBL)</label>
+          <input type="number" id="designgel-bbl" class="field" value="650" step="0.1" placeholder="650">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">PPT / Gel Loading</label>
+          <input type="number" id="designgel-ppt" class="field" value="20" step="0.1" placeholder="20">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Design Gel Used</div>
+          <div class="val" style="color:var(--brand);" id="designgel-dry">546.0</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Design LGA</div>
+          <div class="val" id="designgel-lga">136.5</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LGA Tote Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">LGA Tote Volume from Strap</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">LGA Tote Volume (gal) = 12.33 (gal/in) × LGA Strap (in) &nbsp;— default 750-gal gel tote</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">LGA Strap (IN)</label>
+          <input type="number" id="lgatote-strap" class="field" value="18" step="0.1" placeholder="18">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Cap Factor (GAL/IN)</label>
+          <input type="number" id="lgatote-cap" class="field" value="12.33" step="0.01" placeholder="12.33">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">LGA Tote Volume</div>
+        <div class="val" style="color:var(--brand);" id="lgatote-gal">221.9</div>
+        <div class="unit">GAL</div>
+      </div>
+    </div>
+
+    <!-- End LGA Tote Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">End LGA Tote Volume</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">End Volume (gal) = Start LGA Tote Volume (gal) − LGA Needed (gal)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Start Strap (IN)</label>
+          <input type="number" id="endlga-startstrap" class="field" value="40" step="0.1" placeholder="40">
+        </div>
+        <div>
+          <label class="lbl">Cap Factor (GAL/IN)</label>
+          <input type="number" id="endlga-cap" class="field" value="12.33" step="0.01" placeholder="12.33">
+        </div>
+        <div>
+          <label class="lbl">LGA Needed (GAL)</label>
+          <input type="number" id="endlga-needed" class="field" value="50" step="0.1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">Or Start Volume (GAL)</label>
+          <input type="number" id="endlga-startvol" class="field" value="" step="0.1" placeholder="auto from strap">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Start Volume</div>
+          <div class="val" id="endlga-start-out">493.2</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">End Volume</div>
+          <div class="val" style="color:var(--brand);" id="endlga-endvol">443.2</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">End Strap</div>
+          <div class="val" id="endlga-endstrap">35.9</div>
+          <div class="unit">IN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mid-Stage Tote Swap Predictor -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">Mid-Stage Tote Swap Predictor</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Practical tote handoff — gel from tote 1 to swap strap, remainder from tote 2</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tote 1 Start Strap (IN)</label>
+          <input type="number" id="toteswap-t1start" class="field" value="10" step="0.5" placeholder="10">
+        </div>
+        <div>
+          <label class="lbl">Tote 1 Swap Strap (IN)</label>
+          <input type="number" id="toteswap-t1swap" class="field" value="3.5" step="0.5" placeholder="3.5">
+        </div>
+        <div>
+          <label class="lbl">Tote 2 Start Strap (IN)</label>
+          <input type="number" id="toteswap-t2start" class="field" value="58" step="0.5" placeholder="58">
+        </div>
+        <div>
+          <label class="lbl">Stage Gel Used (GAL)</label>
+          <input type="number" id="toteswap-totalgel" class="field" value="200" placeholder="200">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Tote Capacity Factor (GAL/IN)</label>
+        <input type="number" id="toteswap-factor" class="field" value="12.33" step="0.01" placeholder="12.33">
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gel From Tote 1</div>
+          <div class="val" id="toteswap-t1gel">80.1</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Tote 2 Ending Strap</div>
+          <div class="val" style="color:var(--brand);" id="toteswap-t2end">48.3</div>
+          <div class="unit">IN</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ BLENDER ══════════════ -->
+  <div class="section" id="s-blender">
+    <div class="mb-4">
+      <div class="sec-title">BLENDER CALCULATIONS</div>
+      <div class="sec-sub">CLEAN &amp; SLURRY FORMULAS</div>
+    </div>
+
+    <!-- Clean & Slurry Rate Conversion (CFR & Yield) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Clean &amp; Slurry Rate Conversion (CFR &amp; Yield)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="blconv-cleanrate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="blconv-slurryrate" class="field" value="72.8" step="0.1" placeholder="72.8">
+        </div>
+        <div>
+          <label class="lbl">Proppant Conc (PPA / PPG)</label>
+          <input type="number" id="blconv-ppa" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="blconv-sg" class="field" value="2.65" step="0.01" placeholder="2.65">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Abs Vol Factor (AVF)</div>
+          <div class="val" id="blconv-avf">0.0452</div>
+          <div class="unit">GAL/LB</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Slurry Yield</div>
+          <div class="val" id="blconv-yield">1.1357</div>
+          <div class="unit">GAL/GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Clean Fluid Ratio (CFR)</div>
+          <div class="val" style="color:var(--brand);" id="blconv-cfr">0.8805</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calc Slurry Rate (from Clean)</div>
+          <div class="val" style="color:var(--brand);" id="blconv-outslurry">73.8</div>
+          <div class="unit">BPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Calc Clean Rate (from Slurry)</div>
+          <div class="val" style="color:var(--brand);" id="blconv-outclean">64.1</div>
+          <div class="unit">BPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screw Concentration & Total Auger RPM -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Screw Concentration &amp; Total Auger RPM</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="blscrew-rate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Target PPA (PPG)</label>
+          <input type="number" id="blscrew-ppa" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Auger PPR (LBS/REV)</label>
+          <input type="number" id="blscrew-ppr" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Auger 1 RPM</label>
+          <input type="number" id="blscrew-aug1" class="field" value="91" placeholder="91">
+        </div>
+        <div>
+          <label class="lbl">Auger 2 RPM</label>
+          <input type="number" id="blscrew-aug2" class="field" value="91" placeholder="91">
+        </div>
+        <div>
+          <label class="lbl">Auger 3 RPM</label>
+          <input type="number" id="blscrew-aug3" class="field" value="91" placeholder="91">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Req Total RPM</div>
+          <div class="val" style="color:var(--brand);" id="blscrew-reqrpm">2,730</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Actual Total RPM</div>
+          <div class="val" id="blscrew-actrpm">273</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Calc Screw Conc</div>
+          <div class="val" style="color:var(--brand);" id="blscrew-outconc">0.30</div>
+          <div class="unit">PPA</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Proppant Rate</div>
+          <div class="val" id="blscrew-lbsmin">819</div>
+          <div class="unit">LBS/MIN</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Prop PPM</div>
+          <div class="val" id="blscrew-ppm">273.0</div>
+          <div class="unit">PPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Clean Rate from Slurry Rate -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Design Clean Rate from Design Slurry Rate</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Design Slurry Rate (BPM)</label>
+          <input type="number" id="bldesign-slurryrate" class="field" value="75" placeholder="75">
+        </div>
+        <div>
+          <label class="lbl">Design Proppant Conc (PPA)</label>
+          <input type="number" id="bldesign-ppa" class="field" value="4.0" step="0.1" placeholder="4.0">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="bldesign-sg" class="field" value="2.65" step="0.01" placeholder="2.65">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Design Clean Rate</div>
+        <div class="val" style="color:var(--brand);" id="bldesign-cleanrate">63.5</div>
+        <div class="unit">BPM</div>
+      </div>
+    </div>
+
+    <!-- Split Flow Blender Concentration (CLD) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Split Flow Blender Concentration (CLD)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Design PPA (PPG)</label>
+          <input type="number" id="blsplit-designppa" class="field" value="3.5" step="0.1" placeholder="3.5">
+        </div>
+        <div>
+          <label class="lbl">Blender Clean Rate (BPM)</label>
+          <input type="number" id="blsplit-blenderrate" class="field" value="40" placeholder="40">
+        </div>
+        <div>
+          <label class="lbl">Total Combined Clean Rate (BPM)</label>
+          <input type="number" id="blsplit-totalrate" class="field" value="80" placeholder="80">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Blender Concentration (CLD)</div>
+        <div class="val" style="color:var(--brand);" id="blsplit-blenderconc">7.00</div>
+        <div class="unit">PPG</div>
+      </div>
+    </div>
+
+    <!-- Auger PPR Calculation & Recalibration -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Auger PPR &amp; Dry Add Recalibration</div>
+      <div class="mb-3" style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Theoretical PPR from Dimensions</div>
+        <div class="grid-2 mb-2">
+          <div>
+            <label class="lbl">Auger Radius (IN)</label>
+            <input type="number" id="blppr-augerrad" class="field" value="3.0" step="0.1" placeholder="3.0">
+          </div>
+          <div>
+            <label class="lbl">Shaft Radius (IN)</label>
+            <input type="number" id="blppr-shaftrad" class="field" value="1.0" step="0.1" placeholder="1.0">
+          </div>
+          <div>
+            <label class="lbl">Pitch (IN)</label>
+            <input type="number" id="blppr-pitch" class="field" value="6.0" step="0.1" placeholder="6.0">
+          </div>
+          <div>
+            <label class="lbl">Bulk Density (LBS/FT³)</label>
+            <input type="number" id="blppr-bulkdens" class="field" value="100" placeholder="100">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Theoretical PPR</div>
+          <div class="val" style="color:var(--brand);" id="blppr-outppr">3.93</div>
+          <div class="unit">LBS/REV</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Recalibrate PPR from Job Totals</div>
+        <div class="grid-3 mb-2">
+          <div>
+            <label class="lbl">Old PPR (LBS/REV)</label>
+            <input type="number" id="blppr-oldppr" class="field" value="3.0" step="0.1" placeholder="3.0">
+          </div>
+          <div>
+            <label class="lbl">Actual Total (LBS)</label>
+            <input type="number" id="blppr-acttotal" class="field" value="42000" placeholder="42000">
+          </div>
+          <div>
+            <label class="lbl">Designed Total (LBS)</label>
+            <input type="number" id="blppr-destotal" class="field" value="40000" placeholder="40000">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Recalibrated PPR</div>
+          <div class="val" style="color:var(--brand);" id="blppr-recalppr">3.15</div>
+          <div class="unit">LBS/REV</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric / Screwless Blender Clean Rate -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Metric / Screwless Blender Clean Rate</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Slurry Rate (m³/min)</label>
+          <input type="number" id="blmetric-slurrym3" class="field" value="10.0" step="0.1" placeholder="10.0">
+        </div>
+        <div>
+          <label class="lbl">Proppant Conc (kg/m³)</label>
+          <input type="number" id="blmetric-ppakgm3" class="field" value="360" placeholder="360">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="blmetric-sg" class="field" value="2.65" step="0.01" placeholder="2.65">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calc Clean Rate (m³/min)</div>
+          <div class="val" style="color:var(--brand);" id="blmetric-cleanm3">8.80</div>
+          <div class="unit">M³/MIN</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Calc Clean Rate (BPM)</div>
+          <div class="val" style="color:var(--brand);" id="blmetric-cleanbpm">55.3</div>
+          <div class="unit">BPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Config -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Test Configuration</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Simulated Rate (BPM)</label>
+          <input type="number" id="bl-rate" class="field" value="60" step="0.1">
+        </div>
+        <div>
+          <label class="lbl">Target GPT</label>
+          <input type="number" id="bl-gpt" class="field" value="1.0" step="0.01">
+        </div>
+        <div>
+          <label class="lbl">Fine Adjust</label>
+          <input type="number" id="bl-fine" class="field" value="1.0" step="0.001">
+        </div>
+        <div>
+          <label class="lbl">Bucket Volume (GAL)</label>
+          <input type="number" id="bl-bucket" class="field" value="0.264" step="0.001">
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Desired Volume (GAL)</label>
+        <input type="number" id="bl-desired" class="field" value="1.0" step="0.001">
+      </div>
+    </div>
+
+    <!-- Theoretical Preview -->
+    <div class="card mb-4 flex justify-between items-center">
+      <div>
+        <div class="lbl">Theoretical GPM</div>
+        <div class="font-display" style="font-size:28px;font-weight:900;color:var(--brand);" id="bl-th-gpm">0.000</div>
+      </div>
+      <div class="text-right">
+        <div class="lbl">Expected Time</div>
+        <div class="font-display" style="font-size:28px;font-weight:900;" id="bl-th-time">0.0s</div>
+      </div>
+    </div>
+
+    <!-- Stopwatch -->
+    <div class="card mb-4">
+      <div class="lbl text-center mb-4">⏱ Bucket Test Stopwatch</div>
+      <div class="timer mb-4" id="bl-timer">0.0s</div>
+      <div class="flex gap-3">
+        <button id="bl-ss-btn" class="btn btn-brand flex-1" style="font-size:15px;padding:14px;" onclick="blStartStop()">▶ Start</button>
+        <button class="btn btn-ghost flex-1" style="font-size:14px;padding:14px;" onclick="blReset()">↺ Reset</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card hidden" id="bl-results">
+      <div class="flex items-center gap-2 mb-3">
+        <span style="color:var(--brand);">✓</span>
+        <span class="lbl lbl-brand" style="margin:0;">Calibration Results</span>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Target GPM</div>
+          <div class="val" id="bl-r-target">–</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Measured GPM</div>
+          <div class="val" style="color:var(--brand);" id="bl-r-measured">–</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">% Error</div>
+          <div class="val" id="bl-r-error">–</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Rec. Fine Adjust</div>
+          <div class="val" style="color:var(--brand);" id="bl-r-fine">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bucket Test Time & Adjustments -->
+    <div class="card mt-4">
+      <div class="lbl mb-3 tool-title">Bucket Test Time &amp; Adjustments</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Gallons Filled</label>
+          <input type="number" id="bkt-gal" class="field" value="5" placeholder="5">
+        </div>
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="bkt-rate" class="field" value="95" placeholder="95">
+        </div>
+        <div>
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="bkt-gpt" class="field" value="0.5" step="0.1" placeholder="0.5">
+        </div>
+        <div>
+          <label class="lbl">Actual Time (SEC)</label>
+          <input type="number" id="bkt-actual" class="field" value="16" placeholder="16">
+        </div>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Estimated Time</div>
+          <div class="val" id="bkt-est">0.0</div>
+          <div class="unit">SEC</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">% Error</div>
+          <div class="val" style="color:var(--yellow);" id="bkt-error">0.0%</div>
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">New Fine Adjust</div>
+        <div class="val" style="color:var(--brand);" id="bkt-newfine">1.00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ LIME ══════════════ -->
+  <div class="section" id="s-lime">
+    <div class="mb-4">
+      <div class="sec-title">LIME Calibration</div>
+      <div class="sec-sub">Liquid Additive Metering Equipment scaling & correction</div>
+    </div>
+
+    <!-- Analog Scaled Value -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Analog Scaled Value (4-20mA)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Device</label>
+          <select id="analog-device" class="field">
+            <option value="pressure" data-min="0" data-max="750">Suction/Discharge Pressure (0-750)</option>
+            <option value="level" data-min="0" data-max="100">Tube Level Sensor (0-100)</option>
+            <option value="micromotion6" data-min="0" data-max="10">Micromotion Waukesha 6 (0-10)</option>
+            <option value="micromotion18" data-min="0" data-max="20">Micromotion Waukesha 18 (0-20)</option>
+            <option value="flow" data-min="0" data-max="175">Magnetic Flow Meter (0-175)</option>
+            <option value="densitometer" data-min="0" data-max="20">Densitometer (0-20)</option>
+            <option value="ph" data-min="0" data-max="14">pH Probe (0-14)</option>
+            <option value="temp" data-min="32" data-max="175">Temperature (32-175)</option>
+            <option value="visco" data-min="0" data-max="60">Viscometer (0-60)</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Raw mA</label>
+          <input type="number" id="analog-raw" class="field" value="12" step="0.1" placeholder="12">
+        </div>
+      </div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Min Scaled</label>
+          <input type="number" id="analog-min" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Max Scaled</label>
+          <input type="number" id="analog-max" class="field" value="750" placeholder="750">
+        </div>
+        <div>
+          <label class="lbl">Fine Adjust</label>
+          <input type="number" id="analog-fine" class="field" value="1.0" step="0.01" placeholder="1.0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Scaled Value</div>
+        <div class="val" style="color:var(--brand);" id="analog-result">375.0</div>
+      </div>
+    </div>
+
+    <!-- Correction Vectors -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Correction Vectors</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Raw Meter Scale</label>
+          <input type="number" id="lime-scale" class="field" value="1.000" step="0.001" placeholder="1.000">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Fine Calibration Factor</label>
+          <input type="number" id="lime-fine" class="field" value="1.000" step="0.001" placeholder="1.000">
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Net System Multiplier</div>
+          <div class="font-display" style="font-size:36px;font-weight:900;color:#fff;" id="lime-mult">1.000</div>
+        </div>
+        <span style="font-size:28px;opacity:0.2;">⚙</span>
+      </div>
+    </div>
+
+    <!-- Pressure Transducer (4-20mA ↔ PSI) Dual Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pressure Transducer (4-20mA ↔ PSI) Dual Converter</div>
+      <div class="mb-3">
+        <label class="lbl">Transducer Rating (PSI)</label>
+        <input type="number" id="transducer-rating" class="field" value="15000" placeholder="15000">
+      </div>
+      <div class="grid-2 gap-3 mb-3">
+        <div style="background:var(--surface);padding:12px;border-radius:10px;">
+          <div class="lbl mb-2">Convert PSI → mA</div>
+          <label class="lbl">Pressure (PSI)</label>
+          <input type="number" id="transducer-inputpsi" class="field mb-2" value="12000" placeholder="12000">
+          <div class="tile">
+            <div class="lbl">Calculated Signal</div>
+            <div class="val" style="color:var(--brand);" id="transducer-outma">16.80</div>
+            <div class="unit">mA</div>
+          </div>
+        </div>
+        <div style="background:var(--surface);padding:12px;border-radius:10px;">
+          <div class="lbl mb-2">Convert mA → PSI</div>
+          <label class="lbl">Signal (mA)</label>
+          <input type="number" id="transducer-inputma" class="field mb-2" value="14.0" step="0.1" placeholder="14.0">
+          <div class="tile">
+            <div class="lbl">Calculated Pressure</div>
+            <div class="val" style="color:var(--brand);" id="transducer-outpsi">9,375</div>
+            <div class="unit">PSI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frequency & Pinion Speed Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Frequency &amp; Pinion Speed Calculator</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Raw Freq (PUL/SEC)</label>
+          <input type="number" id="freqcalc-hz" class="field" value="300" placeholder="300">
+        </div>
+        <div>
+          <label class="lbl">Gear Teeth (PUL/REV)</label>
+          <input type="number" id="freqcalc-teeth" class="field" value="60" placeholder="60">
+        </div>
+        <div>
+          <label class="lbl">Gear Ratio</label>
+          <input type="number" id="freqcalc-ratio" class="field" value="2.5" step="0.1" placeholder="2.5">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Pinion Speed</div>
+          <div class="val" style="color:var(--brand);" id="freqcalc-pinion">300</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Engine Speed</div>
+          <div class="val" id="freqcalc-engine">750</div>
+          <div class="unit">RPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- K-Factor Recalibration Tool -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">K-Factor Recalibration Tool</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Old K-Factor</label>
+          <input type="number" id="krecal-old" class="field" value="850" placeholder="850">
+        </div>
+        <div>
+          <label class="lbl">Micromotion Rate (GPM)</label>
+          <input type="number" id="krecal-micro" class="field" value="10.5" step="0.1" placeholder="10.5">
+        </div>
+        <div>
+          <label class="lbl">Mag Pickup Rate (GPM)</label>
+          <input type="number" id="krecal-mag" class="field" value="10.0" step="0.1" placeholder="10.0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Recalibrated K-Factor</div>
+        <div class="val" style="color:var(--brand);" id="krecal-new">892.5</div>
+      </div>
+    </div>
+
+    <!-- Hardware Matrix -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">Hardware Matrix</div>
+      <div class="mb-3">
+        <label class="lbl">Active Meter Profile</label>
+        <select id="lime-profile" class="field">
+          <option value="850">Standard Flowmeter (850 K-Factor)</option>
+          <option value="2500">Mag Meter (2500 K-Factor)</option>
+          <option value="custom">Custom Manual Vector</option>
+        </select>
+      </div>
+      <div id="lime-custom-wrap" class="mb-3 hidden">
+        <label class="lbl">Custom K-Factor</label>
+        <input type="number" id="lime-k-custom" class="field" value="850" step="1" placeholder="850">
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Signal Frequency (HZ)</label>
+          <input type="number" id="lime-freq" class="field" value="60" step="0.1" placeholder="60">
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Applied K-Factor</div>
+          <div class="val" style="color:var(--brand);" id="lime-k-disp">850</div>
+        </div>
+      </div>
+      <div class="surface-card text-center" style="padding:20px;">
+        <div class="lbl" style="display:block;margin-bottom:8px;">Calculated Throughput</div>
+        <div class="font-display" style="font-size:48px;font-weight:900;" id="lime-gpm">4.24</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text2);margin-bottom:8px;">GPM</div>
+        <div style="font-size:10px;color:var(--text2);font-weight:500;">Real-time flux calculation based on encoder pulse frequency.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ WELLBORE ══════════════ -->
+  <div class="section" id="s-wellbore">
+    <div class="mb-4">
+      <div class="sec-title">WELLBORE CALCULATIONS</div>
+      <div class="sec-sub">FLUSH VOLUME FORMULAS - FORMATION FORMULAS</div>
+    </div>
+
+    <!-- Tubular Capacity, Displacement & Metal Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tubular Capacity, Displacement &amp; Metal Volume</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Outer Diam OD (IN)</label>
+          <input type="number" id="tubular-od" class="field" value="5.500" step="0.1" placeholder="5.500">
+        </div>
+        <div>
+          <label class="lbl">Inner Diam ID (IN)</label>
+          <input type="number" id="tubular-id" class="field" value="4.778" step="0.001" placeholder="4.778">
+        </div>
+        <div>
+          <label class="lbl">Depth / Length (FT)</label>
+          <input type="number" id="tubular-length" class="field" value="10500" placeholder="10500">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Capacity (BBL/FT)</div>
+          <div class="val" style="color:var(--brand);" id="tubular-capbblft">0.0222</div>
+          <div class="unit">BBL/FT</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Capacity (GAL/FT)</div>
+          <div class="val" id="tubular-capgalft">0.931</div>
+          <div class="unit">GAL/FT</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Displacement (BBL/FT)</div>
+          <div class="val" id="tubular-dispbblft">0.0072</div>
+          <div class="unit">BBL/FT</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Total Internal Volume</div>
+          <div class="val" style="color:var(--brand);" id="tubular-totcap">232.8</div>
+          <div class="unit">BBL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Metal Displacement</div>
+          <div class="val" id="tubular-totdisp">75.8</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equivalent Mud Weight (EMW) & Required STP -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Equivalent Mud Weight (EMW) &amp; Surface Pressure</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Surface Pressure (PSI)</label>
+          <input type="number" id="emw-stp" class="field" value="6500" placeholder="6500">
+        </div>
+        <div>
+          <label class="lbl">True Vertical Depth TVD (FT)</label>
+          <input type="number" id="emw-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Base Fluid Density (PPG)</label>
+          <input type="number" id="emw-density" class="field" value="8.33" step="0.01" placeholder="8.33">
+        </div>
+        <div>
+          <label class="lbl">Target EMW (PPG)</label>
+          <input type="number" id="emw-target" class="field" value="22.0" step="0.1" placeholder="22.0">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Hydrostatic Press</div>
+          <div class="val" id="emw-hydro">4,113</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Hydro Gradient</div>
+          <div class="val" id="emw-grad">0.433</div>
+          <div class="unit">PSI/FT</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Calculated EMW</div>
+          <div class="val" style="color:var(--brand);" id="emw-calculated">21.49</div>
+          <div class="unit">PPG</div>
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Req Surface Pressure for Target EMW</div>
+        <div class="val" style="color:var(--brand);" id="emw-reqstp">6,750</div>
+        <div class="unit">PSI</div>
+      </div>
+    </div>
+
+    <!-- Overflush / Underflush & Top of Sand / PBTD -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Overflush / Underflush &amp; Top of Proppant (PBTD)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Perf Depth (FT)</label>
+          <input type="number" id="flushcalc-perfdepth" class="field" value="10500" placeholder="10500">
+        </div>
+        <div>
+          <label class="lbl">Casing Capacity (BBL/FT)</label>
+          <input type="number" id="flushcalc-capbblft" class="field" value="0.0222" step="0.0001" placeholder="0.0222">
+        </div>
+        <div>
+          <label class="lbl">Pumped Flush Vol (BBL)</label>
+          <input type="number" id="flushcalc-pumpedflush" class="field" value="240" placeholder="240">
+        </div>
+        <div>
+          <label class="lbl">Sand Left in Casing (LBS)</label>
+          <input type="number" id="flushcalc-sandlbs" class="field" value="5000" placeholder="5000">
+        </div>
+        <div>
+          <label class="lbl">Sand Bulk Density (LBS/FT³)</label>
+          <input type="number" id="flushcalc-bulkdens" class="field" value="105" placeholder="105">
+        </div>
+      </div>
+      <div class="grid-2 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Required Flush to Perfs</div>
+          <div class="val" id="flushcalc-reqflush">233.1</div>
+          <div class="unit">BBL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Flush Variance (Over/Under)</div>
+          <div class="val" style="color:var(--brand);" id="flushcalc-variance">+6.9 BBL (Over)</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Sand Height in Casing</div>
+          <div class="val" id="flushcalc-sandheight">80.8</div>
+          <div class="unit">FT</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Top of Sand / PBTD</div>
+          <div class="val" style="color:var(--brand);" id="flushcalc-topofsand">10,419.2</div>
+          <div class="unit">FT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perforation Pressure Drop & Active Perfs Solver -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Perforation Pressure Drop &amp; Open Perfs Solver</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="perfcalc-rate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Slurry Density (PPG)</label>
+          <input type="number" id="perfcalc-dens" class="field" value="9.2" step="0.1" placeholder="9.2">
+        </div>
+        <div>
+          <label class="lbl">Open Perfs Count (N)</label>
+          <input type="number" id="perfcalc-nperfs" class="field" value="36" placeholder="36">
+        </div>
+        <div>
+          <label class="lbl">Perf Hole Diam (IN)</label>
+          <input type="number" id="perfcalc-diam" class="field" value="0.42" step="0.01" placeholder="0.42">
+        </div>
+        <div>
+          <label class="lbl">Discharge Coeff (Cd)</label>
+          <input type="number" id="perfcalc-cd" class="field" value="0.95" step="0.01" placeholder="0.95">
+        </div>
+      </div>
+      <div class="tile mb-3">
+        <div class="lbl">Calculated Perf Pressure Drop</div>
+        <div class="val" style="color:var(--brand);" id="perfcalc-outdrop">342</div>
+        <div class="unit">PSI</div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate Open Perfs Count from Measured Drop</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Measured Perf Friction (PSI)</label>
+            <input type="number" id="perfcalc-measfrict" class="field" value="400" placeholder="400">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Solved Open Perfs</div>
+            <div class="val" style="color:var(--brand);" id="perfcalc-solvedn">33.3</div>
+            <div class="unit">PERFS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Surface Treating Pressure (STP) Predictor -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Surface Treating Pressure (STP) Predictor</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Target BHP (PSI)</label>
+          <input type="number" id="stp-bhp" class="field" value="8500" placeholder="8500">
+        </div>
+        <div>
+          <label class="lbl">Fluid Density (PPG)</label>
+          <input type="number" id="stp-density" class="field" value="8.6" step="0.1" placeholder="8.6">
+        </div>
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="stp-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Pipe Friction (PSI)</label>
+          <input type="number" id="stp-pipefrict" class="field" value="1420" placeholder="1420">
+        </div>
+        <div>
+          <label class="lbl">Perf Friction (PSI)</label>
+          <input type="number" id="stp-perffrict" class="field" value="338" placeholder="338">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Hydrostatic Pressure</div>
+          <div class="val" id="stp-hydro">4,247</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Calculated Required STP</div>
+          <div class="val" style="color:var(--brand);" id="stp-calculated">6,011</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Well Parameters</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="wb-tvd" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Perf Depth (FT)</label>
+          <input type="number" id="wb-perf" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Water Density (PPG)</label>
+          <input type="number" id="wb-density" class="field" value="8.33" step="0.01" placeholder="8.33">
+        </div>
+        <div>
+          <label class="lbl">Casing ID (IN)</label>
+          <input type="number" id="wb-id" class="field" value="4.778" step="0.001" placeholder="4.778">
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Tubular</label>
+        <select id="wb-tubular" class="field"><!-- injected --></select>
+      </div>
+    </div>
+
+    <!-- Volumetrics -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Well Volumetrics</div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Hydrostatic</div>
+          <div class="val" style="color:var(--brand);" id="wb-hydro">0</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Total Wellbore Capacity</div>
+          <div class="font-display" style="font-size:36px;font-weight:900;color:#fff;" id="wb-capacity">0.00</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">Calculated from casing ID to perfs</div>
+        </div>
+        <div class="text-right">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,0.6);">Tubular Factor</div>
+          <div class="font-display" style="font-size:20px;font-weight:900;color:rgba(255,255,255,0.8);" id="wb-factor">0.9314</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">BBL/FT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friction Loss Breakdown & f_pipe Solver -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Friction Loss Breakdown &amp; Pipe Friction Solver</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="frict-rate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Slurry Density (PPG)</label>
+          <input type="number" id="frict-dens" class="field" value="9.2" step="0.1" placeholder="9.2">
+        </div>
+        <div>
+          <label class="lbl">Perf Depth (FT)</label>
+          <input type="number" id="frict-depth" class="field" value="10500" placeholder="10500">
+        </div>
+        <div>
+          <label class="lbl">Casing ID (IN)</label>
+          <input type="number" id="frict-id" class="field" value="4.778" step="0.001" placeholder="4.778">
+        </div>
+        <div>
+          <label class="lbl">Pipe Friction Coeff (f_pipe)</label>
+          <input type="number" id="frict-fpipe" class="field" value="0.00018" step="0.00001" placeholder="0.00018">
+        </div>
+        <div>
+          <label class="lbl">Perf Friction Coeff (f_perf)</label>
+          <input type="number" id="frict-fperf" class="field" value="0.08" step="0.01" placeholder="0.08">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Pipe Friction</div>
+          <div class="val" id="frict-pipeval">1,420</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Perf Friction</div>
+          <div class="val" id="frict-perfval">338</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Total Friction</div>
+          <div class="val" style="color:var(--brand);" id="frict-totalval">1,758</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate Pipe Friction Coefficient (f_pipe)</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Measured Pipe Friction (PSI)</label>
+            <input type="number" id="frict-measuredpipe" class="field" value="1500" placeholder="1500">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Solved f_pipe</div>
+            <div class="val" style="color:var(--brand);" id="frict-solvedfpipe">0.000190</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Well Control & Fracture Pressure -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Well Control &amp; Fracture Pressure</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Formation Pressure (PSI)</label>
+          <input type="number" id="wellctrl-formpress" class="field" value="5200" placeholder="5200">
+        </div>
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="wellctrl-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Frac Gradient (PSI/FT)</label>
+          <input type="number" id="wellctrl-grad" class="field" value="0.75" step="0.01" placeholder="0.75">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Kill Mud Weight</div>
+          <div class="val" style="color:var(--brand);" id="wellctrl-killmud">10.54</div>
+          <div class="unit">PPG</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Fracture Pressure</div>
+          <div class="val" id="wellctrl-fracpress">7,125</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Required ISIP</div>
+          <div class="val" id="wellctrl-reqisip">3,012</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BHP -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Bottom Hole Pressure (BHP)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Treating PSI</label>
+          <input type="number" id="wb-treating" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Friction Loss (PSI)</label>
+          <input type="number" id="wb-friction" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">BHP (PSI)</div>
+        <div class="val" style="color:var(--brand);" id="wb-bhp">0</div>
+      </div>
+    </div>
+
+    <!-- Wellbore Capacity (Multi-Section) — chart + custom casing -->
+    <div class="card mb-4 wellcap-card">
+      <div class="wellcap-head">
+        <div class="tool-title">Wellbore Capacity (Multi-Section)</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:8px 14px;" onclick="addWellCapRow()">+ Add Section</button>
+      </div>
+      <p class="wellcap-help">
+        Pick a chart casing or enter custom OD/ID to compute capacity.
+        Section volume = Depth × BBL/FT.
+        Custom: BBL/FT = ID² ÷ 1029.44 · GAL/FT = ID² ÷ 24.51
+      </p>
+      <div id="wellcap-rows"><!-- injected --></div>
+      <div class="wellcap-totals">
+        <div class="tile">
+          <div class="lbl">Total Gallons</div>
+          <div class="val" id="wellcap-gal">0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Total Barrels</div>
+          <div class="val" style="color:var(--brand);" id="wellcap-bbl">0.00</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frac Gradient & Related -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Frac Gradient &amp; Related</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">ISIP (PSI)</label>
+          <input type="number" id="fg-isip" class="field" value="6500" placeholder="6500">
+        </div>
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="fg-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Fluid Density (PPG)</label>
+          <input type="number" id="fg-density" class="field" value="8.6" step="0.1" placeholder="8.6">
+        </div>
+        <div>
+          <label class="lbl">Closure Stress (PSI)</label>
+          <input type="number" id="fg-closure" class="field" value="5800" placeholder="5800">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Frac Gradient</div>
+          <div class="val" style="color:var(--brand);" id="fg-grad">0.72</div>
+          <div class="unit">PSI/FT</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Net Pressure</div>
+          <div class="val" id="fg-net">1,245</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proppant Left in Wellbore -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">Proppant Left in Wellbore</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Slurry Volume (BBL)</label>
+          <input type="number" id="pl-slurry" class="field" value="1200" placeholder="1200">
+        </div>
+        <div>
+          <label class="lbl">Prop Conc (PPG)</label>
+          <input type="number" id="pl-conc" class="field" value="3" step="0.5" placeholder="3">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="pl-sg" class="field" value="2.65" step="0.05" placeholder="2.65">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Proppant Left in Wellbore</div>
+        <div class="val" style="color:var(--brand);" id="pl-result">37,850</div>
+        <div class="unit">LBS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HP ══════════════ -->
+  <div class="section" id="s-hp">
+    <div class="mb-4">
+      <div class="sec-title">HORSEPOWER, HOSES &amp; IRON</div>
+      <div class="sec-sub">CALCULATIONS</div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Stage Energy Analysis</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Treating PSI</label>
+          <input type="number" id="hp-psi" class="field" value="8500" placeholder="8500">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Active Pumps</label>
+          <input type="number" id="hp-pumps" class="field" value="12" min="1" placeholder="12">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Clean Rate (BPM) <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--brand);">— shared with Chem &amp; Hydration</span></label>
+        <input type="number" id="hp-rate" class="field" value="0" step="0.1" placeholder="0">
+      </div>
+      <div class="grid-3 mb-1">
+        <div>
+          <label class="lbl">Total Pumps on Loc</label>
+          <input type="number" id="hp-totalpumps" class="field" value="14" min="1" placeholder="14">
+        </div>
+        <div>
+          <label class="lbl">Pump HP Rating</label>
+          <input type="number" id="hp-rating" class="field" value="2500" placeholder="2500">
+        </div>
+        <div>
+          <label class="lbl">Efficiency (%)</label>
+          <input type="number" id="hp-mecheff" class="field" value="90" placeholder="90">
+        </div>
+      </div>
+    </div>
+
+    <!-- Total HHP -->
+    <div class="brand-card mb-4 text-center">
+      <div class="lbl" style="color:rgba(255,255,255,0.6);display:block;">Total Required Horsepower (HHP)</div>
+      <div class="font-display" style="font-size:52px;font-weight:900;color:#fff;" id="hp-total">0</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;" id="hp-rate-lbl">Based on 0.0 BPM load</div>
+    </div>
+
+    <!-- Fleet Capacity, Load Factor & Mechanical Efficiency -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Fleet Capacity, Load Factor &amp; Engine BHP</div>
+      <div class="grid-2 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">HHP per Active Pump</div>
+          <div class="val" style="color:var(--brand);" id="hp-per">0</div>
+          <div class="unit">HHP</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Engine BHP Required</div>
+          <div class="val" style="color:var(--brand);" id="hp-reqbhp">0</div>
+          <div class="unit">BHP (@ Eff%)</div>
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Total Location Cap</div>
+          <div class="val" id="hp-locavailable">35,000</div>
+          <div class="unit">HHP</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Active Fleet Load</div>
+          <div class="val" id="hp-activeload">0%</div>
+          <div class="unit">% LOAD</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Total Location Load</div>
+          <div class="val" id="hp-totalload">0%</div>
+          <div class="unit">% LOAD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suction/Discharge Hose Count -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Suction / Discharge Hose Count</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Max Clean Rate (BPM)</label>
+          <input type="number" id="hose-clean" class="field" value="120" placeholder="120">
+        </div>
+        <div>
+          <label class="lbl">Max Dirty Rate (BPM)</label>
+          <input type="number" id="hose-dirty" class="field" value="95" placeholder="95">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl"># Suction Hoses</div>
+          <div class="val" style="color:var(--brand);" id="hose-suction">12</div>
+          <div class="unit">(Clean ÷ 10)</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl"># Discharge Hoses</div>
+          <div class="val" id="hose-discharge">7</div>
+          <div class="unit">(Dirty ÷ 15)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Engine Torque ↔ Horsepower Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Engine Torque ↔ Horsepower Calculator</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Engine Speed (RPM)</label>
+          <input type="number" id="torque-rpm" class="field" value="2100" placeholder="2100">
+        </div>
+        <div>
+          <label class="lbl">Torque (LBF-FT)</label>
+          <input type="number" id="torque-lbft" class="field" value="5625" placeholder="5625">
+        </div>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calculated BHP</div>
+          <div class="val" style="color:var(--brand);" id="torque-outbhp">2,250</div>
+          <div class="unit">HP</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate Torque from Horsepower</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Horsepower (HP)</label>
+            <input type="number" id="torque-inputhp" class="field" value="2250" placeholder="2250">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Calculated Torque</div>
+            <div class="val" style="color:var(--brand);" id="torque-outlbft">5,625</div>
+            <div class="unit">LBF-FT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pump Displacement & Crank Speed Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pump Displacement &amp; Crank Speed Calculator</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Plunger Bore (IN)</label>
+          <input type="number" id="pumpdisp-bore" class="field" value="4.5" step="0.25" placeholder="4.5">
+        </div>
+        <div>
+          <label class="lbl">Stroke Length (IN)</label>
+          <input type="number" id="pumpdisp-stroke" class="field" value="8" step="0.5" placeholder="8">
+        </div>
+        <div>
+          <label class="lbl">Plungers Count</label>
+          <input type="number" id="pumpdisp-plungers" class="field" value="3" placeholder="3">
+        </div>
+        <div>
+          <label class="lbl">Pinion Speed (RPM)</label>
+          <input type="number" id="pumpdisp-pinion" class="field" value="1500" placeholder="1500">
+        </div>
+        <div>
+          <label class="lbl">Pinion Ratio</label>
+          <input type="number" id="pumpdisp-ratio" class="field" value="6.353" step="0.001" placeholder="6.353">
+        </div>
+        <div>
+          <label class="lbl">Efficiency (%)</label>
+          <input type="number" id="pumpdisp-eff" class="field" value="95" placeholder="95">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Vol / Rev</div>
+          <div class="val" id="pumpdisp-bblrev">0.0393</div>
+          <div class="unit">BBL/REV</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Crank Speed</div>
+          <div class="val" id="pumpdisp-crank">236.1</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Pump Output</div>
+          <div class="val" style="color:var(--brand);" id="pumpdisp-bpm">8.8</div>
+          <div class="unit">BPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Iron Rate Limit & Max Pressure Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Iron Rate Limit &amp; Max Pressure</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Iron Line ID (IN)</label>
+          <input type="number" id="ironlim-id" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Total Available HHP</label>
+          <input type="number" id="ironlim-hhp" class="field" value="22500" placeholder="22500">
+        </div>
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="ironlim-rate" class="field" value="85" placeholder="85">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Max Rate / Line (2 × ID²)</div>
+          <div class="val" style="color:var(--brand);" id="ironlim-maxrate">18.0</div>
+          <div class="unit">BPM/LINE</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Max Pressure at Rate</div>
+          <div class="val" style="color:var(--brand);" id="ironlim-maxpsi">10,800</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transmission Output Speed -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Transmission Output Speed</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Transmission Type</label>
+          <select id="trans-type" class="field">
+            <option value="TH55-E70">TH55-E70</option>
+            <option value="CX48">CX48-P2300/TH48</option>
+            <option value="Allison">Allison 9826</option>
+            <option value="TH55-E90">TH55-E90</option>
+            <option value="TH350">TH-350</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Current Gear</label>
+          <select id="trans-gear" class="field"><!-- injected --></select>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Deck Engine RPM</label>
+        <input type="number" id="trans-engine" class="field" value="1800" placeholder="1800">
+      </div>
+      <div class="tile">
+        <div class="lbl">Transmission Output Speed</div>
+        <div class="val" style="color:var(--brand);" id="trans-output">1,800</div>
+        <div class="unit">RPM — Pinion Speed for pump calc</div>
+      </div>
+    </div>
+
+    <!-- Pump Rate from Fluid End Specs -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pump Rate from Fluid End Specs</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Pump Type</label>
+          <select id="pumprate-type" class="field">
+            <option value="SPM_TWS_2250">SPM TWS 2250</option>
+            <option value="SPM_TWS_2500">SPM TWS 2500</option>
+            <option value="CAT_WS255">CAT WS255</option>
+            <option value="GD_2500Q">GD 2500 Q</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Efficiency %</label>
+          <input type="number" id="pumprate-eff" class="field" value="95" placeholder="95">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">PE RPM (from transmission)</label>
+        <input type="number" id="pumprate-pe" class="field" value="283" placeholder="283">
+      </div>
+      <div class="tile">
+        <div class="lbl">Pump Rate</div>
+        <div class="val" style="color:var(--brand);" id="pumprate-bpm">10.5</div>
+        <div class="unit">BPM — Max Pressure: <span id="pumprate-psi">15,000</span> psi</div>
+      </div>
+    </div>
+
+    <!-- ═══ GEAR OPTIMIZER ═══ -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">High-Rate Gear Optimizer</div>
+
+      <div class="mb-4">
+        <label class="lbl">Pumps Inline</label>
+        <div class="flex gap-2 items-center mb-1">
+          <input type="number" id="go-pumps" class="field" value="14" min="1" max="30" style="width:90px;">
+          <div class="flex gap-1">
+            <button class="quick-btn" onclick="goPumps(10)">10</button>
+            <button class="quick-btn" onclick="goPumps(12)">12</button>
+            <button class="quick-btn sel" onclick="goPumps(14)">14</button>
+            <button class="quick-btn" onclick="goPumps(16)">16</button>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px;" id="go-range">Range: 58.8 – 149.8 BPM</div>
+      </div>
+
+      <div class="flex gap-3 items-end mb-4">
+        <div class="flex-1">
+          <label class="lbl">Target Total Rate (BPM)</label>
+          <input type="number" id="go-target" class="field" value="100" step="0.1">
+        </div>
+        <button id="go-btn" class="btn btn-brand" onclick="goRun()" style="padding:10px 20px;white-space:nowrap;">⚡ Optimize</button>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--surface);border-radius:12px;">
+        <div>
+          <div style="font-size:13px;font-weight:600;">Extreme Mode (8th &amp; 9th gear)</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px;">Only for rate-critical jobs when 7th gear is insufficient</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="go-extreme">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Gear results -->
+    <div id="go-results" class="hidden">
+      <div class="flex gap-3 mb-4">
+        <div class="card flex-1">
+          <div class="lbl mb-1">Best Match</div>
+          <div class="flex items-baseline gap-1">
+            <div class="font-display" style="font-size:36px;font-weight:900;color:var(--brand);" id="go-achieved">–</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text2);">BPM</div>
+          </div>
+          <div style="margin-top:6px;" id="go-err-badge"></div>
+        </div>
+        <div class="brand-card text-center flex-col" style="min-width:110px;display:flex;align-items:center;justify-content:center;gap:4px;">
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Mid-Band</div>
+          <div class="font-display" style="font-size:40px;font-weight:900;color:#fff;" id="go-midband">–</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.6);">4th–6th gear</div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="lbl mb-3 tool-title">Gear Assignment</div>
+        <div style="overflow-x:auto;">
+          <div class="tbl-wrap"><table class="tbl">
+            <thead>
+              <tr>
+                <th style="text-align:left;width:32%;">Gear</th>
+                <th class="tbl-right">Pumps</th>
+                <th class="tbl-right">Rate</th>
+                <th class="tbl-right">Contrib</th>
+                <th class="tbl-right">Fleet</th>
+              </tr>
+            </thead>
+            <tbody id="go-tbl"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div id="go-alts-wrap" class="hidden">
+        <div class="lbl mb-2" style="padding:0 2px;">Alternative Distributions</div>
+        <div id="go-alts" class="mb-4"></div>
+      </div>
+
+      <div class="card" id="go-notes-card">
+        <div class="lbl mb-3 tool-title">Field Management Notes</div>
+        <div id="go-notes"></div>
+      </div>
+    </div>
+
+  </div><!-- /s-hp -->

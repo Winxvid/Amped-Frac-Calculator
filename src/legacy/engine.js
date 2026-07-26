@@ -274,6 +274,7 @@ function saveFavorites() {
 }
 
 function isFavorite(id) {
+  if (window.__ampedFavoritesBridge) return window.__ampedFavoritesBridge.isFavorite(id);
   return favorites.some(f => f.id === id);
 }
 
@@ -287,6 +288,12 @@ function pulseHeart(btn) {
 }
 
 function toggleFavorite(id, label, tab, btn) {
+  if (window.__ampedFavoritesBridge) {
+    window.__ampedFavoritesBridge.toggleFavorite(id, label, tab);
+    syncAllHeartButtons();
+    if (btn) pulseHeart(btn);
+    return;
+  }
   const idx = favorites.findIndex(f => f.id === id);
   if (idx >= 0) {
     favorites.splice(idx, 1);
@@ -312,6 +319,7 @@ function syncAllHeartButtons() {
 function renderFavoritesPanel() {
   const list = document.getElementById('favorites-list');
   const empty = document.getElementById('favorites-empty');
+  // Phase 2: React owns the Favorites card on the dashboard
   if (!list || !empty) return;
 
   if (!favorites.length) {
@@ -726,23 +734,28 @@ function applyLogo() {
 }
 
 function applySettings() {
+  // Phase 2: React owns theme application when shell is mounted
+  if (window.__ampedReactNavigate) return;
   applyThemeColors();
   applyLogo();
   renderProfileList();
 }
 
 function openSettings() {
+  // Phase 2: React owns settings panel
+  if (window.__ampedReactNavigate) return;
   closeMenu();
-  document.getElementById('settings-overlay').classList.add('open');
-  document.getElementById('settings-panel').classList.add('open');
-  document.getElementById('settings-panel').setAttribute('aria-hidden', 'false');
+  document.getElementById('settings-overlay')?.classList.add('open');
+  document.getElementById('settings-panel')?.classList.add('open');
+  document.getElementById('settings-panel')?.setAttribute('aria-hidden', 'false');
   applySettings();
 }
 
 function closeSettings() {
-  document.getElementById('settings-overlay').classList.remove('open');
-  document.getElementById('settings-panel').classList.remove('open');
-  document.getElementById('settings-panel').setAttribute('aria-hidden', 'true');
+  if (window.__ampedReactNavigate) return;
+  document.getElementById('settings-overlay')?.classList.remove('open');
+  document.getElementById('settings-panel')?.classList.remove('open');
+  document.getElementById('settings-panel')?.setAttribute('aria-hidden', 'true');
 }
 
 function onColorPick(which, value) {
@@ -876,17 +889,25 @@ const F = {
 // ================================================================
 
 function openMenu() {
+  // Phase 2: React shell owns the hamburger menu when bridge is present
+  if (window.__ampedReactNavigate) return;
   closeSettings();
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('sidebar-overlay').classList.add('open');
+  document.getElementById('sidebar')?.classList.add('open');
+  document.getElementById('sidebar-overlay')?.classList.add('open');
 }
 function closeMenu() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-overlay').classList.remove('open');
+  if (window.__ampedReactNavigate) return;
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebar-overlay')?.classList.remove('open');
 }
 
 function nav(tab) {
   S.tab = tab;
+  if (window.__ampedReactNavigate) {
+    window.__ampedReactNavigate(tab);
+    saveS();
+    return;
+  }
   closeMenu();
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('s-' + tab);
@@ -896,21 +917,32 @@ function nav(tab) {
   saveS();
 }
 
-function buildNav() {
-  // Sidebar nav — same icons as dashboard cards
-  document.getElementById('sidebar-nav').innerHTML = TABS.map(t =>
-    `<button class="tab-btn${t.id===S.tab?' active':''}" data-tab="${t.id}" onclick="nav('${t.id}')">
-       <span class="snav-icon">${sidebarIcon(t.id)}</span><span class="snav-label">${t.label}</span>
-     </button>`
-  ).join('');
+function __ampedLegacySetTab(tab) {
+  S.tab = tab;
+  try { saveS(); } catch (e) {}
+}
+window.__ampedLegacySetTab = __ampedLegacySetTab;
 
-  // Dashboard grid
-  document.getElementById('dash-grid').innerHTML = DASH_CARDS.map(c =>
-    `<div class="nav-card" onclick="nav('${c.id}')">
-       <div class="nav-card-icon">${c.icon}</div>
-       <div class="nav-card-label">${c.label}</div>
-     </div>`
-  ).join('');
+function buildNav() {
+  // Phase 2: React owns sidebar + dashboard grid when those nodes are absent
+  const sidebarNav = document.getElementById('sidebar-nav');
+  if (sidebarNav) {
+    sidebarNav.innerHTML = TABS.map(t =>
+      `<button class="tab-btn${t.id===S.tab?' active':''}" data-tab="${t.id}" onclick="nav('${t.id}')">
+         <span class="snav-icon">${sidebarIcon(t.id)}</span><span class="snav-label">${t.label}</span>
+       </button>`
+    ).join('');
+  }
+
+  const dashGrid = document.getElementById('dash-grid');
+  if (dashGrid && !dashGrid.dataset.reactOwned) {
+    dashGrid.innerHTML = DASH_CARDS.map(c =>
+      `<div class="nav-card" onclick="nav('${c.id}')">
+         <div class="nav-card-icon">${c.icon}</div>
+         <div class="nav-card-label">${c.label}</div>
+       </div>`
+    ).join('');
+  }
 
   // Tubular picker
   const sel = document.getElementById('wb-tubular');
@@ -2772,11 +2804,19 @@ function bindAll(id, fn) {
 
 function init() {
   loadS();
-  loadSettings();
-  applySettings();
-  loadFavorites();
+  // Phase 2: React ThemeProvider owns settings CSS vars / logo.
+  // Still load favorites as fallback if bridge not ready yet.
+  if (!window.__ampedFavoritesBridge) loadFavorites();
   buildNav();
   ensureToolFavoriteUI();
+  // Keep hearts in sync when React favorites change
+  window.addEventListener('amped:favorites-changed', () => {
+    if (window.__ampedFavoritesBridge) {
+      // Mirror into local array for any legacy callers
+      favorites = window.__ampedFavoritesBridge.getFavorites() || [];
+    }
+    syncAllHeartButtons();
+  });
 
   // Math
   updateConvUnits();

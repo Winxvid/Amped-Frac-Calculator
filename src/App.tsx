@@ -1,42 +1,27 @@
-import { useEffect, useRef } from 'react';
-import contentHtml from './legacy/content.html?raw';
-import { initLegacyApp } from './legacy/engine.js';
+import { AppProviders } from './context/AppProviders';
+import { Header } from './components/shell/Header';
+import { Sidebar } from './components/shell/Sidebar';
+import { SettingsPanel } from './components/shell/SettingsPanel';
+import { Dashboard } from './components/shell/Dashboard';
+import { CalculatorHost } from './components/CalculatorHost';
 
 /**
- * AmpdFrac React application shell.
- *
- * Phase 1 (current): React mounts the migrated UI and boots the proven
- * calculator engine (favorites, settings, profiles, all tools).
- *
- * Phase 2 (next): lift shell pieces (nav, settings, favorites) into pure
- * React components, then section-by-section calculator rewrites with hooks.
- *
- * Phase 3 (mobile): wrap with Capacitor or share logic with React Native.
+ * Phase 2 — React shell:
+ * Header, sidebar, settings, dashboard/favorites are pure React.
+ * Calculator tools still boot from the proven engine module.
  */
 export default function App() {
-  const booted = useRef(false);
-
-  useEffect(() => {
-    if (booted.current) return;
-    booted.current = true;
-
-    // Defer one frame so injected markup is in the DOM
-    const id = requestAnimationFrame(() => {
-      try {
-        initLegacyApp();
-      } catch (err) {
-        console.error(err);
-      }
-    });
-
-    return () => cancelAnimationFrame(id);
-  }, []);
-
   return (
-    <div
-      className="amped-app-root"
-      // Migrated markup: sidebar, settings, header, all calculator sections
-      dangerouslySetInnerHTML={{ __html: contentHtml }}
-    />
+    <AppProviders>
+      <div className="amped-app-root">
+        <Sidebar />
+        <SettingsPanel />
+        <Header />
+        <div className="app-content">
+          <Dashboard />
+          <CalculatorHost />
+        </div>
+      </div>
+    </AppProviders>
   );
 }

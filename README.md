@@ -39,13 +39,15 @@ public/                 # Logos & dashboard icons
 
 ## Architecture (migration phases)
 
-1. **Now — React host**  
-   React owns the root. The existing product UI and math engine boot via a thin legacy module so every tool keeps working.
+1. **Done — React host**  
+   React owns the app root; calculator engine boots under it.
 
-2. **Next — shell in React**  
-   Header, sidebar, settings, and favorites become pure React components using Context + hooks.
+2. **Done — shell in React (Phase 2)**  
+   Pure React: `Header`, `Sidebar`, `SettingsPanel`, `Dashboard` (favorites + nav cards).  
+   Contexts: `ThemeProvider`, `FavoritesProvider`, `NavigationProvider`.  
+   Calculator tool pages still run via `legacy/engine.js` + `legacy/tools.html`.
 
-3. **Then — section rewrites**  
+3. **Next — section rewrites**  
    Move Math / Sand / Chem / … into React feature modules that call `lib/formulas.ts`.
 
 4. **Mobile**  
