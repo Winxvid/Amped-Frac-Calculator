@@ -1,4 +1,5 @@
-import { NAV_ICON_SRC, TABS } from '../../lib/constants';
+import { TABS } from '../../lib/constants';
+import { NAV_ICON_SRC } from '../../lib/icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigation } from '../../context/NavigationContext';
 

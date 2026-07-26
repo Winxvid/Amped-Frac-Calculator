@@ -23,16 +23,7 @@ export const TABS: { id: TabId; label: string }[] = [
   { id: 'hp', label: 'HP' },
 ];
 
-export const NAV_ICON_SRC: Partial<Record<TabId, string>> = {
-  math: '/Math-icon.png',
-  sand: '/Sand-icon.png',
-  chem: '/Chem-icon.png',
-  hydration: '/Hydration-icon.png',
-  blender: '/Blender-icon.png',
-  lime: '/Lime-icon.png',
-  wellbore: '/Wellbore-icon.png',
-  hp: '/Horsepower.png',
-};
+// Icons live in src/lib/icons.ts (Vite-bundled assets)
 
 export const DASH_CARDS: {
   id: Exclude<TabId, 'dashboard'>;

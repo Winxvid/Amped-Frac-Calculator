@@ -1,4 +1,5 @@
-import { DASH_CARDS, NAV_ICON_SRC, TAB_LABELS } from '../../lib/constants';
+import { DASH_CARDS, TAB_LABELS } from '../../lib/constants';
+import { NAV_ICON_SRC } from '../../lib/icons';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useNavigation } from '../../context/NavigationContext';
 import { HeartIcon } from '../ui/HeartIcon';
@@ -95,8 +96,11 @@ export function Dashboard() {
                 {src ? (
                   <img
                     src={src}
-                    alt=""
+                    alt={c.label}
                     className="nav-card-icon-img"
+                    loading="eager"
+                    decoding="async"
+                    draggable={false}
                   />
                 ) : null}
               </div>
