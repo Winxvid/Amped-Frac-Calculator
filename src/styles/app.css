@@ -404,11 +404,11 @@
       background: transparent;
     }
     .nav-card-label {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      line-height: 1.2;
+      line-height: 1.25;
       overflow-wrap: anywhere;
       word-break: break-word;
       max-width: 100%;
@@ -455,7 +455,7 @@
       .nav-card { padding: 16px 8px; border-radius: 14px; min-height: 96px; }
       .nav-card-icon { height: 52px; margin-bottom: 6px; }
       .nav-card-icon-img { height: 48px; max-height: 48px; max-width: min(120px, 94%); }
-      .nav-card-label { font-size: 11px; letter-spacing: 0.04em; }
+      .nav-card-label { font-size: 13px; letter-spacing: 0.04em; }
     }
     @media (prefers-reduced-motion: reduce) {
       #dash-grid .nav-card-label.fx-foil {
