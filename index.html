@@ -718,8 +718,55 @@
     }
     .menu-btn:hover { background: var(--brand-dim); color: var(--brand); border-color: var(--brand); }
     .dashboard-header { text-align: center; display: block; }
-    .dashboard-header .sec-title { color: var(--brand); font-weight: 900; }
-    .dashboard-header .sec-sub { color: var(--brand); opacity: 0.9; font-weight: 700; margin-top:4px; }
+    /*
+      Metallic / shine title effect (profile-colored, not gold).
+      Uses active profile --title-color and --brand so Amped/Liberty/Default all adapt.
+    */
+    .dashboard-header .sec-title,
+    .dashboard-header .sec-sub {
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background-image: linear-gradient(
+        110deg,
+        var(--title-color) 0%,
+        color-mix(in srgb, var(--title-color) 55%, white) 18%,
+        var(--brand) 42%,
+        color-mix(in srgb, var(--brand) 45%, white) 52%,
+        var(--title-color) 68%,
+        color-mix(in srgb, var(--title-color) 60%, white) 82%,
+        var(--brand) 100%
+      );
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      animation: dash-title-shine 5.5s linear infinite;
+      filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--title-color) 35%, transparent));
+    }
+    .dashboard-header .sec-title {
+      font-size: clamp(26px, 7vw, 34px);
+      line-height: 1.15;
+    }
+    .dashboard-header .sec-sub {
+      font-weight: 800;
+      margin-top: 6px;
+      font-size: clamp(14px, 3.8vw, 17px);
+      letter-spacing: 0.04em;
+      opacity: 0.95;
+      animation-delay: 0.35s;
+    }
+    @keyframes dash-title-shine {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dashboard-header .sec-title,
+      .dashboard-header .sec-sub {
+        animation: none;
+        background-position: 40% 50%;
+      }
+    }
 
     /* ── Settings panel (right drawer) ── */
     #settings-overlay {
