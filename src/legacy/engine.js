@@ -156,14 +156,14 @@ const TABS = [
 
 // Shared icons for dashboard cards + hamburger menu (same assets)
 const NAV_ICON_SRC = {
-  math: '/Math-icon.jpg',
-  sand: '/Sand-icon.jpg',
-  chem: '/Chem-icon.jpg',
-  hydration: '/Hydration-icon.jpg',
-  blender: '/Blender-icon.jpg',
-  lime: '/Lime-icon.jpg',
-  wellbore: '/Wellbore-icon.jpg',
-  hp: '/Horsepower.jpg',
+  math: '/Math-icon.png',
+  sand: '/Sand-icon.png',
+  chem: '/Chem-icon.png',
+  hydration: '/Hydration-icon.png',
+  blender: '/Blender-icon.png',
+  lime: '/Lime-icon.png',
+  wellbore: '/Wellbore-icon.png',
+  hp: '/Horsepower.png',
 };
 
 function dashCardIcon(id) {

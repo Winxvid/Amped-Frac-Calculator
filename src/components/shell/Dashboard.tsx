@@ -96,13 +96,7 @@ export function Dashboard() {
                   <img
                     src={src}
                     alt=""
-                    style={{
-                      height: 32,
-                      width: 'auto',
-                      maxWidth: 96,
-                      objectFit: 'contain',
-                      borderRadius: 5,
-                    }}
+                    className="nav-card-icon-img"
                   />
                 ) : null}
               </div>
