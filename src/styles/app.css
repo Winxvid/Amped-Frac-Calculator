@@ -828,27 +828,43 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 10px;
+      margin: 0 0 12px;
+      width: 100%;
     }
     .tool-title-with-heart .tool-title-text {
-      flex: 1;
+      flex: 1 1 auto;
       min-width: 0;
+      margin: 0 !important;
+      /* keep title color; do not force uppercase from .lbl alone for spacing */
+      text-transform: none;
+      letter-spacing: 0.4px;
+      font-size: 14px;
+    }
+    .tool-title-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
     }
     .fav-heart {
       flex-shrink: 0;
-      width: 36px;
-      height: 36px;
-      margin: -6px -6px 0 0;
-      padding: 6px;
+      width: 40px;
+      height: 40px;
+      margin: -8px -6px 0 0;
+      padding: 8px;
       border: none;
       background: transparent;
       border-radius: 10px;
       cursor: pointer;
-      color: var(--text3);
-      display: inline-flex;
+      color: #8e8e93; /* visible outline heart on light cards */
+      display: inline-flex !important;
       align-items: center;
       justify-content: center;
       transition: color 0.15s, background 0.15s;
       -webkit-tap-highlight-color: transparent;
+      position: relative;
+      z-index: 2;
     }
     .fav-heart:hover {
       color: #e11d48;
@@ -857,6 +873,7 @@
     .fav-heart.is-fav {
       color: #e11d48;
     }
+    .fav-heart.is-fav .heart,
     .fav-heart.is-fav .heart-path {
       fill: currentColor;
       stroke: currentColor;
@@ -866,6 +883,7 @@
       height: 22px;
       overflow: visible;
       display: block;
+      pointer-events: none;
     }
     .fav-heart .heart {
       transform-origin: 50% 50%;

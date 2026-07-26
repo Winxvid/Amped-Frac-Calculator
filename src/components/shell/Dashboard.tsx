@@ -55,6 +55,7 @@ export function Dashboard() {
                   color="#e11d48"
                   title="Remove from favorites"
                   onClick={() => toggleFavorite(f.id, f.label, f.tab)}
+                  className="fav-heart is-fav"
                 />
                 <button
                   type="button"

@@ -260,22 +260,24 @@ export function BlenderPage() {
         <NumField label="Desired Volume (GAL)" value={blDesired} onChange={setBlDesired} step="0.001" className="" />
       </ToolCard>
 
-      <div className="card mb-4 flex justify-between items-center">
-        <div>
-          <div className="lbl">Theoretical GPM</div>
-          <div className="font-display" style={{ fontSize: 28, fontWeight: 900, color: 'var(--brand)' }}>
-            {thGpm.toFixed(3)}
+      <ToolCard title="Bucket Test Targets" tab={TAB}>
+        <div className="flex justify-between items-center gap-3">
+          <div>
+            <div className="lbl">Theoretical GPM</div>
+            <div className="font-display" style={{ fontSize: 28, fontWeight: 900, color: 'var(--brand)' }}>
+              {thGpm.toFixed(3)}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="lbl">Expected Time</div>
+            <div className="font-display" style={{ fontSize: 28, fontWeight: 900 }}>
+              {thTime.toFixed(1)}s
+            </div>
           </div>
         </div>
-        <div className="text-right">
-          <div className="lbl">Expected Time</div>
-          <div className="font-display" style={{ fontSize: 28, fontWeight: 900 }}>
-            {thTime.toFixed(1)}s
-          </div>
-        </div>
-      </div>
+      </ToolCard>
 
-      <ToolCard title="⏱ Bucket Test Stopwatch" tab={TAB}>
+      <ToolCard title="Bucket Test Stopwatch" tab={TAB}>
         <div className="timer mb-4" style={{ textAlign: 'center', fontSize: 36, fontWeight: 900 }}>
           {timerSec.toFixed(1)}s
         </div>
@@ -299,14 +301,8 @@ export function BlenderPage() {
         </div>
       </ToolCard>
 
-      {showResults && (
-        <div className="card mb-4">
-          <div className="flex items-center gap-2 mb-3">
-            <span style={{ color: 'var(--brand)' }}>✓</span>
-            <span className="lbl lbl-brand" style={{ margin: 0 }}>
-              Calibration Results
-            </span>
-          </div>
+      {showResults ? (
+        <ToolCard title="Calibration Results" tab={TAB}>
           <div className="flex gap-3 mb-3">
             <ResultTile label="Target GPM" value={thGpm.toFixed(3)} />
             <ResultTile label="Measured GPM" value={measuredGpm.toFixed(3)} emphasize />
@@ -319,8 +315,8 @@ export function BlenderPage() {
             />
             <ResultTile label="Rec. Fine Adjust" value={recFine.toFixed(3)} emphasize />
           </div>
-        </div>
-      )}
+        </ToolCard>
+      ) : null}
 
       <ToolCard title="Bucket Test Time & Adjustments" tab={TAB}>
         <div className="grid-2 mb-3">

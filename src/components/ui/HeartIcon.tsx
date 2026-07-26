@@ -15,14 +15,14 @@ export type HeartIconProps = AnimatedIconProps & {
 };
 
 /**
- * Animated heart (Motion) — beat on hover/tap.
- * Used for favorites on every tool card and the dashboard list.
+ * Animated Motion heart — beat on hover/tap.
+ * Stroke uses currentColor so CSS vars on the button always resolve.
  */
 const HeartIcon = forwardRef<AnimatedIconHandle, HeartIconProps>(
   (
     {
       size = 24,
-      color = 'currentColor',
+      color,
       strokeWidth = 2,
       className = '',
       filled = false,
@@ -60,6 +60,7 @@ const HeartIcon = forwardRef<AnimatedIconHandle, HeartIconProps>(
     }));
 
     const handleClick = (e: MouseEvent) => {
+      e.preventDefault();
       e.stopPropagation();
       void start();
       onClick?.();
@@ -68,7 +69,7 @@ const HeartIcon = forwardRef<AnimatedIconHandle, HeartIconProps>(
     return (
       <motion.button
         type="button"
-        className={`${className} cursor-pointer`.trim()}
+        className={className}
         title={title}
         aria-label={title || (filled ? 'Remove from favorites' : 'Add to favorites')}
         aria-pressed={filled}
@@ -80,15 +81,18 @@ const HeartIcon = forwardRef<AnimatedIconHandle, HeartIconProps>(
           stop();
         }}
         style={{
+          // Prefer explicit color when passed; otherwise CSS (.fav-heart) owns it
+          ...(color ? { color } : null),
           background: 'none',
           border: 'none',
-          padding: 4,
+          padding: 0,
+          margin: 0,
           cursor: 'pointer',
-          color,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
           lineHeight: 0,
+          flexShrink: 0,
           WebkitTapHighlightColor: 'transparent',
         }}
       >
@@ -99,13 +103,14 @@ const HeartIcon = forwardRef<AnimatedIconHandle, HeartIconProps>(
           height={size}
           viewBox="0 0 24 24"
           fill="none"
-          stroke={color}
+          stroke="currentColor"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ overflow: 'visible', display: 'block' }}
+          aria-hidden="true"
+          style={{ overflow: 'visible', display: 'block', flexShrink: 0 }}
         >
-          <motion.path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <motion.path
             className="heart"
             style={{ transformOrigin: '50% 50%' }}

@@ -21,7 +21,7 @@ type ToolCardProps = {
 };
 
 /**
- * Shared calculator card with favorite heart (Phase 3 React tools).
+ * Shared calculator card with favorite heart on every tool.
  */
 export function ToolCard({
   title,
@@ -42,14 +42,15 @@ export function ToolCard({
       data-tool-label={title}
       data-tool-tab={tab}
     >
-      <div className="tool-title-with-heart lbl mb-3 tool-title" style={{ margin: 0, marginBottom: 12 }}>
-        <span className="tool-title-text">{title}</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="tool-title-with-heart">
+        <span className="tool-title-text tool-title lbl" style={{ margin: 0 }}>
+          {title}
+        </span>
+        <div className="tool-title-actions">
           {badge}
           <HeartIcon
             size={22}
             filled={fav}
-            color={fav ? '#e11d48' : 'var(--text3)'}
             title={fav ? 'Remove from favorites' : 'Add to favorites'}
             onClick={() => toggleFavorite(toolId, title, tab)}
             className={`fav-heart${fav ? ' is-fav' : ''}`}
