@@ -106,9 +106,7 @@ export function Dashboard() {
                   />
                 ) : null}
               </div>
-              <div className="nav-card-label" style={{ color: c.tc }}>
-                {c.label}
-              </div>
+              <div className="nav-card-label fx-foil">{c.label}</div>
             </div>
           );
         })}

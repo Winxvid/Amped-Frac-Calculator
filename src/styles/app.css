@@ -392,6 +392,42 @@
       max-width: 100%;
       padding: 0 2px;
     }
+    /* Foil labels on dash cards — uses active profile colors (--title-color / --brand) */
+    #dash-grid {
+      --ink: var(--title-color);
+      --ink-2: var(--brand);
+      --ink-3: color-mix(in srgb, var(--brand) 42%, white);
+    }
+    #dash-grid .nav-card-label.fx-foil {
+      display: inline-block;
+      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1.15;
+      color: transparent;
+      background:
+        linear-gradient(108deg,
+          color-mix(in srgb, var(--ink) 78%, black) 0%,
+          color-mix(in srgb, var(--ink-2) 70%, white) 18%,
+          var(--ink-3) 24%,
+          color-mix(in srgb, var(--ink) 55%, black) 36%,
+          color-mix(in srgb, var(--ink-2) 55%, white) 51%,
+          color-mix(in srgb, var(--ink) 72%, black) 68%,
+          var(--ink-3) 76%,
+          color-mix(in srgb, var(--ink-2) 65%, white) 100%
+        ) 0 0 / 230% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow:
+        0 1px 0 color-mix(in srgb, var(--ink-3) 45%, transparent),
+        0 6px 14px rgba(0, 0, 0, 0.16);
+      animation: fx-foil 3.1s ease-in-out infinite;
+    }
+    /* Stagger shimmer slightly across the grid */
+    #dash-grid .nav-card:nth-child(2n) .nav-card-label.fx-foil { animation-delay: 0.15s; }
+    #dash-grid .nav-card:nth-child(3n) .nav-card-label.fx-foil { animation-delay: 0.3s; }
+    #dash-grid .nav-card:nth-child(4n) .nav-card-label.fx-foil { animation-delay: 0.45s; }
     .nav-card-icon img {
       max-width: 100%;
       height: auto;
@@ -403,7 +439,14 @@
       .nav-card { padding: 16px 8px; border-radius: 14px; min-height: 84px; }
       .nav-card-icon { font-size: 22px; height: 28px; margin-bottom: 4px; }
       .nav-card-icon img { max-height: 28px; }
-      .nav-card-label { font-size: 11px; letter-spacing: 0; }
+      .nav-card-label { font-size: 11px; letter-spacing: 0.04em; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #dash-grid .nav-card-label.fx-foil {
+        animation: none;
+        background-position: 40% 0;
+        filter: none;
+      }
     }
 
     /* ── Progress bar ── */
