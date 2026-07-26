@@ -69,37 +69,38 @@ export function relativeLuminance(hex: string): number {
   return 0.2126 * lin(rgb.r) + 0.7152 * lin(rgb.g) + 0.0722 * lin(rgb.b);
 }
 
+/** True greys / near-black (low chroma) — not saturated brand accents. */
+export function isNearNeutral(hex: string): boolean {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return true;
+  const max = Math.max(rgb.r, rgb.g, rgb.b);
+  const min = Math.min(rgb.r, rgb.g, rgb.b);
+  return max - min < 30;
+}
+
 /**
- * Keep brand text/number colors readable on light vs dark chrome
- * without changing the user's stored profile hex values.
+ * Map stored brand hex → on-screen color for the active chrome.
+ *
+ * Dark mode rule: keep chromatic brand colors EXACT (same crisp Amped blue /
+ * Liberty red / Amped green as light mode). Only lift true neutrals (e.g.
+ * Liberty black numbers) so text stays readable — never wash brand accents
+ * toward white.
  */
 export function contrastSafe(hex: string, darkChrome: boolean): string {
   const n = normalizeHex(hex) || hex;
   const L = relativeLuminance(n);
   if (darkChrome) {
-    // Near-black / dark grey → lift so it stays visible on dark surfaces
-    if (L < 0.22) return lightenHex(n, 0.72);
-    if (L < 0.35) return lightenHex(n, 0.45);
+    if (isNearNeutral(n) && L < 0.28) {
+      // Black / dark grey text on dark surfaces
+      if (L < 0.04) return '#F2F2F7';
+      if (L < 0.12) return '#E5E5EA';
+      return lightenHex(n, 0.42);
+    }
+    // Saturated brand: use stored color unchanged for light-mode crispness
     return n;
   }
-  // Near-white → darken slightly for light surfaces
   if (L > 0.88) return darkenHex(n, 0.55);
   return n;
-}
-
-/**
- * Mid-bright brand accents (Amped blue, Liberty red) read as neon/washed
- * on dark chrome. Darken them for a richer look while staying above
- * near-black so contrastSafe still doesn't need to re-lift.
- * Stored hex in settings is unchanged — this is display-only.
- */
-export function richOnDark(hex: string, amount = 0.78): string {
-  const n = normalizeHex(hex) || hex;
-  const L = relativeLuminance(n);
-  // Only deepen mid/high-luminance accents (skip already-dark neutrals)
-  if (L < 0.12) return n;
-  if (L < 0.25) return darkenHex(n, Math.min(0.92, amount + 0.1));
-  return darkenHex(n, amount);
 }
 
 export function resolveColorMode(mode: ColorMode): 'light' | 'dark' {
@@ -184,34 +185,23 @@ export function applyBrandToDocument(
   root.style.setProperty('--brand-green-raw', green);
   root.style.setProperty('--brand-blue-raw', blue);
 
-  // Readable variants for UI chrome (dark mode may lift near-black)
-  let greenUi = contrastSafe(green, darkChrome);
-  let blueUi = contrastSafe(blue, darkChrome);
+  // Display colors: brand accents stay exact; only neutrals adapt for chrome
+  const greenUi = contrastSafe(green, darkChrome);
+  const blueUi = contrastSafe(blue, darkChrome);
 
-  // Profile-specific dark-mode accent tuning (display only; stored hex unchanged)
-  if (darkChrome) {
-    if (theme.profileId === 'amped') {
-      // Amped blue can feel too bright on dark — deepen numbers/buttons
-      blueUi = richOnDark(blueUi, 0.72);
-    } else if (theme.profileId === 'liberty') {
-      // Liberty red can feel neon on dark — deepen titles/buttons
-      greenUi = richOnDark(greenUi, 0.74);
-    }
-  }
-
-  const brandAccentRaw = theme.profileId === 'amped' ? blueUi : greenUi;
-  const brandAccent = brandAccentRaw;
+  const brandAccent = theme.profileId === 'amped' ? blueUi : greenUi;
 
   root.style.setProperty('--brand', brandAccent);
   root.style.setProperty(
     '--brand-hover',
-    darkChrome ? lightenHex(brandAccent, 0.1) : darkenHex(brandAccent, 0.85),
+    darkChrome ? darkenHex(brandAccent, 0.88) : darkenHex(brandAccent, 0.85),
   );
-  root.style.setProperty('--brand-dim', rgbaFromHex(brandAccent, darkChrome ? 0.22 : 0.12));
-  root.style.setProperty('--brand-dim2', rgbaFromHex(brandAccent, darkChrome ? 0.14 : 0.06));
-  root.style.setProperty('--brand-shadow', rgbaFromHex(brandAccent, darkChrome ? 0.45 : 0.3));
+  // Match light-mode dim strengths so dark UI doesn’t look milky/washed
+  root.style.setProperty('--brand-dim', rgbaFromHex(brandAccent, darkChrome ? 0.16 : 0.12));
+  root.style.setProperty('--brand-dim2', rgbaFromHex(brandAccent, darkChrome ? 0.1 : 0.06));
+  root.style.setProperty('--brand-shadow', rgbaFromHex(brandAccent, darkChrome ? 0.4 : 0.3));
   root.style.setProperty('--brand-blue', blueUi);
-  root.style.setProperty('--brand-blue-dim', rgbaFromHex(blueUi, darkChrome ? 0.22 : 0.12));
+  root.style.setProperty('--brand-blue-dim', rgbaFromHex(blueUi, darkChrome ? 0.16 : 0.12));
   root.style.setProperty('--blue', blueUi);
 
   let titleColor = greenUi;

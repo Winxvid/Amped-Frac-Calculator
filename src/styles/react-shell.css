@@ -60,7 +60,16 @@ html[data-theme='dark'] .nav-card {
   box-shadow: 0 1px 8px var(--shadow);
 }
 
+/* Brand colors stay exact in dark mode — no brightness/saturate wash */
 html[data-theme='dark'] .fx-foil {
-  /* Keep foil lively without washing brand accents */
-  filter: saturate(1.08) brightness(1.0);
+  filter: none;
+}
+
+html[data-theme='dark'] .lbl,
+html[data-theme='dark'] .tool-title,
+html[data-theme='dark'] .sec-title:not(.fx-foil),
+html[data-theme='dark'] .val,
+html[data-theme='dark'] .field {
+  /* Ensure solid brand tokens paint crisply (no inherited opacity tricks) */
+  -webkit-font-smoothing: antialiased;
 }

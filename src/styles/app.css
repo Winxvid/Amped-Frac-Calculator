@@ -843,15 +843,56 @@
       animation-delay: 0.2s;
     }
     @keyframes fx-foil {
-      0%, 100% { background-position: 115% 0; filter: saturate(1.05); }
-      45%      { background-position: -35% 0; filter: saturate(1.35) brightness(1.12); }
+      0%, 100% { background-position: 115% 0; }
+      45%      { background-position: -35% 0; }
     }
     @media (prefers-reduced-motion: reduce) {
       .dashboard-header .fx-foil {
         animation: none;
         background-position: 40% 0;
-        filter: none;
       }
+    }
+
+    /* Dark mode foil: mix with black (not white) so brand stays crisp */
+    html[data-theme="dark"] .dashboard-header {
+      --ink-3: color-mix(in srgb, var(--brand) 82%, black);
+    }
+    html[data-theme="dark"] .dashboard-header .fx-foil {
+      background:
+        linear-gradient(108deg,
+          color-mix(in srgb, var(--ink) 92%, black) 0%,
+          var(--ink-2) 18%,
+          color-mix(in srgb, var(--ink-2) 70%, var(--ink)) 24%,
+          color-mix(in srgb, var(--ink) 80%, black) 36%,
+          var(--ink-2) 51%,
+          color-mix(in srgb, var(--ink) 88%, black) 68%,
+          color-mix(in srgb, var(--ink-2) 75%, var(--ink)) 76%,
+          var(--ink-2) 100%
+        ) 0 0 / 230% 100%;
+      text-shadow:
+        0 1px 0 color-mix(in srgb, var(--ink-2) 25%, transparent),
+        0 8px 18px rgba(0, 0, 0, 0.45);
+      filter: none;
+    }
+    html[data-theme="dark"] #dash-grid {
+      --ink-3: color-mix(in srgb, var(--brand) 82%, black);
+    }
+    html[data-theme="dark"] #dash-grid .nav-card-label.fx-foil {
+      background:
+        linear-gradient(108deg,
+          color-mix(in srgb, var(--ink) 92%, black) 0%,
+          var(--ink-2) 18%,
+          color-mix(in srgb, var(--ink-2) 70%, var(--ink)) 24%,
+          color-mix(in srgb, var(--ink) 80%, black) 36%,
+          var(--ink-2) 51%,
+          color-mix(in srgb, var(--ink) 88%, black) 68%,
+          color-mix(in srgb, var(--ink-2) 75%, var(--ink)) 76%,
+          var(--ink-2) 100%
+        ) 0 0 / 230% 100%;
+      text-shadow:
+        0 1px 0 color-mix(in srgb, var(--ink-2) 25%, transparent),
+        0 6px 14px rgba(0, 0, 0, 0.4);
+      filter: none;
     }
 
     /* ── Favorites ── */
