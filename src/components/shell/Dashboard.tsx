@@ -2,19 +2,66 @@ import { DASH_CARDS, TAB_LABELS } from '../../lib/constants';
 import { NAV_ICON_SRC } from '../../lib/icons';
 import { useFavorites } from '../../context/FavoritesContext';
 import { useNavigation } from '../../context/NavigationContext';
+import { useTheme } from '../../context/ThemeContext';
 import { HeartIcon } from '../ui/HeartIcon';
+import { SmokyText } from '../ui/SmokyText';
 
 export function Dashboard() {
   const { tab, navigate, openFavoriteTool } = useNavigation();
   const { favorites, toggleFavorite } = useFavorites();
+  const { theme, resolvedMode } = useTheme();
   const active = tab === 'dashboard';
+
+  // Replay smoke when entering Home or when profile / appearance changes
+  const smokeKey = `${active}-${theme.profileId}-${theme.green}-${theme.blue}-${resolvedMode}`;
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-dashboard">
       <div className="mb-4 dashboard-header">
         <div>
-          <div className="sec-title fx-foil">Hydraulic Fracturing</div>
-          <div className="sec-sub fx-foil">Field Calculator</div>
+          <SmokyText
+            text="Hydraulic Fracturing"
+            color="var(--title-color)"
+            className="sec-title smoky-dash-title"
+            intensity={9}
+            duration={1.8}
+            delay={0.05}
+            position="bottomLeft"
+            animationMode="singleLine"
+            replayKey={smokeKey}
+            style={{
+              fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
+              fontWeight: 900,
+              fontSize: 'clamp(26px, 7vw, 34px)',
+              letterSpacing: '0.04em',
+              lineHeight: 1.1,
+              display: 'block',
+              width: '100%',
+              textAlign: 'center',
+            }}
+          />
+          <SmokyText
+            text="Field Calculator"
+            color="var(--brand)"
+            className="sec-sub smoky-dash-sub"
+            intensity={7}
+            duration={1.5}
+            delay={0.25}
+            position="bottomLeft"
+            animationMode="singleLine"
+            replayKey={smokeKey}
+            style={{
+              fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
+              fontWeight: 800,
+              fontSize: 'clamp(14px, 3.8vw, 17px)',
+              letterSpacing: '0.06em',
+              lineHeight: 1.2,
+              display: 'block',
+              width: '100%',
+              textAlign: 'center',
+              marginTop: 8,
+            }}
+          />
         </div>
       </div>
 
@@ -78,7 +125,7 @@ export function Dashboard() {
       </div>
 
       <div className="mb-4" id="dash-grid" data-react-owned="1">
-        {DASH_CARDS.map((c) => {
+        {DASH_CARDS.map((c, i) => {
           const src = NAV_ICON_SRC[c.id];
           return (
             <div
@@ -104,7 +151,27 @@ export function Dashboard() {
                   />
                 ) : null}
               </div>
-              <div className="nav-card-label fx-foil">{c.label}</div>
+              <SmokyText
+                text={c.label}
+                color="var(--title-color)"
+                className="nav-card-label smoky-card-label"
+                intensity={5}
+                duration={1.35}
+                delay={0.12 + i * 0.06}
+                position="bottomLeft"
+                animationMode="singleLine"
+                replayKey={smokeKey}
+                as="span"
+                style={{
+                  fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
+                  fontWeight: 900,
+                  fontSize: 15,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  lineHeight: 1.2,
+                  textAlign: 'center',
+                }}
+              />
             </div>
           );
         })}

@@ -423,7 +423,8 @@
       /* black-bg source art: keep full silhouette */
       background: transparent;
     }
-    .nav-card-label {
+    .nav-card-label,
+    .smoky-card-label {
       font-size: 15px;
       font-weight: 800;
       text-transform: uppercase;
@@ -434,57 +435,28 @@
       max-width: 100%;
       padding: 0 2px;
     }
-    /* Foil labels on dash cards — uses active profile colors (--title-color / --brand) */
-    #dash-grid {
-      --ink: var(--title-color);
-      --ink-2: var(--brand);
-      --ink-3: color-mix(in srgb, var(--brand) 42%, white);
+    .smoky-text {
+      max-width: 100%;
     }
-    #dash-grid .nav-card-label.fx-foil {
-      display: inline-block;
-      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      line-height: 1.15;
-      color: transparent;
-      /* longhands — never use background shorthand (it resets background-clip) */
-      background-image:
-        linear-gradient(108deg,
-          color-mix(in srgb, var(--ink) 78%, black) 0%,
-          color-mix(in srgb, var(--ink-2) 70%, white) 18%,
-          var(--ink-3) 24%,
-          color-mix(in srgb, var(--ink) 55%, black) 36%,
-          color-mix(in srgb, var(--ink-2) 55%, white) 51%,
-          color-mix(in srgb, var(--ink) 72%, black) 68%,
-          var(--ink-3) 76%,
-          color-mix(in srgb, var(--ink-2) 65%, white) 100%
-        );
-      background-size: 230% 100%;
-      background-position: 0 0;
-      background-repeat: no-repeat;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      /* text-shadow breaks clipped foil (renders as solid bars) */
-      text-shadow: none;
-      animation: fx-foil 3.1s ease-in-out infinite;
+    .dashboard-header .smoky-text {
+      width: 100%;
+      text-align: center;
     }
-    /* Stagger shimmer slightly across the grid */
-    #dash-grid .nav-card:nth-child(2n) .nav-card-label.fx-foil { animation-delay: 0.15s; }
-    #dash-grid .nav-card:nth-child(3n) .nav-card-label.fx-foil { animation-delay: 0.3s; }
-    #dash-grid .nav-card:nth-child(4n) .nav-card-label.fx-foil { animation-delay: 0.45s; }
     @media (max-width: 520px) {
       #dash-grid { gap: 10px; }
       .nav-card { padding: 16px 8px; border-radius: 14px; min-height: 96px; }
       .nav-card-icon { height: 52px; margin-bottom: 6px; }
       .nav-card-icon-img { height: 48px; max-height: 48px; max-width: min(120px, 94%); }
-      .nav-card-label { font-size: 13px; letter-spacing: 0.04em; }
+      .nav-card-label,
+      .smoky-card-label { font-size: 13px; letter-spacing: 0.04em; }
     }
     @media (prefers-reduced-motion: reduce) {
-      #dash-grid .nav-card-label.fx-foil {
-        animation: none;
-        background-position: 40% 0;
-        filter: none;
+      .smoky-text span {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        text-shadow: none !important;
+        color: var(--title-color) !important;
       }
     }
 
@@ -799,96 +771,6 @@
     }
     .menu-btn:hover { background: var(--brand-dim); color: var(--brand); border-color: var(--brand); }
     .dashboard-header { text-align: center; display: block; }
-    /*
-      32 Gold-Foil effect on dashboard title, re-skinned with profile colors:
-      --ink   = main (title-color)  --ink-2 = primary accent (brand)
-      --ink-3 = secondary highlight (mix of brand + white)
-    */
-    .dashboard-header {
-      --ink: var(--title-color);
-      --ink-2: var(--brand);
-      --ink-3: color-mix(in srgb, var(--brand) 42%, white);
-    }
-    .dashboard-header .fx-foil {
-      font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      line-height: 1.1;
-      color: transparent;
-      background-image:
-        linear-gradient(108deg,
-          color-mix(in srgb, var(--ink) 78%, black) 0%,
-          color-mix(in srgb, var(--ink-2) 70%, white) 18%,
-          var(--ink-3) 24%,
-          color-mix(in srgb, var(--ink) 55%, black) 36%,
-          color-mix(in srgb, var(--ink-2) 55%, white) 51%,
-          color-mix(in srgb, var(--ink) 72%, black) 68%,
-          var(--ink-3) 76%,
-          color-mix(in srgb, var(--ink-2) 65%, white) 100%
-        );
-      background-size: 230% 100%;
-      background-position: 0 0;
-      background-repeat: no-repeat;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: none;
-      animation: fx-foil 3.1s ease-in-out infinite;
-    }
-    .dashboard-header .sec-title.fx-foil {
-      font-size: clamp(26px, 7vw, 34px);
-    }
-    .dashboard-header .sec-sub.fx-foil {
-      display: inline-block;
-      margin-top: 8px;
-      font-size: clamp(14px, 3.8vw, 17px);
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      animation-delay: 0.2s;
-    }
-    @keyframes fx-foil {
-      0%, 100% { background-position: 115% 0; }
-      45%      { background-position: -35% 0; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .dashboard-header .fx-foil {
-        animation: none;
-        background-position: 40% 0;
-      }
-    }
-
-    /*
-      Dark mode foil: same clip technique as light mode.
-      IMPORTANT: only override background-image (not `background` shorthand),
-      and always re-assert background-clip + text-fill so labels don’t paint
-      as solid colored bars.
-    */
-    html[data-theme="dark"] .dashboard-header,
-    html[data-theme="dark"] #dash-grid {
-      --ink-3: color-mix(in srgb, var(--brand) 70%, black);
-    }
-    html[data-theme="dark"] .dashboard-header .fx-foil,
-    html[data-theme="dark"] #dash-grid .nav-card-label.fx-foil {
-      background-image:
-        linear-gradient(108deg,
-          color-mix(in srgb, var(--ink) 88%, black) 0%,
-          var(--ink-2) 18%,
-          color-mix(in srgb, var(--ink-2) 78%, var(--ink)) 26%,
-          color-mix(in srgb, var(--ink) 72%, black) 38%,
-          var(--ink-2) 52%,
-          color-mix(in srgb, var(--ink) 85%, black) 68%,
-          color-mix(in srgb, var(--ink-2) 80%, var(--ink)) 78%,
-          var(--ink-2) 100%
-        );
-      background-size: 230% 100%;
-      background-repeat: no-repeat;
-      -webkit-background-clip: text !important;
-      background-clip: text !important;
-      -webkit-text-fill-color: transparent !important;
-      color: transparent !important;
-      text-shadow: none !important;
-      filter: none;
-    }
 
     /* ── Favorites ── */
     #favorites-card .tool-title { margin-bottom: 8px; }

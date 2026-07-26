@@ -60,21 +60,9 @@ html[data-theme='dark'] .nav-card {
   box-shadow: 0 1px 8px var(--shadow);
 }
 
-/* Don’t wipe foil clip via filter hacks */
-html[data-theme='dark'] .fx-foil {
-  filter: none;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  text-shadow: none;
-}
-
 html[data-theme='dark'] .lbl,
 html[data-theme='dark'] .tool-title,
-html[data-theme='dark'] .sec-title:not(.fx-foil),
 html[data-theme='dark'] .val,
 html[data-theme='dark'] .field {
-  /* Ensure solid brand tokens paint crisply (no inherited opacity tricks) */
   -webkit-font-smoothing: antialiased;
 }
