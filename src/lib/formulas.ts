@@ -1,6 +1,5 @@
 /**
  * Shared field-math formulas (pure functions).
- * Use these from React hooks/components as sections are rewritten.
  */
 
 export const F = {
@@ -22,9 +21,23 @@ export const F = {
     const rFt3s = (rateBPM * 5.6146) / 60;
     return rFt3s / aFt2;
   },
-  /** Capacity BBL/FT from ID (in) */
-  capBblFt: (idIn: number) =>
-    idIn > 0 ? (idIn * idIn) / 1029.44 : 0,
+  capBblFt: (idIn: number) => (idIn > 0 ? (idIn * idIn) / 1029.44 : 0),
+  convertUnit: (
+    val: number,
+    cat: string,
+    from: string,
+    to: string,
+    categories: Record<
+      string,
+      { toBase: Record<string, number> }
+    >,
+  ) => {
+    const category = categories[cat];
+    if (!category) return val;
+    const baseFrom = category.toBase[from] ?? 1;
+    const baseTo = category.toBase[to] ?? 1;
+    return (val * baseFrom) / baseTo;
+  },
 };
 
 export type FormulaApi = typeof F;

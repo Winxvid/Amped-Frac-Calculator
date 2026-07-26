@@ -4,11 +4,11 @@ import { Sidebar } from './components/shell/Sidebar';
 import { SettingsPanel } from './components/shell/SettingsPanel';
 import { Dashboard } from './components/shell/Dashboard';
 import { CalculatorHost } from './components/CalculatorHost';
+import { MathPage } from './features/math/MathPage';
 
 /**
- * Phase 2 — React shell:
- * Header, sidebar, settings, dashboard/favorites are pure React.
- * Calculator tools still boot from the proven engine module.
+ * Phase 2 shell + Phase 3 Math:
+ * Shell and Math are pure React. Other sections still use the engine.
  */
 export default function App() {
   return (
@@ -19,6 +19,7 @@ export default function App() {
         <Header />
         <div className="app-content">
           <Dashboard />
+          <MathPage />
           <CalculatorHost />
         </div>
       </div>

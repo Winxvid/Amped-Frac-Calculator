@@ -47,8 +47,9 @@ public/                 # Logos & dashboard icons
    Contexts: `ThemeProvider`, `FavoritesProvider`, `NavigationProvider`.  
    Calculator tool pages still run via `legacy/engine.js` + `legacy/tools.html`.
 
-3. **Next — section rewrites**  
-   Move Math / Sand / Chem / … into React feature modules that call `lib/formulas.ts`.
+3. **In progress — section rewrites**  
+   **Math** is pure React (`src/features/math/`).  
+   Sand / Chem / Hydration / … still use the legacy engine.
 
 4. **Mobile**  
    - **PWA** (quick): installable mobile web  

@@ -2818,15 +2818,8 @@ function init() {
     syncAllHeartButtons();
   });
 
-  // Math
-  updateConvUnits();
-  renderAcronyms();
-  renderUnitConversionsTable();
-  ['conv-val','conv-cat','conv-from','conv-to','rect-len','rect-h','circ-d',
-   'tank-l','tank-w','tank-h','cyl-d','cyl-l','capfac-bbl','capfac-ft',
-   'force-psi','force-area','velpipe-rate','velpipe-id','hosecalc-size','hosecalc-id','hosecalc-len']
-    .forEach(id => bindAll(id, renderMath));
-  renderMath();
+  // Math — Phase 3: pure React MathPage (skip legacy math DOM)
+  // updateConvUnits / renderMath not bound when #s-math is React-owned
 
   // Sand
   renderSand();
