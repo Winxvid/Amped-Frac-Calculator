@@ -1,0 +1,35 @@
+/* React shell / mobile-ready polish on top of migrated app styles */
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+#root {
+  isolation: isolate;
+}
+
+/* Safe areas for notched phones (Capacitor / PWA later) */
+body {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* Touch-friendlier controls on coarse pointers */
+@media (pointer: coarse) {
+  .field {
+    min-height: 44px;
+  }
+  .fav-heart {
+    width: 44px;
+    height: 44px;
+  }
+  .menu-btn,
+  .settings-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
