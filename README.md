@@ -8,7 +8,7 @@ Hydraulic fracturing field calculator — **React + Vite** app with a full suite
 |--------|------|
 | UI framework | **React 19** |
 | Build | **Vite 6** |
-| Language | **TypeScript** (shell) + migrated calculator engine |
+| Language | **TypeScript** |
 | Motion (ready) | **framer-motion** |
 | Deploy | Vercel (`npm run build` → `dist/`) |
 
@@ -25,40 +25,41 @@ npm run preview
 
 ```
 src/
-  main.tsx              # React entry
-  App.tsx               # App root (mounts UI + boots engine)
-  styles/               # Global CSS (migrated + mobile shell)
-  legacy/
-    content.html        # Full app markup (tools, nav, settings)
-    engine.js           # Calculator engine, favorites, profiles
-  lib/formulas.ts       # Pure formula helpers for React rewrites
-  context/              # React providers (expand over time)
-  components/           # Pure React UI (add as you rewrite)
-public/                 # Logos & dashboard icons
+  main.tsx                 # React entry
+  App.tsx                  # Shell + all calculator sections
+  styles/                  # Global CSS
+  lib/formulas.ts          # Pure field-math helpers
+  context/                 # Theme, Favorites, Navigation, CalcState
+  components/              # Shell UI, ToolCard, NumField
+  features/
+    math/                  # Fundamental Math
+    sand/                  # Sand
+    chem/                  # Chemicals
+    hydration/             # Hydration / gel
+    blender/               # Blender
+    lime/                  # LIME calibration
+    wellbore/              # Wellbore
+    hp/                    # Horsepower / pumps
+    shared/fieldData.ts    # Shared tables (proppant, totes, tubulars…)
+  legacy/                  # Unused engine HTML (kept for reference)
+public/                    # Logos & dashboard icons
 ```
 
-## Architecture (migration phases)
+## Architecture
 
-1. **Done — React host**  
-   React owns the app root; calculator engine boots under it.
-
-2. **Done — shell in React (Phase 2)**  
-   Pure React: `Header`, `Sidebar`, `SettingsPanel`, `Dashboard` (favorites + nav cards).  
-   Contexts: `ThemeProvider`, `FavoritesProvider`, `NavigationProvider`.  
-   Calculator tool pages still run via `legacy/engine.js` + `legacy/tools.html`.
-
-3. **In progress — section rewrites**  
-   **Math** is pure React (`src/features/math/`).  
-   Sand / Chem / Hydration / … still use the legacy engine.
-
-4. **Mobile**  
-   - **PWA** (quick): installable mobile web  
-   - **Capacitor** (native store): wrap this Vite build for iOS/Android  
-   - **React Native** (later): reuse formula modules and design tokens  
+1. **Done — React host** — React owns the app root.
+2. **Done — shell (Phase 2)** — Header, Sidebar, Settings, Dashboard + favorites.
+3. **Done — section rewrites (Phase 3)** — All calculator tabs are pure React pages. No runtime dependency on `legacy/engine.js`.
+4. **Next — mobile**
+   - **PWA** (quick): installable mobile web
+   - **Capacitor** (native store): wrap this Vite build for iOS/Android
+   - **React Native** (later): reuse formula modules and design tokens
 
 ## Company profiles & favorites
 
-Still available in **Settings (⚙)** and **Home → Favorites**. Preferences stay in `localStorage` on the device.
+Available in **Settings (⚙)** and **Home → Favorites**. Preferences stay in `localStorage` on the device.
+
+Profiles: **Default**, **Amped**, **Liberty** (A/B color variants).
 
 ## Vercel
 
