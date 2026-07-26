@@ -295,15 +295,7 @@
       height: 76px;
       box-sizing: border-box;
     }
-    .nav-header-actions {
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+
     .nav-center {
       display: none;
     }
@@ -330,7 +322,7 @@
     .nav-logo-center { display:block; margin:0 auto; height:100%; display:flex; align-items:center; justify-content:center; }
     .nav-logo-center img { height: calc(100% - 2px); max-height: calc(100% - 2px); width: auto; display: block; object-fit:contain; }
     .nav-header > .menu-btn { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
-    .nav-header-actions .menu-btn { position: static; transform: none; }
+    .nav-header .settings-btn { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); left: auto; }
     @media (max-width: 480px) {
       .nav-header { height: 60px; }
       .nav-logo-center img { height: calc(100% - 2px); max-height: calc(100% - 2px); }
