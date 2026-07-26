@@ -437,10 +437,22 @@
     }
     .smoky-text {
       max-width: 100%;
+      overflow: visible !important;
+    }
+    .smoky-text-inner,
+    .smoky-text span {
+      overflow: visible !important;
+    }
+    .dashboard-header {
+      overflow: visible;
     }
     .dashboard-header .smoky-text {
       width: 100%;
       text-align: center;
+    }
+    #dash-grid,
+    .nav-card {
+      overflow: visible;
     }
     @media (max-width: 520px) {
       #dash-grid { gap: 10px; }
@@ -456,7 +468,6 @@
         opacity: 1 !important;
         transform: none !important;
         text-shadow: none !important;
-        color: var(--title-color) !important;
       }
     }
 

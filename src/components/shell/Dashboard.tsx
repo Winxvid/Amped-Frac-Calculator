@@ -15,6 +15,10 @@ export function Dashboard() {
   // Replay smoke when entering Home or when profile / appearance changes
   const smokeKey = `${active}-${theme.profileId}-${theme.green}-${theme.blue}-${resolvedMode}`;
 
+  if (!active) {
+    // Keep section mounted for CSS .section.active, but skip heavy smoke work off-tab
+  }
+
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-dashboard">
       <div className="mb-4 dashboard-header">
@@ -23,18 +27,19 @@ export function Dashboard() {
             text="Hydraulic Fracturing"
             color="var(--title-color)"
             className="sec-title smoky-dash-title"
-            intensity={9}
-            duration={1.8}
-            delay={0.05}
+            intensity={12}
+            duration={2}
+            delay={0.08}
             position="bottomLeft"
             animationMode="singleLine"
+            motionScale={0.28}
             replayKey={smokeKey}
             style={{
               fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
               fontWeight: 900,
               fontSize: 'clamp(26px, 7vw, 34px)',
               letterSpacing: '0.04em',
-              lineHeight: 1.1,
+              lineHeight: 1.15,
               display: 'block',
               width: '100%',
               textAlign: 'center',
@@ -44,22 +49,23 @@ export function Dashboard() {
             text="Field Calculator"
             color="var(--brand)"
             className="sec-sub smoky-dash-sub"
-            intensity={7}
-            duration={1.5}
-            delay={0.25}
+            intensity={10}
+            duration={1.7}
+            delay={0.35}
             position="bottomLeft"
             animationMode="singleLine"
+            motionScale={0.24}
             replayKey={smokeKey}
             style={{
               fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
               fontWeight: 800,
               fontSize: 'clamp(14px, 3.8vw, 17px)',
               letterSpacing: '0.06em',
-              lineHeight: 1.2,
+              lineHeight: 1.25,
               display: 'block',
               width: '100%',
               textAlign: 'center',
-              marginTop: 8,
+              marginTop: 10,
             }}
           />
         </div>
@@ -151,15 +157,17 @@ export function Dashboard() {
                   />
                 ) : null}
               </div>
+              {/* inPlace = smoke puff without flying off the card */}
               <SmokyText
                 text={c.label}
                 color="var(--title-color)"
                 className="nav-card-label smoky-card-label"
-                intensity={5}
-                duration={1.35}
-                delay={0.12 + i * 0.06}
+                intensity={9}
+                duration={1.4}
+                delay={0.15 + i * 0.07}
                 position="bottomLeft"
-                animationMode="singleLine"
+                animationMode="inPlace"
+                motionScale={0.18}
                 replayKey={smokeKey}
                 as="span"
                 style={{
