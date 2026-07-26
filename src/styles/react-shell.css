@@ -61,5 +61,6 @@ html[data-theme='dark'] .nav-card {
 }
 
 html[data-theme='dark'] .fx-foil {
-  filter: saturate(1.15) brightness(1.08);
+  /* Keep foil lively without washing brand accents */
+  filter: saturate(1.08) brightness(1.0);
 }

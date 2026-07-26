@@ -87,6 +87,21 @@ export function contrastSafe(hex: string, darkChrome: boolean): string {
   return n;
 }
 
+/**
+ * Mid-bright brand accents (Amped blue, Liberty red) read as neon/washed
+ * on dark chrome. Darken them for a richer look while staying above
+ * near-black so contrastSafe still doesn't need to re-lift.
+ * Stored hex in settings is unchanged — this is display-only.
+ */
+export function richOnDark(hex: string, amount = 0.78): string {
+  const n = normalizeHex(hex) || hex;
+  const L = relativeLuminance(n);
+  // Only deepen mid/high-luminance accents (skip already-dark neutrals)
+  if (L < 0.12) return n;
+  if (L < 0.25) return darkenHex(n, Math.min(0.92, amount + 0.1));
+  return darkenHex(n, amount);
+}
+
 export function resolveColorMode(mode: ColorMode): 'light' | 'dark' {
   if (mode === 'light') return 'light';
   if (mode === 'dark') return 'dark';
@@ -170,16 +185,27 @@ export function applyBrandToDocument(
   root.style.setProperty('--brand-blue-raw', blue);
 
   // Readable variants for UI chrome (dark mode may lift near-black)
-  const greenUi = contrastSafe(green, darkChrome);
-  const blueUi = contrastSafe(blue, darkChrome);
+  let greenUi = contrastSafe(green, darkChrome);
+  let blueUi = contrastSafe(blue, darkChrome);
 
-  const brandAccentRaw = theme.profileId === 'amped' ? blue : green;
-  const brandAccent = contrastSafe(brandAccentRaw, darkChrome);
+  // Profile-specific dark-mode accent tuning (display only; stored hex unchanged)
+  if (darkChrome) {
+    if (theme.profileId === 'amped') {
+      // Amped blue can feel too bright on dark — deepen numbers/buttons
+      blueUi = richOnDark(blueUi, 0.72);
+    } else if (theme.profileId === 'liberty') {
+      // Liberty red can feel neon on dark — deepen titles/buttons
+      greenUi = richOnDark(greenUi, 0.74);
+    }
+  }
+
+  const brandAccentRaw = theme.profileId === 'amped' ? blueUi : greenUi;
+  const brandAccent = brandAccentRaw;
 
   root.style.setProperty('--brand', brandAccent);
   root.style.setProperty(
     '--brand-hover',
-    darkChrome ? lightenHex(brandAccent, 0.12) : darkenHex(brandAccent, 0.85),
+    darkChrome ? lightenHex(brandAccent, 0.1) : darkenHex(brandAccent, 0.85),
   );
   root.style.setProperty('--brand-dim', rgbaFromHex(brandAccent, darkChrome ? 0.22 : 0.12));
   root.style.setProperty('--brand-dim2', rgbaFromHex(brandAccent, darkChrome ? 0.14 : 0.06));
