@@ -60,9 +60,14 @@ html[data-theme='dark'] .nav-card {
   box-shadow: 0 1px 8px var(--shadow);
 }
 
-/* Brand colors stay exact in dark mode — no brightness/saturate wash */
+/* Don’t wipe foil clip via filter hacks */
 html[data-theme='dark'] .fx-foil {
   filter: none;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: none;
 }
 
 html[data-theme='dark'] .lbl,

@@ -447,7 +447,8 @@
       letter-spacing: 0.08em;
       line-height: 1.15;
       color: transparent;
-      background:
+      /* longhands — never use background shorthand (it resets background-clip) */
+      background-image:
         linear-gradient(108deg,
           color-mix(in srgb, var(--ink) 78%, black) 0%,
           color-mix(in srgb, var(--ink-2) 70%, white) 18%,
@@ -457,13 +458,15 @@
           color-mix(in srgb, var(--ink) 72%, black) 68%,
           var(--ink-3) 76%,
           color-mix(in srgb, var(--ink-2) 65%, white) 100%
-        ) 0 0 / 230% 100%;
+        );
+      background-size: 230% 100%;
+      background-position: 0 0;
+      background-repeat: no-repeat;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow:
-        0 1px 0 color-mix(in srgb, var(--ink-3) 45%, transparent),
-        0 6px 14px rgba(0, 0, 0, 0.16);
+      /* text-shadow breaks clipped foil (renders as solid bars) */
+      text-shadow: none;
       animation: fx-foil 3.1s ease-in-out infinite;
     }
     /* Stagger shimmer slightly across the grid */
@@ -812,7 +815,7 @@
       letter-spacing: 0.04em;
       line-height: 1.1;
       color: transparent;
-      background:
+      background-image:
         linear-gradient(108deg,
           color-mix(in srgb, var(--ink) 78%, black) 0%,
           color-mix(in srgb, var(--ink-2) 70%, white) 18%,
@@ -822,13 +825,14 @@
           color-mix(in srgb, var(--ink) 72%, black) 68%,
           var(--ink-3) 76%,
           color-mix(in srgb, var(--ink-2) 65%, white) 100%
-        ) 0 0 / 230% 100%;
+        );
+      background-size: 230% 100%;
+      background-position: 0 0;
+      background-repeat: no-repeat;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow:
-        0 1px 0 color-mix(in srgb, var(--ink-3) 45%, transparent),
-        0 9px 20px rgba(0, 0, 0, 0.18);
+      text-shadow: none;
       animation: fx-foil 3.1s ease-in-out infinite;
     }
     .dashboard-header .sec-title.fx-foil {
@@ -853,45 +857,36 @@
       }
     }
 
-    /* Dark mode foil: mix with black (not white) so brand stays crisp */
-    html[data-theme="dark"] .dashboard-header {
-      --ink-3: color-mix(in srgb, var(--brand) 82%, black);
-    }
-    html[data-theme="dark"] .dashboard-header .fx-foil {
-      background:
-        linear-gradient(108deg,
-          color-mix(in srgb, var(--ink) 92%, black) 0%,
-          var(--ink-2) 18%,
-          color-mix(in srgb, var(--ink-2) 70%, var(--ink)) 24%,
-          color-mix(in srgb, var(--ink) 80%, black) 36%,
-          var(--ink-2) 51%,
-          color-mix(in srgb, var(--ink) 88%, black) 68%,
-          color-mix(in srgb, var(--ink-2) 75%, var(--ink)) 76%,
-          var(--ink-2) 100%
-        ) 0 0 / 230% 100%;
-      text-shadow:
-        0 1px 0 color-mix(in srgb, var(--ink-2) 25%, transparent),
-        0 8px 18px rgba(0, 0, 0, 0.45);
-      filter: none;
-    }
+    /*
+      Dark mode foil: same clip technique as light mode.
+      IMPORTANT: only override background-image (not `background` shorthand),
+      and always re-assert background-clip + text-fill so labels don’t paint
+      as solid colored bars.
+    */
+    html[data-theme="dark"] .dashboard-header,
     html[data-theme="dark"] #dash-grid {
-      --ink-3: color-mix(in srgb, var(--brand) 82%, black);
+      --ink-3: color-mix(in srgb, var(--brand) 70%, black);
     }
+    html[data-theme="dark"] .dashboard-header .fx-foil,
     html[data-theme="dark"] #dash-grid .nav-card-label.fx-foil {
-      background:
+      background-image:
         linear-gradient(108deg,
-          color-mix(in srgb, var(--ink) 92%, black) 0%,
+          color-mix(in srgb, var(--ink) 88%, black) 0%,
           var(--ink-2) 18%,
-          color-mix(in srgb, var(--ink-2) 70%, var(--ink)) 24%,
-          color-mix(in srgb, var(--ink) 80%, black) 36%,
-          var(--ink-2) 51%,
-          color-mix(in srgb, var(--ink) 88%, black) 68%,
-          color-mix(in srgb, var(--ink-2) 75%, var(--ink)) 76%,
+          color-mix(in srgb, var(--ink-2) 78%, var(--ink)) 26%,
+          color-mix(in srgb, var(--ink) 72%, black) 38%,
+          var(--ink-2) 52%,
+          color-mix(in srgb, var(--ink) 85%, black) 68%,
+          color-mix(in srgb, var(--ink-2) 80%, var(--ink)) 78%,
           var(--ink-2) 100%
-        ) 0 0 / 230% 100%;
-      text-shadow:
-        0 1px 0 color-mix(in srgb, var(--ink-2) 25%, transparent),
-        0 6px 14px rgba(0, 0, 0, 0.4);
+        );
+      background-size: 230% 100%;
+      background-repeat: no-repeat;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+      color: transparent !important;
+      text-shadow: none !important;
       filter: none;
     }
 
