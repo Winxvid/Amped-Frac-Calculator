@@ -165,7 +165,7 @@ export function WelcomePage() {
               type="text"
               autoComplete="nickname"
               maxLength={40}
-              placeholder="e.g. Frankie"
+              placeholder="e.g. John Smith"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               onBlur={() => setTouched((t) => ({ ...t, name: true }))}
