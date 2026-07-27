@@ -22,13 +22,27 @@ import {
   resolveLogoSrc,
   type ColorMode,
   type ThemeState,
+  type UserProfile,
 } from '../lib/themeUtils';
+
+export type CompleteOnboardingInput = {
+  displayName: string;
+  companyName: string;
+  /** Built-in profile when company matched; null = custom / default path */
+  matchedProfileId: CompanyProfileId | null;
+  /** Custom colors (only used when no match, or override) */
+  green?: string;
+  blue?: string;
+  logoDataUrl?: string | null;
+  /** If true and no match, force default colors even if green/blue passed */
+  useDefaultColors?: boolean;
+};
 
 type ThemeContextValue = {
   theme: ThemeState;
   logoSrc: string | null;
-  /** Resolved light|dark (after system preference) */
   resolvedMode: 'light' | 'dark';
+  needsOnboarding: boolean;
   selectProfile: (id: CompanyProfileId) => void;
   setColor: (which: 'green' | 'blue', hex: string) => void;
   resetColors: () => void;
@@ -37,6 +51,7 @@ type ThemeContextValue = {
   setCustomLogo: (dataUrl: string | null) => void;
   uploadLogo: (file: File) => Promise<void>;
   resetLogo: () => void;
+  completeOnboarding: (input: CompleteOnboardingInput) => void;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -49,6 +64,8 @@ function loadTheme(): ThemeState {
     green: defaults.green,
     blue: defaults.blue,
     colorMode: 'system',
+    onboardingComplete: false,
+    user: null,
   };
   try {
     let raw = localStorage.getItem(SETTINGS_KEY);
@@ -78,6 +95,29 @@ function loadTheme(): ThemeState {
     } else if (data.darkMode === false) {
       base.colorMode = 'light';
     }
+
+    if (data.user && typeof data.user.displayName === 'string') {
+      base.user = {
+        displayName: String(data.user.displayName || '').trim(),
+        companyName: String(data.user.companyName || '').trim(),
+      };
+    }
+
+    if (data.onboardingComplete === true) {
+      base.onboardingComplete = true;
+    } else if (data.onboardingComplete === false) {
+      base.onboardingComplete = false;
+    } else {
+      // Migration: existing installs with saved settings skip welcome
+      const hadPriorUse =
+        Boolean(data.profileId) ||
+        Boolean(data.logoDataUrl) ||
+        Boolean(data.green) ||
+        Boolean(data.blue) ||
+        Boolean(data.colorMode) ||
+        Boolean(data.user);
+      base.onboardingComplete = hadPriorUse;
+    }
   } catch {
     /* ignore */
   }
@@ -91,6 +131,8 @@ function persistTheme(theme: ThemeState) {
     green: theme.green,
     blue: theme.blue,
     colorMode: theme.colorMode,
+    onboardingComplete: theme.onboardingComplete,
+    user: theme.user,
   };
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(payload));
@@ -124,7 +166,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return theme.colorMode;
   }, [theme.colorMode, systemDark]);
 
-  // Apply CSS vars whenever theme or OS preference (system mode) changes
   useEffect(() => {
     const modeForApply =
       theme.colorMode === 'system'
@@ -136,7 +177,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     persistTheme(theme);
   }, [theme, systemDark]);
 
-  // Listen for OS appearance changes when mode is "system"
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -168,7 +208,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const resetColors = useCallback(() => {
     setTheme((t) => {
       const colors = profileDefaultColors(t.profileId);
-      // Always allocate a new object; normalize so color inputs update
       return {
         ...t,
         green: colors.green,
@@ -184,7 +223,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggleLightDark = useCallback(() => {
     setTheme((t) => {
       const current = resolveColorMode(t.colorMode);
-      // Explicit toggle exits "system" so the choice sticks
       return { ...t, colorMode: current === 'dark' ? 'light' : 'dark' };
     });
   }, []);
@@ -210,11 +248,62 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setTheme((t) => ({ ...t, logoDataUrl: null }));
   }, []);
 
+  const completeOnboarding = useCallback((input: CompleteOnboardingInput) => {
+    const displayName = String(input.displayName || '').trim();
+    const companyName = String(input.companyName || '').trim();
+    if (!displayName || !companyName) return;
+
+    const user: UserProfile = { displayName, companyName };
+
+    if (input.matchedProfileId && COMPANY_PROFILES[input.matchedProfileId]) {
+      const id = input.matchedProfileId;
+      const colors = profileDefaultColors(id);
+      setTheme((t) => ({
+        ...t,
+        user,
+        onboardingComplete: true,
+        profileId: id,
+        logoDataUrl: null,
+        green: colors.green,
+        blue: colors.blue,
+      }));
+      return;
+    }
+
+    // Custom / unmatched company → Default base + optional logo/colors
+    const def = profileDefaultColors(DEFAULT_PROFILE_ID);
+    const green =
+      !input.useDefaultColors && normalizeHex(input.green || '')
+        ? normalizeHex(input.green!)!
+        : def.green;
+    const blue =
+      !input.useDefaultColors && normalizeHex(input.blue || '')
+        ? normalizeHex(input.blue!)!
+        : def.blue;
+    const logoDataUrl =
+      typeof input.logoDataUrl === 'string' && input.logoDataUrl
+        ? input.logoDataUrl
+        : null;
+
+    setTheme((t) => ({
+      ...t,
+      user,
+      onboardingComplete: true,
+      profileId: DEFAULT_PROFILE_ID,
+      green,
+      blue,
+      logoDataUrl,
+    }));
+  }, []);
+
+  const needsOnboarding = !theme.onboardingComplete;
+
   const value = useMemo<ThemeContextValue>(
     () => ({
       theme,
       logoSrc: resolveLogoSrc(theme),
       resolvedMode,
+      needsOnboarding,
       selectProfile,
       setColor,
       resetColors,
@@ -223,10 +312,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setCustomLogo,
       uploadLogo,
       resetLogo,
+      completeOnboarding,
     }),
     [
       theme,
       resolvedMode,
+      needsOnboarding,
       selectProfile,
       setColor,
       resetColors,
@@ -235,6 +326,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setCustomLogo,
       uploadLogo,
       resetLogo,
+      completeOnboarding,
     ],
   );
 

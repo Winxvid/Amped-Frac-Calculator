@@ -114,6 +114,11 @@ export function resolveColorMode(mode: ColorMode): 'light' | 'dark' {
   return 'light';
 }
 
+export type UserProfile = {
+  displayName: string;
+  companyName: string;
+};
+
 export type ThemeState = {
   profileId: CompanyProfileId;
   logoDataUrl: string | null;
@@ -121,6 +126,10 @@ export type ThemeState = {
   blue: string;
   /** UI chrome: light / dark / follow OS */
   colorMode: ColorMode;
+  /** First-run welcome completed */
+  onboardingComplete: boolean;
+  /** Preferred name + company from welcome */
+  user: UserProfile | null;
 };
 
 const LIGHT_CHROME = {
