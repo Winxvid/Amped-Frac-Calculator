@@ -15,6 +15,11 @@ export function Dashboard() {
   // Replay smoke when entering Home or when profile / appearance changes
   const smokeKey = `${active}-${theme.profileId}-${theme.green}-${theme.blue}-${resolvedMode}`;
 
+  // Pastel dash cards stay light in all modes — default profile uses black labels
+  // (not lifted light title-color from dark chrome).
+  const cardLabelColor =
+    theme.profileId === 'default' ? '#1C1C1E' : 'var(--title-color)';
+
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-dashboard">
       <div className="mb-4 dashboard-header">
@@ -156,7 +161,7 @@ export function Dashboard() {
               {/* inPlace = smoke puff without flying off the card */}
               <SmokyText
                 text={c.label}
-                color="var(--title-color)"
+                color={cardLabelColor}
                 className="nav-card-label smoky-card-label"
                 intensity={9}
                 duration={1.4}
@@ -174,6 +179,7 @@ export function Dashboard() {
                   textTransform: 'uppercase',
                   lineHeight: 1.2,
                   textAlign: 'center',
+                  color: cardLabelColor,
                 }}
               />
             </div>
