@@ -427,6 +427,17 @@
       max-width: 100%;
       padding: 0 2px;
     }
+    /*
+      Default profile + dark mode: dash cards keep pastel light backgrounds,
+      so labels must stay pure black (not --title-color which is lifted light).
+    */
+    html[data-profile="default"] #dash-grid .nav-card .smoky-text,
+    html[data-profile="default"] #dash-grid .nav-card .smoky-text span,
+    html[data-profile="default"] #dash-grid .dash-label-black,
+    html[data-profile="default"] #dash-grid .dash-label-black span {
+      color: #1C1C1E !important;
+      -webkit-text-fill-color: #1C1C1E !important;
+    }
     .smoky-text {
       max-width: 100%;
       overflow: visible !important;

@@ -15,10 +15,10 @@ export function Dashboard() {
   // Replay smoke when entering Home or when profile / appearance changes
   const smokeKey = `${active}-${theme.profileId}-${theme.green}-${theme.blue}-${resolvedMode}`;
 
-  // Pastel dash cards stay light in all modes — default profile uses black labels
-  // (not lifted light title-color from dark chrome).
-  const cardLabelColor =
-    theme.profileId === 'default' ? '#1C1C1E' : 'var(--title-color)';
+  // Pastel dash cards stay light in every appearance mode.
+  // Default profile: always pure black labels (never dark-mode lifted white).
+  const isDefault = theme.profileId === 'default';
+  const cardLabelColor = isDefault ? '#1C1C1E' : 'var(--title-color)';
 
   return (
     <div className={`section${active ? ' active' : ''}`} id="s-dashboard">
@@ -162,14 +162,14 @@ export function Dashboard() {
               <SmokyText
                 text={c.label}
                 color={cardLabelColor}
-                className="nav-card-label smoky-card-label"
+                className={`nav-card-label smoky-card-label${isDefault ? ' dash-label-black' : ''}`}
                 intensity={9}
                 duration={1.4}
                 delay={0.15 + i * 0.07}
                 position="bottomLeft"
                 animationMode="inPlace"
                 motionScale={0.18}
-                replayKey={smokeKey}
+                replayKey={`${smokeKey}-card-${c.id}-${cardLabelColor}`}
                 as="span"
                 style={{
                   fontFamily: "'Space Grotesk', 'Inter', system-ui, sans-serif",
@@ -180,6 +180,7 @@ export function Dashboard() {
                   lineHeight: 1.2,
                   textAlign: 'center',
                   color: cardLabelColor,
+                  WebkitTextFillColor: cardLabelColor,
                 }}
               />
             </div>

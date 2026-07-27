@@ -106,12 +106,21 @@ function getAppear(c: CharEntry, pos: Position, mode: AnimationMode): string {
 /** Resolve CSS color (incl. var(--x)) to rgb() for reliable keyframes. */
 function resolveCssColor(color: string, host: Element | null): string {
   if (typeof document === 'undefined') return color;
+  const raw = String(color || '').trim();
+  // Keep explicit hex/rgb as-is — never let color-scheme remap them
+  if (/^#[0-9A-Fa-f]{3,8}$/.test(raw) || /^rgba?\(/i.test(raw)) {
+    return raw.length === 4 && raw.startsWith('#')
+      ? `#${raw[1]}${raw[1]}${raw[2]}${raw[2]}${raw[3]}${raw[3]}`
+      : raw;
+  }
   try {
     const probe = document.createElement('span');
-    probe.style.color = color;
+    probe.style.color = raw;
     probe.style.position = 'absolute';
     probe.style.visibility = 'hidden';
     probe.style.pointerEvents = 'none';
+    // Avoid dark color-scheme remapping when resolving vars
+    probe.style.colorScheme = 'light';
     (host || document.body).appendChild(probe);
     const resolved = getComputedStyle(probe).color;
     probe.remove();
@@ -121,7 +130,7 @@ function resolveCssColor(color: string, host: Element | null): string {
   } catch {
     /* ignore */
   }
-  return color.startsWith('#') || color.startsWith('rgb') ? color : '#2DC76D';
+  return raw || '#1C1C1E';
 }
 
 /**

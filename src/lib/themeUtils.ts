@@ -181,9 +181,14 @@ export function applyBrandToDocument(
   const green = normalizeHex(theme.green) || profile.green;
   const blue = normalizeHex(theme.blue) || profile.blue;
 
+  // Used by CSS (e.g. default-profile black labels on pastel dash cards)
+  root.dataset.profile = theme.profileId;
+
   // Stored brand colors (for color pickers / reset comparison)
   root.style.setProperty('--brand-green-raw', green);
   root.style.setProperty('--brand-blue-raw', blue);
+  // Pastel dashboard cards keep light backgrounds — always black labels for Default
+  root.style.setProperty('--dash-card-label', theme.profileId === 'default' ? '#1C1C1E' : '');
 
   // Display colors: brand accents stay exact; only neutrals adapt for chrome
   const greenUi = contrastSafe(green, darkChrome);
