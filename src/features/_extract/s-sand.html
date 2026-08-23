@@ -1,0 +1,347 @@
+<div class="section" id="s-sand">
+    <div class="mb-4">
+      <div class="sec-title">SAND CALCULATIONS</div>
+      <div class="sec-sub">SAND FUNDAMENTALS</div>
+    </div>
+
+    <!-- Sand Fundamentals Quick Reference -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Sand Fundamentals Reference</div>
+      <div class="grid-2 gap-2 mb-2">
+        <div class="surface-card">
+          <div class="lbl">Specific Gravity (SG)</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">SG = Sand Density / Water Density</div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">Abs. Volume Factor (AVF)</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">AVF = 1 / (8.33 × SG)</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px;">Nat. Sand (SG 2.65): 0.0453 gal/lb</div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">Slurry Yield</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">Yield = (PPA × AVF) + 1</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px;">Gal slurry / Gal clean fluid</div>
+        </div>
+        <div class="surface-card">
+          <div class="lbl">Standard Source Water</div>
+          <div style="font-size:12px;font-weight:700;color:var(--brand);">8.33 - 8.35 lbs/gal</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px;">Metric AVF = 0.00037736 m³/kg</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bulk Density Calculator & Table -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Bulk Density Calculator &amp; Reference</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Measured Mass (LBS)</label>
+          <input type="number" id="bulkcalc-mass" class="field" value="91" placeholder="91">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Measured Volume (FT³)</label>
+          <input type="number" id="bulkcalc-vol" class="field" value="1.0" step="0.1" placeholder="1.0">
+        </div>
+      </div>
+      <div class="tile mb-3">
+        <div class="lbl">Calculated Bulk Density</div>
+        <div class="val" style="color:var(--brand);" id="bulkcalc-result">91.00</div>
+        <div class="unit">LBS/FT³</div>
+      </div>
+      <div class="lbl mb-2" style="font-size:11px;">Standard Proppant Bulk Densities &amp; SG</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Proppant / Material Type</th>
+            <th class="tbl-right">Bulk Density (lbs/ft³)</th>
+            <th class="tbl-right">Specific Gravity (SG)</th>
+          </tr>
+        </thead>
+        <tbody id="proppant-tbody"><!-- injected by JS --></tbody>
+      </table></div>
+    </div>
+
+    <!-- Stage tabs -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Stages (Design vs Actual Tracking)</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addStage()">+ Add Stage</button>
+      </div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;" id="stage-tabs"><!-- injected --></div>
+    </div>
+
+    <div id="sand-detail"><!-- injected --></div>
+
+    <!-- Sand Needed <-> Clean Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Sand Needed ↔ Clean Volume</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Clean Volume (BBL)</label>
+          <input type="number" id="sandneed-clean" class="field" value="5000" placeholder="5000">
+        </div>
+        <div>
+          <label class="lbl">Concentration (PPG)</label>
+          <input type="number" id="sandneed-ppg" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Sand Needed</div>
+          <div class="val" style="color:var(--brand);" id="sandneed-lbs">420,000</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Clean Vol from Sand</div>
+          <div class="val" id="sandneed-clean-out">5,000</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AVF / CFR / Yield / Slurry Density -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">AVF • CFR • Yield • Slurry Density</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">PPA (PPG)</label>
+          <input type="number" id="propcalc-ppa" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="propcalc-sg" class="field" value="2.65" step="0.05" placeholder="2.65">
+        </div>
+      </div>
+      <div class="grid-2 gap-2">
+        <div class="tile"><div class="lbl">AVF</div><div class="val" id="propcalc-avf">0.090</div></div>
+        <div class="tile"><div class="lbl">CFR</div><div class="val" id="propcalc-cfr">0.917</div></div>
+        <div class="tile"><div class="lbl">Yield</div><div class="val" id="propcalc-yield">1.090</div></div>
+        <div class="tile"><div class="lbl">Slurry Dens (PPG)</div><div class="val" style="color:var(--brand);" id="propcalc-slurrydens">9.01</div></div>
+      </div>
+    </div>
+
+    <!-- Proppant Concentration Calculations -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Proppant Concentration (PPA) Calculators</div>
+      
+      <!-- Method 1: From Slurry Rate & Clean Rate -->
+      <div class="surface-card mb-3" style="padding:12px;">
+        <div class="lbl" style="color:var(--brand);margin-bottom:8px;">Method 1: From Slurry &amp; Clean Pump Rates</div>
+        <div class="grid-3 mb-3">
+          <div>
+            <label class="lbl">Slurry Rate (BPM)</label>
+            <input type="number" id="propconc-slurryrate" class="field" value="65" step="0.5" placeholder="65">
+          </div>
+          <div>
+            <label class="lbl">Clean Rate (BPM)</label>
+            <input type="number" id="propconc-cleanrate" class="field" value="60" step="0.5" placeholder="60">
+          </div>
+          <div>
+            <label class="lbl">Sand SG</label>
+            <input type="number" id="propconc-sg1" class="field" value="2.65" step="0.05" placeholder="2.65">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Prop Concentration (PPA)</div>
+          <div class="val" style="color:var(--brand);" id="propconc-res1">1.84</div>
+          <div class="unit">PPG</div>
+        </div>
+      </div>
+
+      <!-- Method 2: From Measured Slurry Density -->
+      <div class="surface-card" style="padding:12px;">
+        <div class="lbl" style="color:var(--brand);margin-bottom:8px;">Method 2: From Densitometer / Measured Fluid Density</div>
+        <div class="grid-3 mb-3">
+          <div>
+            <label class="lbl">Carrier Fluid Dens (PPG)</label>
+            <input type="number" id="propconc-carrier" class="field" value="8.33" step="0.01" placeholder="8.33">
+          </div>
+          <div>
+            <label class="lbl">Measured Slurry Dens (PPG)</label>
+            <input type="number" id="propconc-measured" class="field" value="9.20" step="0.05" placeholder="9.20">
+          </div>
+          <div>
+            <label class="lbl">Sand SG</label>
+            <input type="number" id="propconc-sg2" class="field" value="2.65" step="0.05" placeholder="2.65">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Prop Concentration (PPA)</div>
+          <div class="val" style="color:var(--brand);" id="propconc-res2">2.08</div>
+          <div class="unit">PPG</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sand Ramp Average PPA & Total Sand Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Sand Ramp Calculator</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Start PPA (PPG)</label>
+          <input type="number" id="ramp-start" class="field" value="0.5" step="0.1" placeholder="0.5">
+        </div>
+        <div>
+          <label class="lbl">End PPA (PPG)</label>
+          <input type="number" id="ramp-end" class="field" value="2.5" step="0.1" placeholder="2.5">
+        </div>
+        <div>
+          <label class="lbl">Ramp Clean Vol (BBL)</label>
+          <input type="number" id="ramp-vol" class="field" value="1000" placeholder="1000">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Average PPA</div>
+          <div class="val" id="ramp-avgppa">1.50</div>
+          <div class="unit">PPG</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Sand Pumped</div>
+          <div class="val" style="color:var(--brand);" id="ramp-totallbs">63,000</div>
+          <div class="unit">LBS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PPR Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">PPR Calculator (Auger Dimensions)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Auger Radius (IN)</label>
+          <input type="number" id="ppr-augr" class="field" value="0.75" step="0.01" placeholder="0.75">
+        </div>
+        <div>
+          <label class="lbl">Shaft Radius (IN)</label>
+          <input type="number" id="ppr-shaftr" class="field" value="0.25" step="0.01" placeholder="0.25">
+        </div>
+        <div>
+          <label class="lbl">Auger Pitch (IN)</label>
+          <input type="number" id="ppr-pitch" class="field" value="1.5" step="0.1" placeholder="1.5">
+        </div>
+        <div>
+          <label class="lbl">Bulk Density (LBS/FT³)</label>
+          <input type="number" id="ppr-bulk" class="field" value="91" placeholder="91">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">PPR</div>
+        <div class="val" style="color:var(--brand);" id="ppr-result">0.038</div>
+        <div class="unit">LBS/REV</div>
+      </div>
+    </div>
+
+    <!-- PPR Recalibration Tool -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">PPR Recalibration (Post-Stage Adjustment)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Old / Current PPR (LBS/REV)</label>
+          <input type="number" id="pprrecal-old" class="field" value="0.038" step="0.001" placeholder="0.038">
+        </div>
+        <div>
+          <label class="lbl">Actual Total Pumped (LBS)</label>
+          <input type="number" id="pprrecal-actual" class="field" value="210000" placeholder="210000">
+        </div>
+        <div>
+          <label class="lbl">Design / Metered Total (LBS)</label>
+          <input type="number" id="pprrecal-design" class="field" value="200000" placeholder="200000">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Calibrated New PPR</div>
+        <div class="val" style="color:var(--brand);" id="pprrecal-new">0.0399</div>
+        <div class="unit">LBS/REV</div>
+      </div>
+    </div>
+
+    <!-- Auger RPM, PPM & PPT Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Auger RPM, PPM &amp; PPT Rates</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="augerrpm-rate" class="field" value="95" placeholder="95">
+        </div>
+        <div>
+          <label class="lbl">Prop Conc (PPG)</label>
+          <input type="number" id="augerrpm-ppg" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+        <div>
+          <label class="lbl">PPR (LBS/REV)</label>
+          <input type="number" id="augerrpm-ppr" class="field" value="0.038" step="0.001" placeholder="0.038">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Total Auger RPM</div>
+          <div class="val" style="color:var(--brand);" id="augerrpm-total">105.3</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Pounds Per Min (PPM)</div>
+          <div class="val" id="augerrpm-ppm">7,980</div>
+          <div class="unit">LBS/MIN</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Pounds Per 1k Gal (PPT)</div>
+          <div class="val" id="augerrpm-ppt">2,000</div>
+          <div class="unit">PPT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Auger Priority RPM Allocator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Multi-Auger Priority RPM Allocation</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Total Prop RPM Required</label>
+          <input type="number" id="multiauger-totalrpm" class="field" value="120" placeholder="120">
+        </div>
+        <div>
+          <label class="lbl">Augers in Use</label>
+          <select id="multiauger-count" class="field">
+            <option value="2">2 Augers</option>
+            <option value="3" selected>3 Augers</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Priority RPM Threshold</label>
+          <input type="number" id="multiauger-threshold" class="field" value="50" placeholder="50">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-2" id="multiauger-results">
+        <!-- Injected by JS -->
+      </div>
+      <div style="font-size:11px;color:var(--text2);">Logic: Priority 1 fills to threshold, then Priority 2, then Priority 3. If Total RPM &gt; (Threshold × # Augers), all augers run equal RPM.</div>
+    </div>
+
+    <!-- Job Prop Total from Cum Volumes -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Job Prop Total from Cum Volumes</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Slurry Cum (GAL)</label>
+          <input type="number" id="jobprop-slurry" class="field" value="1250000" placeholder="1250000">
+        </div>
+        <div>
+          <label class="lbl">Clean Cum (GAL)</label>
+          <input type="number" id="jobprop-clean" class="field" value="1180000" placeholder="1180000">
+        </div>
+        <div>
+          <label class="lbl">All Chem (GAL)</label>
+          <input type="number" id="jobprop-chem" class="field" value="12500" placeholder="12500">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Job Prop Total</div>
+        <div class="val" style="color:var(--brand);" id="jobprop-total">184,211</div>
+        <div class="unit">LBS</div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-top:8px;">Formula: (Slurry − Clean − Chem) / Prop AVF</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ CHEM ══════════════ -->
+  

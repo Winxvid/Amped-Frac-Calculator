@@ -1,0 +1,389 @@
+<div class="section" id="s-hydration">
+    <div class="mb-4">
+      <div class="sec-title">HYDRATION CALCULATIONS</div>
+      <div class="sec-sub">Section 4 formulas — Rules of Four, LGA, tub volume, hydration time &amp; gel loading</div>
+    </div>
+
+    <!-- Rules of Four reference -->
+    <div class="card mb-4" style="border-color:rgba(59,130,246,0.3);">
+      <div class="flex items-center gap-2 mb-1">
+        <span style="color:var(--blue);font-size:15px;">ℹ</span>
+        <span class="lbl lbl-blue" style="margin:0;">Rules of Four Reference</span>
+      </div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;font-weight:500;">Every LGA gallon has 4 lbs of guar. Viscosity rules of thumb only — other factors affect viscosity. Dry guar bulk density ~34–48 lbs/ft³.</div>
+      <div class="grid-2" id="rof-grid"><!-- injected --></div>
+    </div>
+
+    <!-- Rules of Four Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Rules of Four Converter</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">LGA Set Point = PPT ÷ 4 &nbsp;·&nbsp; PPT = LGA × 4 &nbsp;·&nbsp; Lb System ≈ Target Visc + 4 &nbsp;·&nbsp; LGA Used = Guar lbs ÷ 4</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">LGA Set Point (GPT)</label>
+          <input type="number" id="rof-lga" class="field" value="6" step="0.1" placeholder="6" oninput="rofFromLga()">
+        </div>
+        <div>
+          <label class="lbl">PPT / Gel Loading (LB)</label>
+          <input type="number" id="rof-ppt" class="field" value="24" step="0.1" placeholder="24" oninput="rofFromPpt()">
+        </div>
+        <div>
+          <label class="lbl">Lb System</label>
+          <input type="number" id="rof-lbsystem-in" class="field" value="24" step="0.1" placeholder="24" oninput="rofFromLbSystem()">
+        </div>
+        <div>
+          <label class="lbl">Target Viscosity (CP)</label>
+          <input type="number" id="rof-visc-in" class="field" value="20" step="0.1" placeholder="20" oninput="rofFromVisc()">
+        </div>
+        <div>
+          <label class="lbl">Pounds of Guar Used (LBS)</label>
+          <input type="number" id="rof-guar-lbs" class="field" value="100" step="0.1" placeholder="100" oninput="rofFromGuarLbs()">
+        </div>
+        <div>
+          <label class="lbl">LGA Used (GAL)</label>
+          <input type="number" id="rof-lga-used" class="field" value="25" step="0.1" placeholder="25" oninput="rofFromLgaUsed()">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">PPT from LGA</div>
+          <div class="val" style="color:var(--brand);" id="rof-ppt-out">24.0</div>
+          <div class="unit">LBS / 1000 GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Target Visc ≈ Lb − 4</div>
+          <div class="val" id="rof-visc-out">20.0</div>
+          <div class="unit">CP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LGA GPM (flux) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Liquid Gel Automation (LGA) Rate</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">GPM = Rate (bpm) × 0.042 × LGA Set Point (gpt)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Hydration / Clean Rate (BPM)</label>
+          <input type="number" id="lga-rate" class="field" value="80" step="0.1" placeholder="80">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">LGA Set Point (GPT)</label>
+          <input type="number" id="lga-gpt" class="field" value="6" step="0.01" placeholder="6">
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center mb-3">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Required LGA Rate</div>
+          <div class="font-display" style="font-size:32px;font-weight:900;color:#fff;" id="lga-gpm">0.00</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.4);">GPM</div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Equivalent PPT</div>
+          <div class="val" id="lga-ppt-eq">24.0</div>
+          <div class="unit">PPT = LGA × 4</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Dry Gel Rate</div>
+          <div class="val" id="lga-ppm-eq">0.0</div>
+          <div class="unit">LBS/MIN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PPM & Guar Auger RPM -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pounds Per Minute &amp; Guar Auger RPM</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">PPM = Hydration Rate × 0.042 × PPT &nbsp;·&nbsp; Guar Auger RPM = PPM ÷ PPR &nbsp;·&nbsp; LGA GPM = PPM ÷ 4</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Hydration Rate (BPM)</label>
+          <input type="number" id="guar-rate" class="field" value="35" step="0.1" placeholder="35">
+        </div>
+        <div>
+          <label class="lbl">PPT / Gel Loading</label>
+          <input type="number" id="guar-ppt" class="field" value="24" step="0.1" placeholder="24">
+        </div>
+        <div>
+          <label class="lbl">Auger PPR (LBS/REV)</label>
+          <input type="number" id="guar-ppr" class="field" value="3" step="0.01" placeholder="3">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Pounds Per Minute</div>
+          <div class="val" style="color:var(--brand);" id="guar-ppm">35.3</div>
+          <div class="unit">LBS/MIN (PPM)</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Liquid Gel Rate</div>
+          <div class="val" id="guar-gpm">8.8</div>
+          <div class="unit">GPM LGA</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Guar Auger RPM</div>
+          <div class="val" style="color:var(--brand);" id="guar-rpm">11.8</div>
+          <div class="unit">RPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tub Volume & Hydration Time -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tub Volume &amp; Hydration Time</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Tub Volume (bbl) = Capacity × Level% ÷ 100 &nbsp;·&nbsp; Hydration Time (min) = Tub Volume ÷ Job Clean Rate</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tub Capacity (BBL)</label>
+          <input type="number" id="tub-cap" class="field" value="100" step="1" placeholder="100">
+        </div>
+        <div>
+          <label class="lbl">Job Clean Rate (BPM)</label>
+          <input type="number" id="tub-cleanrate" class="field" value="80" step="0.1" placeholder="80">
+        </div>
+      </div>
+      <div class="mb-3">
+        <div class="flex justify-between items-center mb-2">
+          <label class="lbl" style="margin:0;">Tub Level</label>
+          <span class="font-display" style="color:var(--brand);font-weight:900;" id="tub-pct-lbl">50%</span>
+        </div>
+        <input type="range" id="tub-level" min="0" max="100" value="50">
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Tub Volume</div>
+          <div class="val" id="tub-vol">50.0</div>
+          <div class="unit">BBL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Hydration Time</div>
+          <div class="val" style="color:var(--brand);" id="tub-res">–</div>
+          <div class="unit">MIN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LGA Needed for Tub -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">LGA Needed for Tub</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">LGA Needed (gal) = Tub Volume (bbl) × 0.042 × LGA Set Point (gpt)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tub Volume (BBL)</label>
+          <input type="number" id="lganeed-vol" class="field" value="50" step="0.1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">LGA Set Point (GPT)</label>
+          <input type="number" id="lganeed-gpt" class="field" value="6" step="0.1" placeholder="6">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">LGA Needed</div>
+          <div class="val" style="color:var(--brand);" id="lganeed-gal">12.6</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Dry Guar Equivalent</div>
+          <div class="val" id="lganeed-lbs">50.4</div>
+          <div class="unit">LBS</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost mt-3" style="width:100%;font-size:12px;" onclick="syncLgaNeedFromTub()">Use Tub Volume from Hydration Time tool</button>
+    </div>
+
+    <!-- Gel Used to Visc Up Tub -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Gel Used to Visc Up Tub</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Gel Used (lbs) = Tub Volume (bbl) × 0.042 × PPT</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tub Volume (BBL)</label>
+          <input type="number" id="viscup-vol" class="field" value="50" step="0.1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">PPT / Gel Loading</label>
+          <input type="number" id="viscup-ppt" class="field" value="24" step="0.1" placeholder="24">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gel Used (Dry)</div>
+          <div class="val" style="color:var(--brand);" id="viscup-lbs">50.4</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">LGA Equivalent</div>
+          <div class="val" id="viscup-lga">12.6</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Increase Tub Viscosity -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Gel Used to Increase Tub Viscosity</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Gel Used (lbs) = Tub Volume (bbl) × 0.042 × (Target cp − Current cp)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Tub Volume (BBL)</label>
+          <input type="number" id="tubvisc-vol" class="field" value="80" step="0.1" placeholder="80">
+        </div>
+        <div>
+          <label class="lbl">Current Visc (CP)</label>
+          <input type="number" id="tubvisc-current" class="field" value="12" step="0.1" placeholder="12">
+        </div>
+        <div>
+          <label class="lbl">Target Visc (CP)</label>
+          <input type="number" id="tubvisc-target" class="field" value="18" step="0.1" placeholder="18">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gel Needed (Dry)</div>
+          <div class="val" style="color:var(--brand);" id="tubvisc-dry">20.2</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">LGA Needed</div>
+          <div class="val" id="tubvisc-gel">5.0</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Gel for Stage -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Design Gel Used for Stage</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Design Gel Used (lbs) = Gel Stage Volume (bbl) × 0.042 × PPT</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Gel Stage Volume (BBL)</label>
+          <input type="number" id="designgel-bbl" class="field" value="650" step="0.1" placeholder="650">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">PPT / Gel Loading</label>
+          <input type="number" id="designgel-ppt" class="field" value="20" step="0.1" placeholder="20">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Design Gel Used</div>
+          <div class="val" style="color:var(--brand);" id="designgel-dry">546.0</div>
+          <div class="unit">LBS</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Design LGA</div>
+          <div class="val" id="designgel-lga">136.5</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LGA Tote Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">LGA Tote Volume from Strap</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">LGA Tote Volume (gal) = 12.33 (gal/in) × LGA Strap (in) &nbsp;— default 750-gal gel tote</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">LGA Strap (IN)</label>
+          <input type="number" id="lgatote-strap" class="field" value="18" step="0.1" placeholder="18">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Cap Factor (GAL/IN)</label>
+          <input type="number" id="lgatote-cap" class="field" value="12.33" step="0.01" placeholder="12.33">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">LGA Tote Volume</div>
+        <div class="val" style="color:var(--brand);" id="lgatote-gal">221.9</div>
+        <div class="unit">GAL</div>
+      </div>
+    </div>
+
+    <!-- End LGA Tote Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">End LGA Tote Volume</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">End Volume (gal) = Start LGA Tote Volume (gal) − LGA Needed (gal)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Start Strap (IN)</label>
+          <input type="number" id="endlga-startstrap" class="field" value="40" step="0.1" placeholder="40">
+        </div>
+        <div>
+          <label class="lbl">Cap Factor (GAL/IN)</label>
+          <input type="number" id="endlga-cap" class="field" value="12.33" step="0.01" placeholder="12.33">
+        </div>
+        <div>
+          <label class="lbl">LGA Needed (GAL)</label>
+          <input type="number" id="endlga-needed" class="field" value="50" step="0.1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">Or Start Volume (GAL)</label>
+          <input type="number" id="endlga-startvol" class="field" value="" step="0.1" placeholder="auto from strap">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Start Volume</div>
+          <div class="val" id="endlga-start-out">493.2</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">End Volume</div>
+          <div class="val" style="color:var(--brand);" id="endlga-endvol">443.2</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">End Strap</div>
+          <div class="val" id="endlga-endstrap">35.9</div>
+          <div class="unit">IN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mid-Stage Tote Swap Predictor -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">Mid-Stage Tote Swap Predictor</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;">Practical tote handoff — gel from tote 1 to swap strap, remainder from tote 2</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Tote 1 Start Strap (IN)</label>
+          <input type="number" id="toteswap-t1start" class="field" value="10" step="0.5" placeholder="10">
+        </div>
+        <div>
+          <label class="lbl">Tote 1 Swap Strap (IN)</label>
+          <input type="number" id="toteswap-t1swap" class="field" value="3.5" step="0.5" placeholder="3.5">
+        </div>
+        <div>
+          <label class="lbl">Tote 2 Start Strap (IN)</label>
+          <input type="number" id="toteswap-t2start" class="field" value="58" step="0.5" placeholder="58">
+        </div>
+        <div>
+          <label class="lbl">Stage Gel Used (GAL)</label>
+          <input type="number" id="toteswap-totalgel" class="field" value="200" placeholder="200">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Tote Capacity Factor (GAL/IN)</label>
+        <input type="number" id="toteswap-factor" class="field" value="12.33" step="0.01" placeholder="12.33">
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Gel From Tote 1</div>
+          <div class="val" id="toteswap-t1gel">80.1</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Tote 2 Ending Strap</div>
+          <div class="val" style="color:var(--brand);" id="toteswap-t2end">48.3</div>
+          <div class="unit">IN</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ BLENDER ══════════════ -->
+  

@@ -1,0 +1,368 @@
+<div class="section" id="s-hp">
+    <div class="mb-4">
+      <div class="sec-title">HORSEPOWER, HOSES &amp; IRON</div>
+      <div class="sec-sub">CALCULATIONS</div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Stage Energy Analysis</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Treating PSI</label>
+          <input type="number" id="hp-psi" class="field" value="8500" placeholder="8500">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Active Pumps</label>
+          <input type="number" id="hp-pumps" class="field" value="12" min="1" placeholder="12">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Clean Rate (BPM) <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--brand);">— shared with Chem &amp; Hydration</span></label>
+        <input type="number" id="hp-rate" class="field" value="0" step="0.1" placeholder="0">
+      </div>
+      <div class="grid-3 mb-1">
+        <div>
+          <label class="lbl">Total Pumps on Loc</label>
+          <input type="number" id="hp-totalpumps" class="field" value="14" min="1" placeholder="14">
+        </div>
+        <div>
+          <label class="lbl">Pump HP Rating</label>
+          <input type="number" id="hp-rating" class="field" value="2500" placeholder="2500">
+        </div>
+        <div>
+          <label class="lbl">Efficiency (%)</label>
+          <input type="number" id="hp-mecheff" class="field" value="90" placeholder="90">
+        </div>
+      </div>
+    </div>
+
+    <!-- Total HHP -->
+    <div class="brand-card mb-4 text-center">
+      <div class="lbl" style="color:rgba(255,255,255,0.6);display:block;">Total Required Horsepower (HHP)</div>
+      <div class="font-display" style="font-size:52px;font-weight:900;color:#fff;" id="hp-total">0</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;" id="hp-rate-lbl">Based on 0.0 BPM load</div>
+    </div>
+
+    <!-- Fleet Capacity, Load Factor & Mechanical Efficiency -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Fleet Capacity, Load Factor &amp; Engine BHP</div>
+      <div class="grid-2 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">HHP per Active Pump</div>
+          <div class="val" style="color:var(--brand);" id="hp-per">0</div>
+          <div class="unit">HHP</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Engine BHP Required</div>
+          <div class="val" style="color:var(--brand);" id="hp-reqbhp">0</div>
+          <div class="unit">BHP (@ Eff%)</div>
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Total Location Cap</div>
+          <div class="val" id="hp-locavailable">35,000</div>
+          <div class="unit">HHP</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Active Fleet Load</div>
+          <div class="val" id="hp-activeload">0%</div>
+          <div class="unit">% LOAD</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Total Location Load</div>
+          <div class="val" id="hp-totalload">0%</div>
+          <div class="unit">% LOAD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suction/Discharge Hose Count -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Suction / Discharge Hose Count</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Max Clean Rate (BPM)</label>
+          <input type="number" id="hose-clean" class="field" value="120" placeholder="120">
+        </div>
+        <div>
+          <label class="lbl">Max Dirty Rate (BPM)</label>
+          <input type="number" id="hose-dirty" class="field" value="95" placeholder="95">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl"># Suction Hoses</div>
+          <div class="val" style="color:var(--brand);" id="hose-suction">12</div>
+          <div class="unit">(Clean ÷ 10)</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl"># Discharge Hoses</div>
+          <div class="val" id="hose-discharge">7</div>
+          <div class="unit">(Dirty ÷ 15)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Engine Torque ↔ Horsepower Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Engine Torque ↔ Horsepower Calculator</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Engine Speed (RPM)</label>
+          <input type="number" id="torque-rpm" class="field" value="2100" placeholder="2100">
+        </div>
+        <div>
+          <label class="lbl">Torque (LBF-FT)</label>
+          <input type="number" id="torque-lbft" class="field" value="5625" placeholder="5625">
+        </div>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calculated BHP</div>
+          <div class="val" style="color:var(--brand);" id="torque-outbhp">2,250</div>
+          <div class="unit">HP</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate Torque from Horsepower</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Horsepower (HP)</label>
+            <input type="number" id="torque-inputhp" class="field" value="2250" placeholder="2250">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Calculated Torque</div>
+            <div class="val" style="color:var(--brand);" id="torque-outlbft">5,625</div>
+            <div class="unit">LBF-FT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pump Displacement & Crank Speed Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pump Displacement &amp; Crank Speed Calculator</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Plunger Bore (IN)</label>
+          <input type="number" id="pumpdisp-bore" class="field" value="4.5" step="0.25" placeholder="4.5">
+        </div>
+        <div>
+          <label class="lbl">Stroke Length (IN)</label>
+          <input type="number" id="pumpdisp-stroke" class="field" value="8" step="0.5" placeholder="8">
+        </div>
+        <div>
+          <label class="lbl">Plungers Count</label>
+          <input type="number" id="pumpdisp-plungers" class="field" value="3" placeholder="3">
+        </div>
+        <div>
+          <label class="lbl">Pinion Speed (RPM)</label>
+          <input type="number" id="pumpdisp-pinion" class="field" value="1500" placeholder="1500">
+        </div>
+        <div>
+          <label class="lbl">Pinion Ratio</label>
+          <input type="number" id="pumpdisp-ratio" class="field" value="6.353" step="0.001" placeholder="6.353">
+        </div>
+        <div>
+          <label class="lbl">Efficiency (%)</label>
+          <input type="number" id="pumpdisp-eff" class="field" value="95" placeholder="95">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Vol / Rev</div>
+          <div class="val" id="pumpdisp-bblrev">0.0393</div>
+          <div class="unit">BBL/REV</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Crank Speed</div>
+          <div class="val" id="pumpdisp-crank">236.1</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Pump Output</div>
+          <div class="val" style="color:var(--brand);" id="pumpdisp-bpm">8.8</div>
+          <div class="unit">BPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Iron Rate Limit & Max Pressure Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Iron Rate Limit &amp; Max Pressure</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Iron Line ID (IN)</label>
+          <input type="number" id="ironlim-id" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Total Available HHP</label>
+          <input type="number" id="ironlim-hhp" class="field" value="22500" placeholder="22500">
+        </div>
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="ironlim-rate" class="field" value="85" placeholder="85">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Max Rate / Line (2 × ID²)</div>
+          <div class="val" style="color:var(--brand);" id="ironlim-maxrate">18.0</div>
+          <div class="unit">BPM/LINE</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Max Pressure at Rate</div>
+          <div class="val" style="color:var(--brand);" id="ironlim-maxpsi">10,800</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transmission Output Speed -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Transmission Output Speed</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Transmission Type</label>
+          <select id="trans-type" class="field">
+            <option value="TH55-E70">TH55-E70</option>
+            <option value="CX48">CX48-P2300/TH48</option>
+            <option value="Allison">Allison 9826</option>
+            <option value="TH55-E90">TH55-E90</option>
+            <option value="TH350">TH-350</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Current Gear</label>
+          <select id="trans-gear" class="field"><!-- injected --></select>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Deck Engine RPM</label>
+        <input type="number" id="trans-engine" class="field" value="1800" placeholder="1800">
+      </div>
+      <div class="tile">
+        <div class="lbl">Transmission Output Speed</div>
+        <div class="val" style="color:var(--brand);" id="trans-output">1,800</div>
+        <div class="unit">RPM — Pinion Speed for pump calc</div>
+      </div>
+    </div>
+
+    <!-- Pump Rate from Fluid End Specs -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pump Rate from Fluid End Specs</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Pump Type</label>
+          <select id="pumprate-type" class="field">
+            <option value="SPM_TWS_2250">SPM TWS 2250</option>
+            <option value="SPM_TWS_2500">SPM TWS 2500</option>
+            <option value="CAT_WS255">CAT WS255</option>
+            <option value="GD_2500Q">GD 2500 Q</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Efficiency %</label>
+          <input type="number" id="pumprate-eff" class="field" value="95" placeholder="95">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">PE RPM (from transmission)</label>
+        <input type="number" id="pumprate-pe" class="field" value="283" placeholder="283">
+      </div>
+      <div class="tile">
+        <div class="lbl">Pump Rate</div>
+        <div class="val" style="color:var(--brand);" id="pumprate-bpm">10.5</div>
+        <div class="unit">BPM — Max Pressure: <span id="pumprate-psi">15,000</span> psi</div>
+      </div>
+    </div>
+
+    <!-- ═══ GEAR OPTIMIZER ═══ -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">High-Rate Gear Optimizer</div>
+
+      <div class="mb-4">
+        <label class="lbl">Pumps Inline</label>
+        <div class="flex gap-2 items-center mb-1">
+          <input type="number" id="go-pumps" class="field" value="14" min="1" max="30" style="width:90px;">
+          <div class="flex gap-1">
+            <button class="quick-btn" onclick="goPumps(10)">10</button>
+            <button class="quick-btn" onclick="goPumps(12)">12</button>
+            <button class="quick-btn sel" onclick="goPumps(14)">14</button>
+            <button class="quick-btn" onclick="goPumps(16)">16</button>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--text2);margin-top:4px;" id="go-range">Range: 58.8 – 149.8 BPM</div>
+      </div>
+
+      <div class="flex gap-3 items-end mb-4">
+        <div class="flex-1">
+          <label class="lbl">Target Total Rate (BPM)</label>
+          <input type="number" id="go-target" class="field" value="100" step="0.1">
+        </div>
+        <button id="go-btn" class="btn btn-brand" onclick="goRun()" style="padding:10px 20px;white-space:nowrap;">⚡ Optimize</button>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--surface);border-radius:12px;">
+        <div>
+          <div style="font-size:13px;font-weight:600;">Extreme Mode (8th &amp; 9th gear)</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px;">Only for rate-critical jobs when 7th gear is insufficient</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="go-extreme">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Gear results -->
+    <div id="go-results" class="hidden">
+      <div class="flex gap-3 mb-4">
+        <div class="card flex-1">
+          <div class="lbl mb-1">Best Match</div>
+          <div class="flex items-baseline gap-1">
+            <div class="font-display" style="font-size:36px;font-weight:900;color:var(--brand);" id="go-achieved">–</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text2);">BPM</div>
+          </div>
+          <div style="margin-top:6px;" id="go-err-badge"></div>
+        </div>
+        <div class="brand-card text-center flex-col" style="min-width:110px;display:flex;align-items:center;justify-content:center;gap:4px;">
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Mid-Band</div>
+          <div class="font-display" style="font-size:40px;font-weight:900;color:#fff;" id="go-midband">–</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.6);">4th–6th gear</div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="lbl mb-3 tool-title">Gear Assignment</div>
+        <div style="overflow-x:auto;">
+          <div class="tbl-wrap"><table class="tbl">
+            <thead>
+              <tr>
+                <th style="text-align:left;width:32%;">Gear</th>
+                <th class="tbl-right">Pumps</th>
+                <th class="tbl-right">Rate</th>
+                <th class="tbl-right">Contrib</th>
+                <th class="tbl-right">Fleet</th>
+              </tr>
+            </thead>
+            <tbody id="go-tbl"></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div id="go-alts-wrap" class="hidden">
+        <div class="lbl mb-2" style="padding:0 2px;">Alternative Distributions</div>
+        <div id="go-alts" class="mb-4"></div>
+      </div>
+
+      <div class="card" id="go-notes-card">
+        <div class="lbl mb-3 tool-title">Field Management Notes</div>
+        <div id="go-notes"></div>
+      </div>
+    </div>
+
+  </div><!-- /s-hp -->

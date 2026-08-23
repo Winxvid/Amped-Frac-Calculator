@@ -1,0 +1,455 @@
+<div class="section" id="s-chem">
+    <div class="mb-4">
+      <div class="sec-title">CHEMICAL CALCULATIONS</div>
+      <div class="sec-sub">CHEMICAL FUNDAMENTALS</div>
+    </div>
+
+    <!-- Total GPM -->
+    <div class="brand-card mb-4 text-center">
+      <div class="lbl" style="color:rgba(255,255,255,0.6);display:block;">Total Injection Synthesis</div>
+      <div class="font-display" style="font-size:52px;font-weight:900;color:#fff;" id="ch-total">0.00</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;" id="ch-count-lbl">0 active channels</div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:4px;">GPM_REQ</div>
+    </div>
+
+    <!-- Config -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Batch Config</div>
+      <div class="mb-3">
+        <label class="lbl">Clean Rate (BPM) <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--brand);">— shared with HP & Hydration</span></label>
+        <input type="number" id="ch-rate" class="field" value="0" step="0.1" placeholder="0">
+      </div>
+      <div class="flex gap-3 items-end">
+        <div class="flex-1">
+          <label class="lbl">Active Channels (1–10)</label>
+          <input type="number" id="ch-count" class="field" value="2" min="1" max="10">
+        </div>
+        <button class="btn btn-brand" style="white-space:nowrap;" onclick="initChannels()">Init</button>
+      </div>
+    </div>
+
+    <!-- Channel cards -->
+    <div class="grid-2 mb-4" id="ch-grid"><!-- injected --></div>
+
+    <!-- Chemical Used from Straps -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Used from Straps</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Starting Strap (GAL or IN)</label>
+          <input type="number" id="chemused-start" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Ending / Current Strap</label>
+          <input type="number" id="chemused-end" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Chemical Used</div>
+        <div class="val" style="color:var(--brand);" id="chemused-result">0.0</div>
+      </div>
+    </div>
+
+    <!-- Chemical Stage Variance -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Stage Variance</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Amount Pumped (GAL)</label>
+          <input type="number" id="chemvar-pumped" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Designed (GAL)</label>
+          <input type="number" id="chemvar-designed" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Variance</div>
+          <div class="val" style="color:var(--brand);" id="chemvar-pct">0.0%</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Status</div>
+          <div class="val" style="font-size:14px;" id="chemvar-status">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GPT <-> GPM Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">GPT ↔ GPM Converter</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="gptgpm-rate" class="field" value="0" step="0.1" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="gptgpm-gpt" class="field" value="0" step="0.05" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Chemical Rate</div>
+          <div class="val" style="color:var(--brand);" id="gptgpm-gpm">0.00</div>
+          <div class="unit">GPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Concentration</div>
+          <div class="val" id="gptgpm-conc">0.00</div>
+          <div class="unit">GPT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HCL Density & % Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">HCL Density &amp; % Converter</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">% HCL</label>
+          <input type="number" id="hcl-pct" class="field" value="15" step="0.5" placeholder="15">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Density (PPG)</label>
+          <input type="number" id="hcl-dens" class="field" value="8.797" step="0.001" placeholder="8.797">
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);">Edit either field — the other updates automatically.</div>
+    </div>
+
+    <!-- Acid Dilution -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Acid Dilution (HCL)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Raw Volume (GAL)</label>
+          <input type="number" id="acidd-vol" class="field" value="20" placeholder="20">
+        </div>
+        <div>
+          <label class="lbl">Raw % HCL</label>
+          <input type="number" id="acidd-rawpct" class="field" value="50" step="1" placeholder="50">
+        </div>
+        <div>
+          <label class="lbl">Target Dilute %</label>
+          <input type="number" id="acidd-targetpct" class="field" value="15" step="1" placeholder="15">
+        </div>
+        <div>
+          <label class="lbl">Raw Density (PPG)</label>
+          <input type="number" id="acidd-density" class="field" value="9.52" step="0.01" placeholder="9.52">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Dilute Volume</div>
+          <div class="val" id="acidd-dilutevol">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Water to Add</div>
+          <div class="val" style="color:var(--brand);" id="acidd-watervol">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buffer Needed -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Buffer Needed</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Clean Volume (BBL)</label>
+          <input type="number" id="buffer-bbl" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="buffer-gpt" class="field" value="0" step="0.05" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Buffer Required</div>
+        <div class="val" style="color:var(--brand);" id="buffer-result">0.00</div>
+        <div class="unit">GAL</div>
+      </div>
+    </div>
+
+    <!-- Tote Volume from Strap -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tote Volume from Strap</div>
+      <div class="mb-3">
+        <label class="lbl">Current Strap (IN)</label>
+        <input type="number" id="tote-strap" class="field" value="48" step="0.1" placeholder="48">
+      </div>
+      <div class="flex gap-3 items-end mb-3">
+        <div class="flex-1">
+          <label class="lbl">Tote Type</label>
+          <select id="tote-type" class="field"><!-- injected --></select>
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Bottoms (IN)</label>
+          <input type="number" id="tote-bottoms" class="field" value="0" step="0.5" placeholder="0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Accessible</div>
+          <div class="val" style="color:var(--brand);" id="tote-accessible">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total</div>
+          <div class="val" id="tote-total">0.0</div>
+          <div class="unit">GAL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-Tote Accessible Volume -->
+    <div class="card mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="lbl tool-title" style="margin:0;">Multi-Tote Accessible Volume</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:7px 14px;" onclick="addMultiToteRow()">+ Add Tote</button>
+      </div>
+      <div id="multitote-rows"><!-- injected --></div>
+      <div class="tile mt-3">
+        <div class="lbl">Total Pumpable</div>
+        <div class="val" style="color:var(--brand);" id="multitote-total">0.0</div>
+        <div class="unit">GAL</div>
+      </div>
+    </div>
+
+    <!-- Ending Strap Predictor -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Ending Strap Predictor</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Clean Volume (BBL)</label>
+          <input type="number" id="endstrap-clean" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">GPT Setpoint</label>
+          <input type="number" id="endstrap-gpt" class="field" value="0" step="0.1" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Start Strap (IN)</label>
+          <input type="number" id="endstrap-start" class="field" value="0" step="0.1" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Tote Type</label>
+          <select id="endstrap-type" class="field"><!-- injected --></select>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">FR Needed</div>
+          <div class="val" id="endstrap-fr">0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Ending Strap</div>
+          <div class="val" style="color:var(--brand);" id="endstrap-ending">0.0</div>
+          <div class="unit">IN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tote Refill Count Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tote Refill Count Calculator</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Stage Clean Vol (BBL)</label>
+          <input type="number" id="toterefill-clean" class="field" value="50000" placeholder="50000">
+        </div>
+        <div>
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="toterefill-gpt" class="field" value="1.5" step="0.1" placeholder="1.5">
+        </div>
+        <div>
+          <label class="lbl">Fill Height (IN)</label>
+          <input type="number" id="toterefill-fill" class="field" value="44" step="0.5" placeholder="44">
+        </div>
+        <div>
+          <label class="lbl">Bottoms (IN)</label>
+          <input type="number" id="toterefill-bottoms" class="field" value="2" step="0.5" placeholder="2">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="lbl">Tote Capacity Factor (GAL/IN)</label>
+        <input type="number" id="toterefill-factor" class="field" value="7.45" step="0.01" placeholder="7.45">
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Chem Needed</div>
+          <div class="val" id="toterefill-needed">3,150</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Accessible / Tote</div>
+          <div class="val" id="toterefill-accessible">312.9</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Tote Refills Needed</div>
+          <div class="val" style="color:var(--brand);" id="toterefill-count">11</div>
+          <div class="unit">TIMES</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chemical Setpoint & Clean Volume Back-Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Setpoint &amp; Clean Volume Back-Calculator</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Chemical Rate (GPM)</label>
+          <input type="number" id="chemcalc-gpm" class="field" value="12.0" step="0.1" placeholder="12.0">
+        </div>
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="chemcalc-bpm" class="field" value="60.0" step="0.1" placeholder="60.0">
+        </div>
+        <div>
+          <label class="lbl">Total Chem Used (GAL)</label>
+          <input type="number" id="chemcalc-totchem" class="field" value="1500" placeholder="1500">
+        </div>
+        <div>
+          <label class="lbl">Target Setpoint (GPT)</label>
+          <input type="number" id="chemcalc-targetgpt" class="field" value="2.0" step="0.1" placeholder="2.0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calculated Setpoint</div>
+          <div class="val" style="color:var(--brand);" id="chemcalc-outgpt">0.20</div>
+          <div class="unit">GPT</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Clean Fluid Treated</div>
+          <div class="val" style="color:var(--brand);" id="chemcalc-outcleanbbl">750</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liquid vs Dry Concentration Converter (GPT ↔ PPT) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Liquid vs Dry Concentration Converter (GPT ↔ PPT)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Liquid Setpoint (GPT)</label>
+          <input type="number" id="gptppt-gpt" class="field" value="1.5" step="0.1" placeholder="1.5">
+        </div>
+        <div>
+          <label class="lbl">Chemical Density (PPG)</label>
+          <input type="number" id="gptppt-density" class="field" value="9.2" step="0.1" placeholder="9.2">
+        </div>
+        <div>
+          <label class="lbl">Active Chemical (%)</label>
+          <input type="number" id="gptppt-activepct" class="field" value="100" step="1" placeholder="100">
+        </div>
+      </div>
+      <div class="tile mb-3">
+        <div class="lbl">Calculated Dry Concentration</div>
+        <div class="val" style="color:var(--brand);" id="gptppt-outppt">13.8</div>
+        <div class="unit">PPT (LBS/1000 GAL)</div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate GPT from PPT (LBS/1000 GAL)</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Dry Loading (PPT)</label>
+            <input type="number" id="gptppt-inppt" class="field" value="20.0" step="0.5" placeholder="20.0">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Equivalent Setpoint</div>
+            <div class="val" style="color:var(--brand);" id="gptppt-outbackgpt">2.17</div>
+            <div class="unit">GPT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Strap Rate (IN/HR) & Chemical Flow Rate -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Strap Rate (IN/HR) &amp; Chemical Flow Rate</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Strap Rate (IN/HR)</label>
+          <input type="number" id="straprate-inhr" class="field" value="24.0" step="0.5" placeholder="24.0">
+        </div>
+        <div>
+          <label class="lbl">Tote Factor (GAL/IN)</label>
+          <input type="number" id="straprate-factor" class="field" value="7.45" step="0.01" placeholder="7.45">
+        </div>
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="straprate-cleanbpm" class="field" value="65.0" step="0.1" placeholder="65.0">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Chemical Flow Rate</div>
+          <div class="val" style="color:var(--brand);" id="straprate-outgpm">2.98</div>
+          <div class="unit">GPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Achieved Setpoint</div>
+          <div class="val" style="color:var(--brand);" id="straprate-outgpt">0.046</div>
+          <div class="unit">GPT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chemical Specific Gravity (SG) & Tote Weight -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Chemical Specific Gravity (SG) &amp; Tote Weight</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Specific Gravity (SG)</label>
+          <input type="number" id="chemsg-sg" class="field" value="1.10" step="0.01" placeholder="1.10">
+        </div>
+        <div>
+          <label class="lbl">Volume (GAL)</label>
+          <input type="number" id="chemsg-vol" class="field" value="330" placeholder="330">
+        </div>
+        <div>
+          <label class="lbl">Water Density (PPG)</label>
+          <input type="number" id="chemsg-waterppg" class="field" value="8.34" step="0.01" placeholder="8.34">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Chemical Density</div>
+          <div class="val" style="color:var(--brand);" id="chemsg-outppg">9.17</div>
+          <div class="unit">PPG (LBS/GAL)</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Mass / Weight</div>
+          <div class="val" style="color:var(--brand);" id="chemsg-outlbs">3,027</div>
+          <div class="unit">LBS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tote Capacity Factors -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tote Capacity Factors</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th style="text-align:left;">Tote Type</th><th class="tbl-right">GAL/IN</th></tr></thead>
+        <tbody id="totetype-tbody"><!-- injected --></tbody>
+      </table></div>
+    </div>
+
+    <!-- % HCL by Mass Density -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">% HCL by Mass Density</div>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th style="text-align:left;">% HCL</th><th class="tbl-right">Density (PPG)</th></tr></thead>
+        <tbody id="hcltable-tbody"><!-- injected --></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HYDRATION ══════════════ -->
+  

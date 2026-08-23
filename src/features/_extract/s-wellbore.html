@@ -1,0 +1,489 @@
+<div class="section" id="s-wellbore">
+    <div class="mb-4">
+      <div class="sec-title">WELLBORE CALCULATIONS</div>
+      <div class="sec-sub">FLUSH VOLUME FORMULAS - FORMATION FORMULAS</div>
+    </div>
+
+    <!-- Tubular Capacity, Displacement & Metal Volume -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Tubular Capacity, Displacement &amp; Metal Volume</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Outer Diam OD (IN)</label>
+          <input type="number" id="tubular-od" class="field" value="5.500" step="0.1" placeholder="5.500">
+        </div>
+        <div>
+          <label class="lbl">Inner Diam ID (IN)</label>
+          <input type="number" id="tubular-id" class="field" value="4.778" step="0.001" placeholder="4.778">
+        </div>
+        <div>
+          <label class="lbl">Depth / Length (FT)</label>
+          <input type="number" id="tubular-length" class="field" value="10500" placeholder="10500">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Capacity (BBL/FT)</div>
+          <div class="val" style="color:var(--brand);" id="tubular-capbblft">0.0222</div>
+          <div class="unit">BBL/FT</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Capacity (GAL/FT)</div>
+          <div class="val" id="tubular-capgalft">0.931</div>
+          <div class="unit">GAL/FT</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Displacement (BBL/FT)</div>
+          <div class="val" id="tubular-dispbblft">0.0072</div>
+          <div class="unit">BBL/FT</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Total Internal Volume</div>
+          <div class="val" style="color:var(--brand);" id="tubular-totcap">232.8</div>
+          <div class="unit">BBL</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Total Metal Displacement</div>
+          <div class="val" id="tubular-totdisp">75.8</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equivalent Mud Weight (EMW) & Required STP -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Equivalent Mud Weight (EMW) &amp; Surface Pressure</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Surface Pressure (PSI)</label>
+          <input type="number" id="emw-stp" class="field" value="6500" placeholder="6500">
+        </div>
+        <div>
+          <label class="lbl">True Vertical Depth TVD (FT)</label>
+          <input type="number" id="emw-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Base Fluid Density (PPG)</label>
+          <input type="number" id="emw-density" class="field" value="8.33" step="0.01" placeholder="8.33">
+        </div>
+        <div>
+          <label class="lbl">Target EMW (PPG)</label>
+          <input type="number" id="emw-target" class="field" value="22.0" step="0.1" placeholder="22.0">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Hydrostatic Press</div>
+          <div class="val" id="emw-hydro">4,113</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Hydro Gradient</div>
+          <div class="val" id="emw-grad">0.433</div>
+          <div class="unit">PSI/FT</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Calculated EMW</div>
+          <div class="val" style="color:var(--brand);" id="emw-calculated">21.49</div>
+          <div class="unit">PPG</div>
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Req Surface Pressure for Target EMW</div>
+        <div class="val" style="color:var(--brand);" id="emw-reqstp">6,750</div>
+        <div class="unit">PSI</div>
+      </div>
+    </div>
+
+    <!-- Overflush / Underflush & Top of Sand / PBTD -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Overflush / Underflush &amp; Top of Proppant (PBTD)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Perf Depth (FT)</label>
+          <input type="number" id="flushcalc-perfdepth" class="field" value="10500" placeholder="10500">
+        </div>
+        <div>
+          <label class="lbl">Casing Capacity (BBL/FT)</label>
+          <input type="number" id="flushcalc-capbblft" class="field" value="0.0222" step="0.0001" placeholder="0.0222">
+        </div>
+        <div>
+          <label class="lbl">Pumped Flush Vol (BBL)</label>
+          <input type="number" id="flushcalc-pumpedflush" class="field" value="240" placeholder="240">
+        </div>
+        <div>
+          <label class="lbl">Sand Left in Casing (LBS)</label>
+          <input type="number" id="flushcalc-sandlbs" class="field" value="5000" placeholder="5000">
+        </div>
+        <div>
+          <label class="lbl">Sand Bulk Density (LBS/FT³)</label>
+          <input type="number" id="flushcalc-bulkdens" class="field" value="105" placeholder="105">
+        </div>
+      </div>
+      <div class="grid-2 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Required Flush to Perfs</div>
+          <div class="val" id="flushcalc-reqflush">233.1</div>
+          <div class="unit">BBL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Flush Variance (Over/Under)</div>
+          <div class="val" style="color:var(--brand);" id="flushcalc-variance">+6.9 BBL (Over)</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Sand Height in Casing</div>
+          <div class="val" id="flushcalc-sandheight">80.8</div>
+          <div class="unit">FT</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Top of Sand / PBTD</div>
+          <div class="val" style="color:var(--brand);" id="flushcalc-topofsand">10,419.2</div>
+          <div class="unit">FT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Perforation Pressure Drop & Active Perfs Solver -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Perforation Pressure Drop &amp; Open Perfs Solver</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="perfcalc-rate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Slurry Density (PPG)</label>
+          <input type="number" id="perfcalc-dens" class="field" value="9.2" step="0.1" placeholder="9.2">
+        </div>
+        <div>
+          <label class="lbl">Open Perfs Count (N)</label>
+          <input type="number" id="perfcalc-nperfs" class="field" value="36" placeholder="36">
+        </div>
+        <div>
+          <label class="lbl">Perf Hole Diam (IN)</label>
+          <input type="number" id="perfcalc-diam" class="field" value="0.42" step="0.01" placeholder="0.42">
+        </div>
+        <div>
+          <label class="lbl">Discharge Coeff (Cd)</label>
+          <input type="number" id="perfcalc-cd" class="field" value="0.95" step="0.01" placeholder="0.95">
+        </div>
+      </div>
+      <div class="tile mb-3">
+        <div class="lbl">Calculated Perf Pressure Drop</div>
+        <div class="val" style="color:var(--brand);" id="perfcalc-outdrop">342</div>
+        <div class="unit">PSI</div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate Open Perfs Count from Measured Drop</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Measured Perf Friction (PSI)</label>
+            <input type="number" id="perfcalc-measfrict" class="field" value="400" placeholder="400">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Solved Open Perfs</div>
+            <div class="val" style="color:var(--brand);" id="perfcalc-solvedn">33.3</div>
+            <div class="unit">PERFS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Surface Treating Pressure (STP) Predictor -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Surface Treating Pressure (STP) Predictor</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Target BHP (PSI)</label>
+          <input type="number" id="stp-bhp" class="field" value="8500" placeholder="8500">
+        </div>
+        <div>
+          <label class="lbl">Fluid Density (PPG)</label>
+          <input type="number" id="stp-density" class="field" value="8.6" step="0.1" placeholder="8.6">
+        </div>
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="stp-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Pipe Friction (PSI)</label>
+          <input type="number" id="stp-pipefrict" class="field" value="1420" placeholder="1420">
+        </div>
+        <div>
+          <label class="lbl">Perf Friction (PSI)</label>
+          <input type="number" id="stp-perffrict" class="field" value="338" placeholder="338">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Hydrostatic Pressure</div>
+          <div class="val" id="stp-hydro">4,247</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Calculated Required STP</div>
+          <div class="val" style="color:var(--brand);" id="stp-calculated">6,011</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Well Parameters</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="wb-tvd" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Perf Depth (FT)</label>
+          <input type="number" id="wb-perf" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Water Density (PPG)</label>
+          <input type="number" id="wb-density" class="field" value="8.33" step="0.01" placeholder="8.33">
+        </div>
+        <div>
+          <label class="lbl">Casing ID (IN)</label>
+          <input type="number" id="wb-id" class="field" value="4.778" step="0.001" placeholder="4.778">
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Tubular</label>
+        <select id="wb-tubular" class="field"><!-- injected --></select>
+      </div>
+    </div>
+
+    <!-- Volumetrics -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Well Volumetrics</div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Hydrostatic</div>
+          <div class="val" style="color:var(--brand);" id="wb-hydro">0</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Total Wellbore Capacity</div>
+          <div class="font-display" style="font-size:36px;font-weight:900;color:#fff;" id="wb-capacity">0.00</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">Calculated from casing ID to perfs</div>
+        </div>
+        <div class="text-right">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:rgba(255,255,255,0.6);">Tubular Factor</div>
+          <div class="font-display" style="font-size:20px;font-weight:900;color:rgba(255,255,255,0.8);" id="wb-factor">0.9314</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">BBL/FT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friction Loss Breakdown & f_pipe Solver -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Friction Loss Breakdown &amp; Pipe Friction Solver</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="frict-rate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Slurry Density (PPG)</label>
+          <input type="number" id="frict-dens" class="field" value="9.2" step="0.1" placeholder="9.2">
+        </div>
+        <div>
+          <label class="lbl">Perf Depth (FT)</label>
+          <input type="number" id="frict-depth" class="field" value="10500" placeholder="10500">
+        </div>
+        <div>
+          <label class="lbl">Casing ID (IN)</label>
+          <input type="number" id="frict-id" class="field" value="4.778" step="0.001" placeholder="4.778">
+        </div>
+        <div>
+          <label class="lbl">Pipe Friction Coeff (f_pipe)</label>
+          <input type="number" id="frict-fpipe" class="field" value="0.00018" step="0.00001" placeholder="0.00018">
+        </div>
+        <div>
+          <label class="lbl">Perf Friction Coeff (f_perf)</label>
+          <input type="number" id="frict-fperf" class="field" value="0.08" step="0.01" placeholder="0.08">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Pipe Friction</div>
+          <div class="val" id="frict-pipeval">1,420</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Perf Friction</div>
+          <div class="val" id="frict-perfval">338</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Total Friction</div>
+          <div class="val" style="color:var(--brand);" id="frict-totalval">1,758</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Back-Calculate Pipe Friction Coefficient (f_pipe)</div>
+        <div class="flex gap-3 items-end">
+          <div class="flex-1">
+            <label class="lbl">Measured Pipe Friction (PSI)</label>
+            <input type="number" id="frict-measuredpipe" class="field" value="1500" placeholder="1500">
+          </div>
+          <div class="tile flex-1">
+            <div class="lbl">Solved f_pipe</div>
+            <div class="val" style="color:var(--brand);" id="frict-solvedfpipe">0.000190</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Well Control & Fracture Pressure -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Well Control &amp; Fracture Pressure</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Formation Pressure (PSI)</label>
+          <input type="number" id="wellctrl-formpress" class="field" value="5200" placeholder="5200">
+        </div>
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="wellctrl-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Frac Gradient (PSI/FT)</label>
+          <input type="number" id="wellctrl-grad" class="field" value="0.75" step="0.01" placeholder="0.75">
+        </div>
+      </div>
+      <div class="grid-3 gap-2">
+        <div class="tile">
+          <div class="lbl">Kill Mud Weight</div>
+          <div class="val" style="color:var(--brand);" id="wellctrl-killmud">10.54</div>
+          <div class="unit">PPG</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Fracture Pressure</div>
+          <div class="val" id="wellctrl-fracpress">7,125</div>
+          <div class="unit">PSI</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Required ISIP</div>
+          <div class="val" id="wellctrl-reqisip">3,012</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BHP -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Bottom Hole Pressure (BHP)</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Treating PSI</label>
+          <input type="number" id="wb-treating" class="field" value="0" placeholder="0">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Friction Loss (PSI)</label>
+          <input type="number" id="wb-friction" class="field" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">BHP (PSI)</div>
+        <div class="val" style="color:var(--brand);" id="wb-bhp">0</div>
+      </div>
+    </div>
+
+    <!-- Wellbore Capacity (Multi-Section) — chart + custom casing -->
+    <div class="card mb-4 wellcap-card">
+      <div class="wellcap-head">
+        <div class="tool-title">Wellbore Capacity (Multi-Section)</div>
+        <button class="btn btn-brand" style="font-size:12px;padding:8px 14px;" onclick="addWellCapRow()">+ Add Section</button>
+      </div>
+      <p class="wellcap-help">
+        Pick a chart casing or enter custom OD/ID to compute capacity.
+        Section volume = Depth × BBL/FT.
+        Custom: BBL/FT = ID² ÷ 1029.44 · GAL/FT = ID² ÷ 24.51
+      </p>
+      <div id="wellcap-rows"><!-- injected --></div>
+      <div class="wellcap-totals">
+        <div class="tile">
+          <div class="lbl">Total Gallons</div>
+          <div class="val" id="wellcap-gal">0</div>
+          <div class="unit">GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Total Barrels</div>
+          <div class="val" style="color:var(--brand);" id="wellcap-bbl">0.00</div>
+          <div class="unit">BBL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frac Gradient & Related -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Frac Gradient &amp; Related</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">ISIP (PSI)</label>
+          <input type="number" id="fg-isip" class="field" value="6500" placeholder="6500">
+        </div>
+        <div>
+          <label class="lbl">TVD (FT)</label>
+          <input type="number" id="fg-tvd" class="field" value="9500" placeholder="9500">
+        </div>
+        <div>
+          <label class="lbl">Fluid Density (PPG)</label>
+          <input type="number" id="fg-density" class="field" value="8.6" step="0.1" placeholder="8.6">
+        </div>
+        <div>
+          <label class="lbl">Closure Stress (PSI)</label>
+          <input type="number" id="fg-closure" class="field" value="5800" placeholder="5800">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Frac Gradient</div>
+          <div class="val" style="color:var(--brand);" id="fg-grad">0.72</div>
+          <div class="unit">PSI/FT</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Net Pressure</div>
+          <div class="val" id="fg-net">1,245</div>
+          <div class="unit">PSI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proppant Left in Wellbore -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">Proppant Left in Wellbore</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Slurry Volume (BBL)</label>
+          <input type="number" id="pl-slurry" class="field" value="1200" placeholder="1200">
+        </div>
+        <div>
+          <label class="lbl">Prop Conc (PPG)</label>
+          <input type="number" id="pl-conc" class="field" value="3" step="0.5" placeholder="3">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="pl-sg" class="field" value="2.65" step="0.05" placeholder="2.65">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Proppant Left in Wellbore</div>
+        <div class="val" style="color:var(--brand);" id="pl-result">37,850</div>
+        <div class="unit">LBS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HP ══════════════ -->
+  

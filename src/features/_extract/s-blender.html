@@ -1,0 +1,367 @@
+<div class="section" id="s-blender">
+    <div class="mb-4">
+      <div class="sec-title">BLENDER CALCULATIONS</div>
+      <div class="sec-sub">CLEAN &amp; SLURRY FORMULAS</div>
+    </div>
+
+    <!-- Clean & Slurry Rate Conversion (CFR & Yield) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Clean &amp; Slurry Rate Conversion (CFR &amp; Yield)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="blconv-cleanrate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Slurry Rate (BPM)</label>
+          <input type="number" id="blconv-slurryrate" class="field" value="72.8" step="0.1" placeholder="72.8">
+        </div>
+        <div>
+          <label class="lbl">Proppant Conc (PPA / PPG)</label>
+          <input type="number" id="blconv-ppa" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="blconv-sg" class="field" value="2.65" step="0.01" placeholder="2.65">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Abs Vol Factor (AVF)</div>
+          <div class="val" id="blconv-avf">0.0452</div>
+          <div class="unit">GAL/LB</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Slurry Yield</div>
+          <div class="val" id="blconv-yield">1.1357</div>
+          <div class="unit">GAL/GAL</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Clean Fluid Ratio (CFR)</div>
+          <div class="val" style="color:var(--brand);" id="blconv-cfr">0.8805</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calc Slurry Rate (from Clean)</div>
+          <div class="val" style="color:var(--brand);" id="blconv-outslurry">73.8</div>
+          <div class="unit">BPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Calc Clean Rate (from Slurry)</div>
+          <div class="val" style="color:var(--brand);" id="blconv-outclean">64.1</div>
+          <div class="unit">BPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screw Concentration & Total Auger RPM -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Screw Concentration &amp; Total Auger RPM</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="blscrew-rate" class="field" value="65" placeholder="65">
+        </div>
+        <div>
+          <label class="lbl">Target PPA (PPG)</label>
+          <input type="number" id="blscrew-ppa" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Auger PPR (LBS/REV)</label>
+          <input type="number" id="blscrew-ppr" class="field" value="3.0" step="0.1" placeholder="3.0">
+        </div>
+        <div>
+          <label class="lbl">Auger 1 RPM</label>
+          <input type="number" id="blscrew-aug1" class="field" value="91" placeholder="91">
+        </div>
+        <div>
+          <label class="lbl">Auger 2 RPM</label>
+          <input type="number" id="blscrew-aug2" class="field" value="91" placeholder="91">
+        </div>
+        <div>
+          <label class="lbl">Auger 3 RPM</label>
+          <input type="number" id="blscrew-aug3" class="field" value="91" placeholder="91">
+        </div>
+      </div>
+      <div class="grid-3 gap-2 mb-3">
+        <div class="tile">
+          <div class="lbl">Req Total RPM</div>
+          <div class="val" style="color:var(--brand);" id="blscrew-reqrpm">2,730</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Actual Total RPM</div>
+          <div class="val" id="blscrew-actrpm">273</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Calc Screw Conc</div>
+          <div class="val" style="color:var(--brand);" id="blscrew-outconc">0.30</div>
+          <div class="unit">PPA</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Proppant Rate</div>
+          <div class="val" id="blscrew-lbsmin">819</div>
+          <div class="unit">LBS/MIN</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Prop PPM</div>
+          <div class="val" id="blscrew-ppm">273.0</div>
+          <div class="unit">PPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design Clean Rate from Slurry Rate -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Design Clean Rate from Design Slurry Rate</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Design Slurry Rate (BPM)</label>
+          <input type="number" id="bldesign-slurryrate" class="field" value="75" placeholder="75">
+        </div>
+        <div>
+          <label class="lbl">Design Proppant Conc (PPA)</label>
+          <input type="number" id="bldesign-ppa" class="field" value="4.0" step="0.1" placeholder="4.0">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="bldesign-sg" class="field" value="2.65" step="0.01" placeholder="2.65">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Design Clean Rate</div>
+        <div class="val" style="color:var(--brand);" id="bldesign-cleanrate">63.5</div>
+        <div class="unit">BPM</div>
+      </div>
+    </div>
+
+    <!-- Split Flow Blender Concentration (CLD) -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Split Flow Blender Concentration (CLD)</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Design PPA (PPG)</label>
+          <input type="number" id="blsplit-designppa" class="field" value="3.5" step="0.1" placeholder="3.5">
+        </div>
+        <div>
+          <label class="lbl">Blender Clean Rate (BPM)</label>
+          <input type="number" id="blsplit-blenderrate" class="field" value="40" placeholder="40">
+        </div>
+        <div>
+          <label class="lbl">Total Combined Clean Rate (BPM)</label>
+          <input type="number" id="blsplit-totalrate" class="field" value="80" placeholder="80">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Blender Concentration (CLD)</div>
+        <div class="val" style="color:var(--brand);" id="blsplit-blenderconc">7.00</div>
+        <div class="unit">PPG</div>
+      </div>
+    </div>
+
+    <!-- Auger PPR Calculation & Recalibration -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Auger PPR &amp; Dry Add Recalibration</div>
+      <div class="mb-3" style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Theoretical PPR from Dimensions</div>
+        <div class="grid-2 mb-2">
+          <div>
+            <label class="lbl">Auger Radius (IN)</label>
+            <input type="number" id="blppr-augerrad" class="field" value="3.0" step="0.1" placeholder="3.0">
+          </div>
+          <div>
+            <label class="lbl">Shaft Radius (IN)</label>
+            <input type="number" id="blppr-shaftrad" class="field" value="1.0" step="0.1" placeholder="1.0">
+          </div>
+          <div>
+            <label class="lbl">Pitch (IN)</label>
+            <input type="number" id="blppr-pitch" class="field" value="6.0" step="0.1" placeholder="6.0">
+          </div>
+          <div>
+            <label class="lbl">Bulk Density (LBS/FT³)</label>
+            <input type="number" id="blppr-bulkdens" class="field" value="100" placeholder="100">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Theoretical PPR</div>
+          <div class="val" style="color:var(--brand);" id="blppr-outppr">3.93</div>
+          <div class="unit">LBS/REV</div>
+        </div>
+      </div>
+      <div style="background:var(--surface);padding:12px;border-radius:10px;">
+        <div class="lbl mb-2">Recalibrate PPR from Job Totals</div>
+        <div class="grid-3 mb-2">
+          <div>
+            <label class="lbl">Old PPR (LBS/REV)</label>
+            <input type="number" id="blppr-oldppr" class="field" value="3.0" step="0.1" placeholder="3.0">
+          </div>
+          <div>
+            <label class="lbl">Actual Total (LBS)</label>
+            <input type="number" id="blppr-acttotal" class="field" value="42000" placeholder="42000">
+          </div>
+          <div>
+            <label class="lbl">Designed Total (LBS)</label>
+            <input type="number" id="blppr-destotal" class="field" value="40000" placeholder="40000">
+          </div>
+        </div>
+        <div class="tile">
+          <div class="lbl">Recalibrated PPR</div>
+          <div class="val" style="color:var(--brand);" id="blppr-recalppr">3.15</div>
+          <div class="unit">LBS/REV</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metric / Screwless Blender Clean Rate -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Metric / Screwless Blender Clean Rate</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Slurry Rate (m³/min)</label>
+          <input type="number" id="blmetric-slurrym3" class="field" value="10.0" step="0.1" placeholder="10.0">
+        </div>
+        <div>
+          <label class="lbl">Proppant Conc (kg/m³)</label>
+          <input type="number" id="blmetric-ppakgm3" class="field" value="360" placeholder="360">
+        </div>
+        <div>
+          <label class="lbl">Sand SG</label>
+          <input type="number" id="blmetric-sg" class="field" value="2.65" step="0.01" placeholder="2.65">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Calc Clean Rate (m³/min)</div>
+          <div class="val" style="color:var(--brand);" id="blmetric-cleanm3">8.80</div>
+          <div class="unit">M³/MIN</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Calc Clean Rate (BPM)</div>
+          <div class="val" style="color:var(--brand);" id="blmetric-cleanbpm">55.3</div>
+          <div class="unit">BPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Config -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Test Configuration</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Simulated Rate (BPM)</label>
+          <input type="number" id="bl-rate" class="field" value="60" step="0.1">
+        </div>
+        <div>
+          <label class="lbl">Target GPT</label>
+          <input type="number" id="bl-gpt" class="field" value="1.0" step="0.01">
+        </div>
+        <div>
+          <label class="lbl">Fine Adjust</label>
+          <input type="number" id="bl-fine" class="field" value="1.0" step="0.001">
+        </div>
+        <div>
+          <label class="lbl">Bucket Volume (GAL)</label>
+          <input type="number" id="bl-bucket" class="field" value="0.264" step="0.001">
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Desired Volume (GAL)</label>
+        <input type="number" id="bl-desired" class="field" value="1.0" step="0.001">
+      </div>
+    </div>
+
+    <!-- Theoretical Preview -->
+    <div class="card mb-4 flex justify-between items-center">
+      <div>
+        <div class="lbl">Theoretical GPM</div>
+        <div class="font-display" style="font-size:28px;font-weight:900;color:var(--brand);" id="bl-th-gpm">0.000</div>
+      </div>
+      <div class="text-right">
+        <div class="lbl">Expected Time</div>
+        <div class="font-display" style="font-size:28px;font-weight:900;" id="bl-th-time">0.0s</div>
+      </div>
+    </div>
+
+    <!-- Stopwatch -->
+    <div class="card mb-4">
+      <div class="lbl text-center mb-4">⏱ Bucket Test Stopwatch</div>
+      <div class="timer mb-4" id="bl-timer">0.0s</div>
+      <div class="flex gap-3">
+        <button id="bl-ss-btn" class="btn btn-brand flex-1" style="font-size:15px;padding:14px;" onclick="blStartStop()">▶ Start</button>
+        <button class="btn btn-ghost flex-1" style="font-size:14px;padding:14px;" onclick="blReset()">↺ Reset</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card hidden" id="bl-results">
+      <div class="flex items-center gap-2 mb-3">
+        <span style="color:var(--brand);">✓</span>
+        <span class="lbl lbl-brand" style="margin:0;">Calibration Results</span>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Target GPM</div>
+          <div class="val" id="bl-r-target">–</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Measured GPM</div>
+          <div class="val" style="color:var(--brand);" id="bl-r-measured">–</div>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">% Error</div>
+          <div class="val" id="bl-r-error">–</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Rec. Fine Adjust</div>
+          <div class="val" style="color:var(--brand);" id="bl-r-fine">–</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bucket Test Time & Adjustments -->
+    <div class="card mt-4">
+      <div class="lbl mb-3 tool-title">Bucket Test Time &amp; Adjustments</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Gallons Filled</label>
+          <input type="number" id="bkt-gal" class="field" value="5" placeholder="5">
+        </div>
+        <div>
+          <label class="lbl">Clean Rate (BPM)</label>
+          <input type="number" id="bkt-rate" class="field" value="95" placeholder="95">
+        </div>
+        <div>
+          <label class="lbl">Setpoint (GPT)</label>
+          <input type="number" id="bkt-gpt" class="field" value="0.5" step="0.1" placeholder="0.5">
+        </div>
+        <div>
+          <label class="lbl">Actual Time (SEC)</label>
+          <input type="number" id="bkt-actual" class="field" value="16" placeholder="16">
+        </div>
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="tile flex-1">
+          <div class="lbl">Estimated Time</div>
+          <div class="val" id="bkt-est">0.0</div>
+          <div class="unit">SEC</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">% Error</div>
+          <div class="val" style="color:var(--yellow);" id="bkt-error">0.0%</div>
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">New Fine Adjust</div>
+        <div class="val" style="color:var(--brand);" id="bkt-newfine">1.00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ LIME ══════════════ -->
+  

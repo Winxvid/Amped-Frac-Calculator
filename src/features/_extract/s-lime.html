@@ -1,0 +1,192 @@
+<div class="section" id="s-lime">
+    <div class="mb-4">
+      <div class="sec-title">LIME Calibration</div>
+      <div class="sec-sub">Liquid Additive Metering Equipment scaling & correction</div>
+    </div>
+
+    <!-- Analog Scaled Value -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Analog Scaled Value (4-20mA)</div>
+      <div class="grid-2 mb-3">
+        <div>
+          <label class="lbl">Device</label>
+          <select id="analog-device" class="field">
+            <option value="pressure" data-min="0" data-max="750">Suction/Discharge Pressure (0-750)</option>
+            <option value="level" data-min="0" data-max="100">Tube Level Sensor (0-100)</option>
+            <option value="micromotion6" data-min="0" data-max="10">Micromotion Waukesha 6 (0-10)</option>
+            <option value="micromotion18" data-min="0" data-max="20">Micromotion Waukesha 18 (0-20)</option>
+            <option value="flow" data-min="0" data-max="175">Magnetic Flow Meter (0-175)</option>
+            <option value="densitometer" data-min="0" data-max="20">Densitometer (0-20)</option>
+            <option value="ph" data-min="0" data-max="14">pH Probe (0-14)</option>
+            <option value="temp" data-min="32" data-max="175">Temperature (32-175)</option>
+            <option value="visco" data-min="0" data-max="60">Viscometer (0-60)</option>
+          </select>
+        </div>
+        <div>
+          <label class="lbl">Raw mA</label>
+          <input type="number" id="analog-raw" class="field" value="12" step="0.1" placeholder="12">
+        </div>
+      </div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Min Scaled</label>
+          <input type="number" id="analog-min" class="field" value="0" placeholder="0">
+        </div>
+        <div>
+          <label class="lbl">Max Scaled</label>
+          <input type="number" id="analog-max" class="field" value="750" placeholder="750">
+        </div>
+        <div>
+          <label class="lbl">Fine Adjust</label>
+          <input type="number" id="analog-fine" class="field" value="1.0" step="0.01" placeholder="1.0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Scaled Value</div>
+        <div class="val" style="color:var(--brand);" id="analog-result">375.0</div>
+      </div>
+    </div>
+
+    <!-- Correction Vectors -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Correction Vectors</div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Raw Meter Scale</label>
+          <input type="number" id="lime-scale" class="field" value="1.000" step="0.001" placeholder="1.000">
+        </div>
+        <div class="flex-1">
+          <label class="lbl">Fine Calibration Factor</label>
+          <input type="number" id="lime-fine" class="field" value="1.000" step="0.001" placeholder="1.000">
+        </div>
+      </div>
+      <div class="brand-card flex justify-between items-center">
+        <div>
+          <div class="lbl" style="color:rgba(255,255,255,0.6);">Net System Multiplier</div>
+          <div class="font-display" style="font-size:36px;font-weight:900;color:#fff;" id="lime-mult">1.000</div>
+        </div>
+        <span style="font-size:28px;opacity:0.2;">⚙</span>
+      </div>
+    </div>
+
+    <!-- Pressure Transducer (4-20mA ↔ PSI) Dual Converter -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Pressure Transducer (4-20mA ↔ PSI) Dual Converter</div>
+      <div class="mb-3">
+        <label class="lbl">Transducer Rating (PSI)</label>
+        <input type="number" id="transducer-rating" class="field" value="15000" placeholder="15000">
+      </div>
+      <div class="grid-2 gap-3 mb-3">
+        <div style="background:var(--surface);padding:12px;border-radius:10px;">
+          <div class="lbl mb-2">Convert PSI → mA</div>
+          <label class="lbl">Pressure (PSI)</label>
+          <input type="number" id="transducer-inputpsi" class="field mb-2" value="12000" placeholder="12000">
+          <div class="tile">
+            <div class="lbl">Calculated Signal</div>
+            <div class="val" style="color:var(--brand);" id="transducer-outma">16.80</div>
+            <div class="unit">mA</div>
+          </div>
+        </div>
+        <div style="background:var(--surface);padding:12px;border-radius:10px;">
+          <div class="lbl mb-2">Convert mA → PSI</div>
+          <label class="lbl">Signal (mA)</label>
+          <input type="number" id="transducer-inputma" class="field mb-2" value="14.0" step="0.1" placeholder="14.0">
+          <div class="tile">
+            <div class="lbl">Calculated Pressure</div>
+            <div class="val" style="color:var(--brand);" id="transducer-outpsi">9,375</div>
+            <div class="unit">PSI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frequency & Pinion Speed Calculator -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">Frequency &amp; Pinion Speed Calculator</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Raw Freq (PUL/SEC)</label>
+          <input type="number" id="freqcalc-hz" class="field" value="300" placeholder="300">
+        </div>
+        <div>
+          <label class="lbl">Gear Teeth (PUL/REV)</label>
+          <input type="number" id="freqcalc-teeth" class="field" value="60" placeholder="60">
+        </div>
+        <div>
+          <label class="lbl">Gear Ratio</label>
+          <input type="number" id="freqcalc-ratio" class="field" value="2.5" step="0.1" placeholder="2.5">
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="tile flex-1">
+          <div class="lbl">Pinion Speed</div>
+          <div class="val" style="color:var(--brand);" id="freqcalc-pinion">300</div>
+          <div class="unit">RPM</div>
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Engine Speed</div>
+          <div class="val" id="freqcalc-engine">750</div>
+          <div class="unit">RPM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- K-Factor Recalibration Tool -->
+    <div class="card mb-4">
+      <div class="lbl mb-3 tool-title">K-Factor Recalibration Tool</div>
+      <div class="grid-3 mb-3">
+        <div>
+          <label class="lbl">Old K-Factor</label>
+          <input type="number" id="krecal-old" class="field" value="850" placeholder="850">
+        </div>
+        <div>
+          <label class="lbl">Micromotion Rate (GPM)</label>
+          <input type="number" id="krecal-micro" class="field" value="10.5" step="0.1" placeholder="10.5">
+        </div>
+        <div>
+          <label class="lbl">Mag Pickup Rate (GPM)</label>
+          <input type="number" id="krecal-mag" class="field" value="10.0" step="0.1" placeholder="10.0">
+        </div>
+      </div>
+      <div class="tile">
+        <div class="lbl">Recalibrated K-Factor</div>
+        <div class="val" style="color:var(--brand);" id="krecal-new">892.5</div>
+      </div>
+    </div>
+
+    <!-- Hardware Matrix -->
+    <div class="card">
+      <div class="lbl mb-3 tool-title">Hardware Matrix</div>
+      <div class="mb-3">
+        <label class="lbl">Active Meter Profile</label>
+        <select id="lime-profile" class="field">
+          <option value="850">Standard Flowmeter (850 K-Factor)</option>
+          <option value="2500">Mag Meter (2500 K-Factor)</option>
+          <option value="custom">Custom Manual Vector</option>
+        </select>
+      </div>
+      <div id="lime-custom-wrap" class="mb-3 hidden">
+        <label class="lbl">Custom K-Factor</label>
+        <input type="number" id="lime-k-custom" class="field" value="850" step="1" placeholder="850">
+      </div>
+      <div class="flex gap-3 mb-3">
+        <div class="flex-1">
+          <label class="lbl">Signal Frequency (HZ)</label>
+          <input type="number" id="lime-freq" class="field" value="60" step="0.1" placeholder="60">
+        </div>
+        <div class="tile flex-1">
+          <div class="lbl">Applied K-Factor</div>
+          <div class="val" style="color:var(--brand);" id="lime-k-disp">850</div>
+        </div>
+      </div>
+      <div class="surface-card text-center" style="padding:20px;">
+        <div class="lbl" style="display:block;margin-bottom:8px;">Calculated Throughput</div>
+        <div class="font-display" style="font-size:48px;font-weight:900;" id="lime-gpm">4.24</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text2);margin-bottom:8px;">GPM</div>
+        <div style="font-size:10px;color:var(--text2);font-weight:500;">Real-time flux calculation based on encoder pulse frequency.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ WELLBORE ══════════════ -->
+  
