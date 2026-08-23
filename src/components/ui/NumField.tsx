@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 type NumFieldProps = {
   label: string;
   value: number | string;
@@ -15,16 +17,32 @@ export function NumField({
   placeholder,
   className = 'flex-1',
 }: NumFieldProps) {
+  const [localValue, setLocalValue] = useState(value === 0 ? '' : String(value));
+
+  // Sync when the external value changes (e.g. reset)
+  useEffect(() => {
+    setLocalValue(value === 0 ? '' : String(value));
+  }, [value]);
+
   return (
     <div className={className}>
       <label className="lbl">{label}</label>
       <input
         type="number"
         className="field"
-        value={value}
+        value={localValue}
         step={step}
-        placeholder={placeholder}
-        onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+        placeholder={placeholder ?? '0'}
+        onChange={(e) => {
+          setLocalValue(e.target.value);
+          const parsed = parseFloat(e.target.value);
+          onChange(isNaN(parsed) ? 0 : parsed);
+        }}
+        onBlur={() => {
+          // Normalize display on blur (strip trailing dots/zeros etc.)
+          const parsed = parseFloat(localValue);
+          if (!isNaN(parsed)) setLocalValue(String(parsed));
+        }}
       />
     </div>
   );
