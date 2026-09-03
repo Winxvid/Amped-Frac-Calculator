@@ -245,13 +245,14 @@ export function applyBrandToDocument(
   root.style.setProperty('--field-value-color', numberColor);
   root.style.setProperty('--number-color', numberColor);
 
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) {
-    meta.setAttribute(
-      'content',
-      darkChrome ? DARK_CHROME.bg : brandAccent,
-    );
-  }
+  const chromeColor = darkChrome ? DARK_CHROME.bg : brandAccent;
+  // iOS Safari often ignores in-place attribute mutations on theme-color
+  // (stale browser chrome until next navigation) — recreate the node instead.
+  document.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
+  const meta = document.createElement('meta');
+  meta.setAttribute('name', 'theme-color');
+  meta.setAttribute('content', chromeColor);
+  document.head.appendChild(meta);
 }
 
 export function applyThemeToDocument(theme: ThemeState) {
