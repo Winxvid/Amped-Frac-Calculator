@@ -442,10 +442,10 @@ const COMPANY_PROFILES = {
   amped: {
     id: 'amped',
     name: 'Amped Energy Solutions',
-    short: 'Green titles/labels · blue buttons, fields & results',
+    short: 'Green titles/labels · navy buttons, fields & results',
     logo: '/new-amped-logo.png',
-    green: '#2DC76D',
-    blue: '#2D7AC7',
+    green: '#1E8C3C',
+    blue: '#002451',
   },
   liberty: {
     id: 'liberty',

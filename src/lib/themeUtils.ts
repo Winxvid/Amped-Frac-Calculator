@@ -96,6 +96,9 @@ export function contrastSafe(hex: string, darkChrome: boolean): string {
       if (L < 0.12) return '#E5E5EA';
       return lightenHex(n, 0.42);
     }
+    // Very dark saturated colors (e.g. deep navy) would nearly vanish against
+    // dark chrome — lift while preserving hue so they stay legible.
+    if (L < 0.08) return lightenHex(n, 0.6);
     // Saturated brand: use stored color unchanged for light-mode crispness
     return n;
   }
