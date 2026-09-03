@@ -257,9 +257,23 @@ export function applyThemeToDocument(theme: ThemeState) {
   applyBrandToDocument(theme, resolved === 'dark');
 }
 
-export function resolveLogoSrc(theme: ThemeState): string | null {
+export function resolveProfileLogoSrc(
+  profileId: CompanyProfileId,
+  resolvedMode: 'light' | 'dark',
+): string | null {
+  const profile = COMPANY_PROFILES[profileId];
+  if (!profile) return null;
+  if (resolvedMode === 'dark' && profile.logoDark) return profile.logoDark;
+  return profile.logo ?? null;
+}
+
+export function resolveLogoSrc(
+  theme: ThemeState,
+  resolvedMode?: 'light' | 'dark',
+): string | null {
   if (theme.logoDataUrl) return theme.logoDataUrl;
-  return COMPANY_PROFILES[theme.profileId]?.logo ?? null;
+  const mode = resolvedMode ?? resolveColorMode(theme.colorMode);
+  return resolveProfileLogoSrc(theme.profileId, mode);
 }
 
 export function profileDefaultColors(profileId: CompanyProfileId) {

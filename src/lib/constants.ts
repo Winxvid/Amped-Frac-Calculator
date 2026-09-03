@@ -58,6 +58,7 @@ export type CompanyProfile = {
   name: string;
   short: string;
   logo: string | null;
+  logoDark?: string | null;
   green: string;
   blue: string;
 };
@@ -84,6 +85,7 @@ export const COMPANY_PROFILES: Record<CompanyProfileId, CompanyProfile> = {
     name: 'Liberty Energy',
     short: 'Red titles/buttons · black numbers',
     logo: '/liberty-logo.png',
+    logoDark: '/liberty-logo-dark.jpg',
     green: '#E32400',
     blue: '#1C1C1E',
   },

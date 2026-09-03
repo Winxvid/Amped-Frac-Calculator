@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { COMPANY_PROFILES } from '../../lib/constants';
 import { matchCompanyToProfile, matchLabel } from '../../lib/companyMatch';
-import { fileToLogoDataUrl, normalizeHex, profileDefaultColors } from '../../lib/themeUtils';
+import {
+  fileToLogoDataUrl,
+  normalizeHex,
+  profileDefaultColors,
+  resolveProfileLogoSrc,
+} from '../../lib/themeUtils';
 import { useTheme } from '../../context/ThemeContext';
 import './welcome.css';
 
@@ -12,7 +17,7 @@ function colorInputValue(hex: string) {
 }
 
 export function WelcomePage() {
-  const { completeOnboarding } = useTheme();
+  const { completeOnboarding, resolvedMode } = useTheme();
   const [step, setStep] = useState<Step>(1);
   const [displayName, setDisplayName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -103,6 +108,9 @@ export function WelcomePage() {
     ? defColors.blue
     : normalizeHex(blue) || defColors.blue;
   const matchedProfile = matchedId ? COMPANY_PROFILES[matchedId] : null;
+  const matchedProfileLogo = matchedId
+    ? resolveProfileLogoSrc(matchedId, resolvedMode)
+    : null;
 
   return (
     <div className="welcome-root" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
@@ -235,8 +243,8 @@ export function WelcomePage() {
                 </p>
                 <div className="welcome-profile-preview">
                   <div className="welcome-profile-logo">
-                    {matchedProfile?.logo ? (
-                      <img src={matchedProfile.logo} alt="" />
+                    {matchedProfileLogo ? (
+                      <img src={matchedProfileLogo} alt="" />
                     ) : (
                       <span>No logo</span>
                     )}

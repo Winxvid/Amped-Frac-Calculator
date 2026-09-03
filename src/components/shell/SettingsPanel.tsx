@@ -6,6 +6,7 @@ import {
 } from '../../lib/constants';
 import {
   getColorRoleCopy,
+  resolveProfileLogoSrc,
   type ColorMode,
 } from '../../lib/themeUtils';
 import { useTheme } from '../../context/ThemeContext';
@@ -32,6 +33,7 @@ export function SettingsPanel() {
   } = useTheme();
   const { settingsOpen, closeSettings } = useNavigation();
   const profile = COMPANY_PROFILES[theme.profileId];
+  const profileLogoSrc = resolveProfileLogoSrc(theme.profileId, resolvedMode);
   const copy = getColorRoleCopy(theme.profileId, profile.name);
 
   return (
@@ -142,8 +144,8 @@ export function SettingsPanel() {
               })}
             </select>
             <div className="profile-select-summary" aria-live="polite">
-              <div className={`profile-card-logo${profile.logo ? '' : ' empty'}`}>
-                {profile.logo ? <img src={profile.logo} alt="" /> : 'None'}
+              <div className={`profile-card-logo${profileLogoSrc ? '' : ' empty'}`}>
+                {profileLogoSrc ? <img src={profileLogoSrc} alt="" /> : 'None'}
               </div>
               <div className="profile-card-meta">
                 <div className="profile-card-sub">{profile.short}</div>

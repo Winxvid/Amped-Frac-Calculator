@@ -301,7 +301,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ThemeContextValue>(
     () => ({
       theme,
-      logoSrc: resolveLogoSrc(theme),
+      logoSrc: resolveLogoSrc(theme, resolvedMode),
       resolvedMode,
       needsOnboarding,
       selectProfile,
