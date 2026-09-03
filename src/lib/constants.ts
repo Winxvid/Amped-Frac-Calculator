@@ -9,6 +9,12 @@ export type TabId =
   | 'wellbore'
   | 'hp';
 
+import ampedLogo from '../assets/logos/amped-logo.png';
+import libertyLogo from '../assets/logos/liberty-logo.png';
+import libertyLogoDark from '../assets/logos/liberty-logo-dark.jpg';
+import nextierLogo from '../assets/logos/nextier-logo.jpg';
+import nextierLogoDark from '../assets/logos/nextier-logo-dark.png';
+
 export type CompanyProfileId = 'default' | 'amped' | 'liberty' | 'nextier';
 
 export const TABS: { id: TabId; label: string }[] = [
@@ -76,7 +82,7 @@ export const COMPANY_PROFILES: Record<CompanyProfileId, CompanyProfile> = {
     id: 'amped',
     name: 'Amped Energy Solutions',
     short: 'Green titles/labels · navy buttons, fields & results',
-    logo: '/new-amped-logo.png',
+    logo: ampedLogo,
     green: '#1E8C3C',
     blue: '#002451',
   },
@@ -84,8 +90,8 @@ export const COMPANY_PROFILES: Record<CompanyProfileId, CompanyProfile> = {
     id: 'liberty',
     name: 'Liberty Energy',
     short: 'Red titles/buttons · black numbers',
-    logo: '/liberty-logo.png',
-    logoDark: '/liberty-logo-dark.jpg',
+    logo: libertyLogo,
+    logoDark: libertyLogoDark,
     green: '#E32400',
     blue: '#1C1C1E',
   },
@@ -93,8 +99,8 @@ export const COMPANY_PROFILES: Record<CompanyProfileId, CompanyProfile> = {
     id: 'nextier',
     name: 'NexTier',
     short: 'Forest green titles/buttons · black numbers',
-    logo: '/nextier-logo.jpg',
-    logoDark: '/nextier-logo-dark.png',
+    logo: nextierLogo,
+    logoDark: nextierLogoDark,
     green: '#377B46',
     blue: '#1C1C1E',
   },
