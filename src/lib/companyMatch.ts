@@ -9,6 +9,7 @@ export const PROFILE_ALIASES: Record<CompanyProfileId, string[]> = {
     'amped energy solution',
   ],
   liberty: ['liberty', 'liberty energy'],
+  nextier: ['nextier', 'next tier', 'nextier energy', 'nextier oilfield solutions'],
   default: ['default', 'none', 'no company'],
 };
 
@@ -30,7 +31,7 @@ export function matchCompanyToProfile(
   const q = normalizeCompany(companyName);
   if (!q) return null;
 
-  const order: CompanyProfileId[] = ['amped', 'liberty', 'default'];
+  const order: CompanyProfileId[] = ['amped', 'liberty', 'nextier', 'default'];
   for (const id of order) {
     const names = [
       normalizeCompany(COMPANY_PROFILES[id].name),

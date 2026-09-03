@@ -9,7 +9,7 @@ export type TabId =
   | 'wellbore'
   | 'hp';
 
-export type CompanyProfileId = 'default' | 'amped' | 'liberty';
+export type CompanyProfileId = 'default' | 'amped' | 'liberty' | 'nextier';
 
 export const TABS: { id: TabId; label: string }[] = [
   { id: 'dashboard', label: 'Home' },
@@ -89,9 +89,18 @@ export const COMPANY_PROFILES: Record<CompanyProfileId, CompanyProfile> = {
     green: '#E32400',
     blue: '#1C1C1E',
   },
+  nextier: {
+    id: 'nextier',
+    name: 'NexTier',
+    short: 'Forest green titles/buttons · black numbers',
+    logo: '/nextier-logo.jpg',
+    logoDark: '/nextier-logo-dark.png',
+    green: '#377B46',
+    blue: '#1C1C1E',
+  },
 };
 
-export const PROFILE_ORDER: CompanyProfileId[] = ['default', 'amped', 'liberty'];
+export const PROFILE_ORDER: CompanyProfileId[] = ['default', 'amped', 'liberty', 'nextier'];
 
 export const SETTINGS_KEY = 'ampdFrac_settings_v2';
 export const FAVORITES_KEY = 'ampdFrac_favorites_v1';

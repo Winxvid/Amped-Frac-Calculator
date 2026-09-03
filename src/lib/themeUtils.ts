@@ -231,7 +231,7 @@ export function applyBrandToDocument(
     labelColor = blueUi;
     numberColor = blueUi;
   } else {
-    // Liberty: red titles/buttons, black (or custom) numbers
+    // Liberty / NexTier / custom: brand titles & buttons, black (or custom) numbers
     titleColor = greenUi;
     labelColor = greenUi;
     numberColor = blueUi;
@@ -309,6 +309,19 @@ export function getColorRoleCopy(profileId: CompanyProfileId, name: string) {
         'Changes: all numbers typed in fields and calculator result values. Default is black (#1C1C1E).',
       footer:
         'Reset restores Color A to Liberty red (#E32400) and Color B to black (#1C1C1E).',
+    };
+  }
+  if (profileId === 'nextier') {
+    return {
+      note: `Active profile: ${name}. Color A is NexTier forest green; Color B defaults to black for numbers (auto-lifted in dark mode for readability).`,
+      greenLabel: 'Color A — titles, labels & buttons',
+      greenHelp:
+        'Changes: page titles, tool titles, field labels, primary buttons, toggles, and focus highlights.',
+      blueLabel: 'Color B — numbers & results',
+      blueHelp:
+        'Changes: all numbers typed in fields and calculator result values. Default is black (#1C1C1E).',
+      footer:
+        'Reset restores Color A to NexTier green (#377B46) and Color B to black (#1C1C1E).',
     };
   }
   return {
