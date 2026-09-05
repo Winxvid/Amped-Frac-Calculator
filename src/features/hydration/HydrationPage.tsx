@@ -355,14 +355,14 @@ export function HydrationPage() {
             label="Auger PPR (LBS/REV)"
             value={guarPpr}
             onChange={setGuarPpr}
-            step="0.01"
+            step="0.001"
             className=""
           />
         </div>
         <div className="grid-3 gap-2">
           <ResultTile
             label="Pounds Per Minute"
-            value={guarPpm.toFixed(1)}
+            value={guarPpm.toFixed(3)}
             unit="LBS/MIN (PPM)"
             emphasize
             className="tile"
@@ -375,7 +375,7 @@ export function HydrationPage() {
           />
           <ResultTile
             label="Guar Auger RPM"
-            value={guarRpm.toFixed(1)}
+            value={guarRpm.toFixed(3)}
             unit="RPM"
             emphasize
             className="tile"

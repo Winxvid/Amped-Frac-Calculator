@@ -178,19 +178,19 @@ export function BlenderPage() {
         <div className="grid-3 mb-3">
           <NumField label="Clean Rate (BPM)" value={screwClean} onChange={setScrewClean} />
           <NumField label="Target PPA (PPG)" value={screwPpa} onChange={setScrewPpa} step="0.1" />
-          <NumField label="Auger PPR (LBS/REV)" value={screwPpr} onChange={setScrewPpr} step="0.1" />
+          <NumField label="Auger PPR (LBS/REV)" value={screwPpr} onChange={setScrewPpr} step="0.001" />
           <NumField label="Auger 1 RPM" value={aug1} onChange={setAug1} />
           <NumField label="Auger 2 RPM" value={aug2} onChange={setAug2} />
           <NumField label="Auger 3 RPM" value={aug3} onChange={setAug3} />
         </div>
         <div className="grid-3 gap-2 mb-3">
-          <ResultTile label="Req Total RPM" value={F.c(reqRpm)} unit="RPM" emphasize />
-          <ResultTile label="Actual Total RPM" value={F.c(actRpm)} unit="RPM" />
-          <ResultTile label="Calc Screw Conc" value={screwConc.toFixed(2)} unit="PPA" emphasize />
+          <ResultTile label="Req Total RPM" value={reqRpm.toFixed(3)} unit="RPM" emphasize />
+          <ResultTile label="Actual Total RPM" value={actRpm.toFixed(3)} unit="RPM" />
+          <ResultTile label="Calc Screw Conc" value={screwConc.toFixed(3)} unit="PPA" emphasize />
         </div>
         <div className="flex gap-3">
           <ResultTile label="Proppant Rate" value={F.c(lbsMin)} unit="LBS/MIN" />
-          <ResultTile label="Prop PPM" value={propPpm.toFixed(1)} unit="PPM" />
+          <ResultTile label="Prop PPM" value={propPpm.toFixed(3)} unit="PPM" />
         </div>
       </ToolCard>
 

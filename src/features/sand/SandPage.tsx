@@ -106,7 +106,7 @@ export function SandPage() {
   // (here and on other tool pages) default to it, while staying editable.
   const { augerPpr, setAugerPpr } = useCalcState();
   useEffect(() => {
-    setAugerPpr(ppr);
+    setAugerPpr(Number(ppr.toFixed(3)));
   }, [ppr, setAugerPpr]);
   useEffect(() => {
     setPprOld(augerPpr);
@@ -117,7 +117,7 @@ export function SandPage() {
   const totalRpm = arPpr > 0 ? (arRate * arPpg * 42) / arPpr : 0;
   const ppm = totalRpm * arPpr;
   useEffect(() => {
-    setMaTotal(totalRpm);
+    setMaTotal(Number(totalRpm.toFixed(3)));
   }, [totalRpm]);
   const isOver = maTotal > maThresh * maCount;
   const augerRpms = useMemo(() => {
@@ -345,28 +345,28 @@ export function SandPage() {
           <NumField label="Pitch (IN)" value={pitch} onChange={setPitch} step="0.1" className="" />
           <NumField label="Bulk Density (LBS/FT³)" value={bulk} onChange={setBulk} className="" />
         </div>
-        <ResultTile label="PPR" value={ppr.toFixed(4)} unit="LBS/REV" emphasize className="tile" />
+        <ResultTile label="PPR" value={ppr.toFixed(3)} unit="LBS/REV" emphasize className="tile" />
       </ToolCard>
 
       <ToolCard title="PPR Recalibration (Post-Stage Adjustment)" tab={TAB}>
         <div className="grid-3 mb-3">
-          <NumField label="Old PPR" value={pprOld} onChange={setPprOld} step="0.0001" className="" />
+          <NumField label="Old PPR" value={pprOld} onChange={setPprOld} step="0.001" className="" />
           <NumField label="Actual Total Pumped (LBS)" value={pprActual} onChange={setPprActual} className="" />
           <NumField label="Design Total Pumped (LBS)" value={pprDesign} onChange={setPprDesign} className="" />
         </div>
-        <ResultTile label="New PPR" value={pprNew.toFixed(4)} emphasize className="tile" />
+        <ResultTile label="New PPR" value={pprNew.toFixed(3)} emphasize className="tile" />
       </ToolCard>
 
       <ToolCard title="Auger RPM, PPM & PPT Rates" tab={TAB}>
         <div className="grid-3 mb-3">
           <NumField label="Clean Rate (BPM)" value={arRate} onChange={setArRate} className="" />
           <NumField label="PPG / PPA" value={arPpg} onChange={setArPpg} step="0.1" className="" />
-          <NumField label="PPR (LBS/REV)" value={arPpr} onChange={setArPpr} step="0.0001" className="" />
+          <NumField label="PPR (LBS/REV)" value={arPpr} onChange={setArPpr} step="0.001" className="" />
         </div>
         <div className="grid-3 gap-2">
-          <ResultTile label="Total Auger RPM" value={totalRpm.toFixed(1)} emphasize className="tile" />
-          <ResultTile label="PPM" value={F.c(ppm)} unit="LBS/MIN" className="tile" />
-          <ResultTile label="PPT" value={F.c(arPpg * 1000)} className="tile" />
+          <ResultTile label="Total Auger RPM" value={totalRpm.toFixed(3)} emphasize className="tile" />
+          <ResultTile label="PPM" value={ppm.toFixed(3)} unit="LBS/MIN" className="tile" />
+          <ResultTile label="PPT" value={(arPpg * 1000).toFixed(3)} className="tile" />
         </div>
       </ToolCard>
 
@@ -379,7 +379,7 @@ export function SandPage() {
         <div className="grid-3 gap-2">
           {augerRpms.map((rpm, i) => (
             <ResultTile key={i} label={`Auger ${i + 1} RPM ${isOver ? '(Equal Run)' : `(P${i + 1})`}`}
-              value={rpm.toFixed(1)} unit="RPM" emphasize className="tile" />
+              value={rpm.toFixed(3)} unit="RPM" emphasize className="tile" />
           ))}
         </div>
       </ToolCard>
