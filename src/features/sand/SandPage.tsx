@@ -116,6 +116,9 @@ export function SandPage() {
   const pprNew = pprDesign > 0 ? pprOld * (pprActual / pprDesign) : pprOld;
   const totalRpm = arPpr > 0 ? (arRate * arPpg * 42) / arPpr : 0;
   const ppm = totalRpm * arPpr;
+  useEffect(() => {
+    setMaTotal(totalRpm);
+  }, [totalRpm]);
   const isOver = maTotal > maThresh * maCount;
   const augerRpms = useMemo(() => {
     if (isOver) return Array(maCount).fill(maTotal / maCount);
