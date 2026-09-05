@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '../../context/NavigationContext';
+import { useCalcState } from '../../context/CalcStateContext';
 import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
@@ -27,6 +28,12 @@ export function HydrationPage() {
   const [guarRate, setGuarRate] = useState(35);
   const [guarPpt, setGuarPpt] = useState(24);
   const [guarPpr, setGuarPpr] = useState(3);
+
+  // Default from the Sand page's Auger Dimensions calculator, still editable.
+  const { augerPpr } = useCalcState();
+  useEffect(() => {
+    setGuarPpr(augerPpr);
+  }, [augerPpr]);
 
   // Tub volume
   const [tubCap, setTubCap] = useState(100);

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { useCalcState } from '../../context/CalcStateContext';
 import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
@@ -35,14 +36,12 @@ export function BlenderPage() {
   const [splitBlenderRate, setSplitBlenderRate] = useState(40);
   const [splitTotalRate, setSplitTotalRate] = useState(80);
 
-  // Auger PPR
-  const [augR, setAugR] = useState(3.0);
-  const [shaftR, setShaftR] = useState(1.0);
-  const [pitch, setPitch] = useState(6.0);
-  const [bulk, setBulk] = useState(100);
-  const [oldPpr, setOldPpr] = useState(3.0);
-  const [actTotal, setActTotal] = useState(42000);
-  const [desTotal, setDesTotal] = useState(40000);
+  // Default PPR fields from the Sand page's Auger Dimensions calculator,
+  // while staying editable for a different screw/auger.
+  const { augerPpr } = useCalcState();
+  useEffect(() => {
+    setScrewPpr(augerPpr);
+  }, [augerPpr]);
 
   // Metric
   const [slurryM3, setSlurryM3] = useState(10.0);
@@ -107,11 +106,6 @@ export function BlenderPage() {
   // Split CLD
   const spRatio = splitTotalRate > 0 ? splitBlenderRate / splitTotalRate : 1;
   const blenderConc = spRatio > 0 ? splitDesignPpa / spRatio : 0;
-
-  // Auger PPR
-  const theoPpr =
-    (1.41 * (augR ** 2 - shaftR ** 2) * pitch * bulk) / 1728;
-  const recalPpr = desTotal > 0 ? oldPpr * (actTotal / desTotal) : oldPpr;
 
   // Metric
   const mDenom = metricSg > 0 ? ppaKgm3 / (metricSg * 999.3524) + 1 : 1;
@@ -216,28 +210,6 @@ export function BlenderPage() {
           <NumField label="Total Combined Clean Rate (BPM)" value={splitTotalRate} onChange={setSplitTotalRate} />
         </div>
         <ResultTile label="Blender Concentration (CLD)" value={blenderConc.toFixed(2)} unit="PPG" emphasize className="tile" />
-      </ToolCard>
-
-      <ToolCard title="Auger PPR & Dry Add Recalibration" tab={TAB}>
-        <div className="mb-3" style={{ background: 'var(--surface)', padding: 12, borderRadius: 10 }}>
-          <div className="lbl mb-2">Theoretical PPR from Dimensions</div>
-          <div className="grid-2 mb-2">
-            <NumField label="Auger Radius (IN)" value={augR} onChange={setAugR} step="0.1" />
-            <NumField label="Shaft Radius (IN)" value={shaftR} onChange={setShaftR} step="0.1" />
-            <NumField label="Pitch (IN)" value={pitch} onChange={setPitch} step="0.1" />
-            <NumField label="Bulk Density (LBS/FT³)" value={bulk} onChange={setBulk} />
-          </div>
-          <ResultTile label="Theoretical PPR" value={theoPpr.toFixed(2)} unit="LBS/REV" emphasize className="tile" />
-        </div>
-        <div style={{ background: 'var(--surface)', padding: 12, borderRadius: 10 }}>
-          <div className="lbl mb-2">Recalibrate PPR from Job Totals</div>
-          <div className="grid-3 mb-2">
-            <NumField label="Old PPR (LBS/REV)" value={oldPpr} onChange={setOldPpr} step="0.1" />
-            <NumField label="Actual Total (LBS)" value={actTotal} onChange={setActTotal} />
-            <NumField label="Designed Total (LBS)" value={desTotal} onChange={setDesTotal} />
-          </div>
-          <ResultTile label="Recalibrated PPR" value={recalPpr.toFixed(2)} unit="LBS/REV" emphasize className="tile" />
-        </div>
       </ToolCard>
 
       <ToolCard title="Metric / Screwless Blender Clean Rate" tab={TAB}>

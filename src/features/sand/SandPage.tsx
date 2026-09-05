@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
+import { useCalcState } from '../../context/CalcStateContext';
 import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
@@ -100,6 +101,18 @@ export function SandPage() {
   const rAvg = (rStart + rEnd) / 2;
   const rTotal = rAvg * rVol * 42;
   const ppr = (1.41 * (augR ** 2 - shaftR ** 2) * pitch * bulk) / 1728;
+
+  // Share the calculated Auger Dimensions PPR app-wide so other PPR fields
+  // (here and on other tool pages) default to it, while staying editable.
+  const { augerPpr, setAugerPpr } = useCalcState();
+  useEffect(() => {
+    setAugerPpr(ppr);
+  }, [ppr, setAugerPpr]);
+  useEffect(() => {
+    setPprOld(augerPpr);
+    setArPpr(augerPpr);
+  }, [augerPpr]);
+
   const pprNew = pprDesign > 0 ? pprOld * (pprActual / pprDesign) : pprOld;
   const totalRpm = arPpr > 0 ? (arRate * arPpg * 42) / arPpr : 0;
   const ppm = totalRpm * arPpr;

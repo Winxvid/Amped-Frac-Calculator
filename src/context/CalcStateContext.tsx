@@ -12,6 +12,10 @@ import { APP_STATE_KEY } from '../lib/constants';
 type CalcStateContextValue = {
   cleanRate: number;
   setCleanRate: (n: number) => void;
+  /** Latest PPR from the Sand page's Auger Dimensions calculator, shared so
+   * other PPR-consuming fields app-wide can default to it (still editable). */
+  augerPpr: number;
+  setAugerPpr: (n: number) => void;
 };
 
 const CalcStateContext = createContext<CalcStateContextValue | null>(null);
@@ -27,8 +31,20 @@ function loadCleanRate() {
   }
 }
 
+function loadAugerPpr() {
+  try {
+    const raw = localStorage.getItem(APP_STATE_KEY);
+    if (!raw) return 0;
+    const data = JSON.parse(raw);
+    return typeof data.augerPpr === 'number' ? data.augerPpr : 0;
+  } catch {
+    return 0;
+  }
+}
+
 export function CalcStateProvider({ children }: { children: ReactNode }) {
   const [cleanRate, setCleanRateState] = useState(loadCleanRate);
+  const [augerPpr, setAugerPprState] = useState(loadAugerPpr);
 
   const setCleanRate = useCallback((n: number) => {
     setCleanRateState(n);
@@ -36,6 +52,18 @@ export function CalcStateProvider({ children }: { children: ReactNode }) {
       const raw = localStorage.getItem(APP_STATE_KEY);
       const data = raw ? JSON.parse(raw) : {};
       data.cleanRate = n;
+      localStorage.setItem(APP_STATE_KEY, JSON.stringify(data));
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const setAugerPpr = useCallback((n: number) => {
+    setAugerPprState(n);
+    try {
+      const raw = localStorage.getItem(APP_STATE_KEY);
+      const data = raw ? JSON.parse(raw) : {};
+      data.augerPpr = n;
       localStorage.setItem(APP_STATE_KEY, JSON.stringify(data));
     } catch {
       /* ignore */
@@ -52,8 +80,8 @@ export function CalcStateProvider({ children }: { children: ReactNode }) {
   }, [cleanRate, setCleanRate]);
 
   const value = useMemo(
-    () => ({ cleanRate, setCleanRate }),
-    [cleanRate, setCleanRate],
+    () => ({ cleanRate, setCleanRate, augerPpr, setAugerPpr }),
+    [cleanRate, setCleanRate, augerPpr, setAugerPpr],
   );
 
   return (
