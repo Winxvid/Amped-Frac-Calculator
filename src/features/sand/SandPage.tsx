@@ -58,9 +58,9 @@ export function SandPage() {
   const [rStart, setRStart] = useState(0.5);
   const [rEnd, setREnd] = useState(2.5);
   const [rVol, setRVol] = useState(1000);
-  const [augR, setAugR] = useState(4);
+  const [augR, setAugR] = useState(6);
   const [shaftR, setShaftR] = useState(1);
-  const [pitch, setPitch] = useState(4);
+  const [pitch, setPitch] = useState(10.5);
   const [bulk, setBulk] = useState(91);
   const [pprOld, setPprOld] = useState(0.038);
   const [pprActual, setPprActual] = useState(100000);
