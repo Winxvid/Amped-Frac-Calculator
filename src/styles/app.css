@@ -1172,6 +1172,48 @@
     }
 
     /* ── Wellbore Capacity (Multi-Section) layout only ── */
+    .wellcap-intro {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .wellcap-intro p,
+    .wellcap-overflush p {
+      color: var(--text2);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .wellcap-intro p { flex: 1 1 240px; }
+    .wellcap-intro .btn { white-space: nowrap; }
+    .wellcap-depths {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .wellcap-depths > * { min-width: 0; }
+    .wellcap-overflush {
+      display: grid;
+      grid-template-columns: minmax(0, 220px) 1fr;
+      align-items: end;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .wellcap-overflush p { padding-bottom: 10px; }
+    .wellcap-error {
+      color: var(--red);
+      font-size: 12px;
+      margin: 4px 0 10px;
+    }
+    @media (max-width: 600px) {
+      .wellcap-depths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .wellcap-depths > :last-child { grid-column: 1 / -1; }
+      .wellcap-overflush { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+      .wellcap-overflush p { padding-bottom: 0; }
+    }
     .wellcap-card .wellcap-head {
       display: flex;
       align-items: flex-start;

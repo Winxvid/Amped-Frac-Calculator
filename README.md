@@ -61,6 +61,12 @@ Available in **Settings (⚙)** and **Home → Favorites**. Preferences stay in 
 
 Profiles: **Default**, **Amped**, **Liberty** (A/B color variants).
 
+## Multi-section wellbore capacity
+
+Enter top and bottom measured depths for each section to calculate its length, or enter
+the length directly (this clears the MD fields). Optional overflush is entered in barrels
+and included in both the barrel and gallon totals.
+
 ## Vercel
 
 | Setting | Value |

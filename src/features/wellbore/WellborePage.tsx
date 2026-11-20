@@ -11,6 +11,8 @@ const TAB = 'wellbore';
 type WellCapSection = {
   id: number;
   depth: number;
+  topMd: number;
+  bottomMd: number;
   tubular: string;
   idIn: number;
   odIn: number;
@@ -33,6 +35,8 @@ function defaultSection(): WellCapSection {
   return {
     id: nextSecId++,
     depth: 0,
+    topMd: 0,
+    bottomMd: 0,
     tubular: t.type,
     idIn: t.id,
     odIn: 0,
@@ -105,6 +109,7 @@ export function WellborePage() {
 
   // Multi-section
   const [sections, setSections] = useState<WellCapSection[]>([]);
+  const [overflush, setOverflush] = useState(0);
 
   // Frac gradient
   const [fgIsip, setFgIsip] = useState(6500);
@@ -178,8 +183,12 @@ export function WellborePage() {
   const reqIsip = fracPress - 8.33 * wcTvd * 0.05195;
 
   // ── Multi-section totals ──
-  const totalBbl = sections.reduce((s, r) => s + (r.depth || 0) * (r.bblPerFt || 0), 0);
-  const totalGal = sections.reduce((s, r) => s + (r.depth || 0) * (r.galPerFt || 0), 0);
+  const invalidSections = sections.some(
+    (r) => r.topMd < 0 || r.bottomMd < 0 || r.bottomMd < r.topMd || r.depth < 0,
+  );
+  const invalidOverflush = overflush < 0;
+  const totalBbl = sections.reduce((s, r) => s + r.depth * r.bblPerFt, 0) + overflush;
+  const totalGal = sections.reduce((s, r) => s + r.depth * r.galPerFt, 0) + overflush * 42;
 
   // ── Frac gradient ──
   const fgHydro = fgDens * fgTvd * 0.05195;
@@ -201,6 +210,13 @@ export function WellborePage() {
       prev.map((row) => {
         if (row.id !== id) return row;
         const next = { ...row, ...patch };
+
+        if (patch.topMd !== undefined || patch.bottomMd !== undefined) {
+          next.depth = next.bottomMd - next.topMd;
+        } else if (patch.depth !== undefined) {
+          next.topMd = 0;
+          next.bottomMd = 0;
+        }
 
         if (patch.tubular !== undefined) {
           if (patch.tubular === 'custom') {
@@ -250,6 +266,144 @@ export function WellborePage() {
         title="WELLBORE CALCULATIONS"
         subtitle="FLUSH VOLUME FORMULAS - FORMATION FORMULAS"
       />
+
+      <ToolCard title="Wellbore Capacity (Multi-Section)" tab={TAB} className="wellcap-card">
+        <div className="wellcap-intro">
+          <p>
+            Enter top and bottom measured depths to calculate section length, or enter length directly
+            (which clears the MD fields). Pick a chart casing or enter custom OD/ID.
+            Custom BBL/FT = ID² ÷ 1029.44; chart factors are in GAL/FT.
+          </p>
+          <button
+            type="button"
+            className="btn btn-brand"
+            onClick={() => setSections((s) => [...s, defaultSection()])}
+          >
+            + Add Section
+          </button>
+        </div>
+
+        {sections.length === 0 && (
+          <div className="wellcap-empty">
+            No sections yet. Tap “+ Add Section” to build the well string.
+          </div>
+        )}
+
+        {sections.map((row, i) => {
+          const isCustom = row.tubular === 'custom';
+          const invalidDepth = row.topMd < 0 || row.bottomMd < 0 || row.bottomMd < row.topMd || row.depth < 0;
+          const secBbl = row.depth * row.bblPerFt;
+          const secGal = row.depth * row.galPerFt;
+          return (
+            <div key={row.id} className="wellcap-section mb-3">
+              <div className="wellcap-section-top">
+                <div className="wellcap-section-label">
+                  Section {i + 1}
+                </div>
+                <button
+                  type="button"
+                  className="btn-danger"
+                  onClick={() => setSections((s) => s.filter((r) => r.id !== row.id))}
+                  title={`Remove section ${i + 1}`}
+                  aria-label={`Remove section ${i + 1}`}
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="wellcap-depths mb-2">
+                <NumField
+                  label="Top MD (FT)"
+                  value={row.topMd}
+                  onChange={(v) => updateSection(row.id, { topMd: v })}
+                  step="any"
+                />
+                <NumField
+                  label="Bottom MD (FT)"
+                  value={row.bottomMd}
+                  onChange={(v) => updateSection(row.id, { bottomMd: v })}
+                  step="any"
+                />
+                <NumField
+                  label="Section Depth / Length (FT)"
+                  value={row.depth}
+                  onChange={(v) => updateSection(row.id, { depth: v })}
+                  step="any"
+                />
+              </div>
+              {invalidDepth && (
+                <p className="wellcap-error" role="alert">
+                  Depths must be non-negative and bottom MD must be at or below top MD.
+                </p>
+              )}
+              <div className="mb-2">
+                <div>
+                  <label className="lbl">Casing (Chart or Custom)</label>
+                  <select
+                    className="field"
+                    value={row.tubular}
+                    onChange={(e) => updateSection(row.id, { tubular: e.target.value })}
+                  >
+                    <option value="custom">Custom casing (enter OD / ID)</option>
+                    {TUBULAR_DATA.map((t) => (
+                      <option key={t.type} value={t.type}>
+                        {t.type} — {t.factor.toFixed(4)} gal/ft (ID {t.id})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="grid-2 mb-2">
+                <NumField
+                  label={`Outer Diam OD (IN)${isCustom ? '' : ' — chart'}`}
+                  value={row.odIn}
+                  onChange={(v) =>
+                    updateSection(row.id, { odIn: v, tubular: isCustom ? 'custom' : row.tubular })
+                  }
+                  step="any"
+                />
+                <NumField
+                  label={`Inner Diam ID (IN)${isCustom ? ' — required' : ''}`}
+                  value={row.idIn}
+                  onChange={(v) => updateSection(row.id, { idIn: v, tubular: 'custom' })}
+                  step="any"
+                />
+              </div>
+              <div className="grid-2 mb-2">
+                <NumField
+                  label="Capacity (GAL/FT)"
+                  value={Number(row.galPerFt.toFixed(4))}
+                  onChange={(v) => updateSection(row.id, { galPerFt: v })}
+                  step="any"
+                />
+                <NumField
+                  label="Capacity (BBL/FT)"
+                  value={Number(row.bblPerFt.toFixed(4))}
+                  onChange={(v) => updateSection(row.id, { bblPerFt: v })}
+                  step="any"
+                />
+              </div>
+              <ResultTile
+                label="Section Volume"
+                value={invalidDepth ? '–' : `${secBbl.toFixed(2)} BBL · ${F.c(secGal)} GAL`}
+                emphasize
+                className="tile wellcap-section-vol"
+              />
+            </div>
+          );
+        })}
+
+        <div className="wellcap-overflush">
+          <NumField label="Overflush (BBL) — optional" value={overflush} onChange={setOverflush} step="any" />
+          <p>Added to the section volumes in both totals.</p>
+        </div>
+        {invalidOverflush && (
+          <p className="wellcap-error" role="alert">Overflush must be non-negative.</p>
+        )}
+        <div className="wellcap-totals">
+          <ResultTile label="Total Gallons" value={invalidSections || invalidOverflush ? '–' : F.c(totalGal)} unit="GAL" />
+          <ResultTile label="Total Barrels" value={invalidSections || invalidOverflush ? '–' : totalBbl.toFixed(2)} unit="BBL" emphasize />
+        </div>
+      </ToolCard>
 
       <ToolCard title="Tubular Capacity, Displacement & Metal Volume" tab={TAB}>
         <div className="grid-3 mb-3">
@@ -456,124 +610,6 @@ export function WellborePage() {
           <NumField label="Friction Loss (PSI)" value={wbFrict} onChange={setWbFrict} />
         </div>
         <ResultTile label="BHP (PSI)" value={F.c(wbBhp)} emphasize className="tile" />
-      </ToolCard>
-
-      <ToolCard title="Wellbore Capacity (Multi-Section)" tab={TAB}>
-        <div className="flex justify-between items-center mb-3">
-          <p style={{ fontSize: 12, color: 'var(--text2)', margin: 0, flex: 1 }}>
-            Pick a chart casing or enter custom OD/ID. BBL/FT = ID² ÷ 1029.44 · Chart factors are
-            gal/ft so BBL = gal/42.
-          </p>
-          <button
-            type="button"
-            className="btn btn-brand"
-            style={{ fontSize: 12, padding: '8px 14px', marginLeft: 12, whiteSpace: 'nowrap' }}
-            onClick={() => setSections((s) => [...s, defaultSection()])}
-          >
-            + Add Section
-          </button>
-        </div>
-
-        {sections.length === 0 && (
-          <div style={{ fontSize: 13, color: 'var(--text2)', padding: 16, textAlign: 'center' }}>
-            No sections yet. Tap “+ Add Section” to build the well string.
-          </div>
-        )}
-
-        {sections.map((row, i) => {
-          const isCustom = row.tubular === 'custom';
-          const secBbl = (row.depth || 0) * (row.bblPerFt || 0);
-          const secGal = (row.depth || 0) * (row.galPerFt || 0);
-          return (
-            <div
-              key={row.id}
-              className="mb-3"
-              style={{
-                background: 'var(--surface)',
-                padding: 12,
-                borderRadius: 10,
-                border: '1px solid var(--border)',
-              }}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="lbl" style={{ margin: 0 }}>
-                  Section {i + 1}
-                </div>
-                <button
-                  type="button"
-                  className="btn-danger"
-                  onClick={() => setSections((s) => s.filter((r) => r.id !== row.id))}
-                  title="Remove section"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="grid-2 mb-2">
-                <NumField
-                  label="Section Depth / Length (FT)"
-                  value={row.depth}
-                  onChange={(v) => updateSection(row.id, { depth: v })}
-                />
-                <div>
-                  <label className="lbl">Casing (Chart or Custom)</label>
-                  <select
-                    className="field"
-                    value={row.tubular}
-                    onChange={(e) => updateSection(row.id, { tubular: e.target.value })}
-                  >
-                    <option value="custom">Custom casing (enter OD / ID)</option>
-                    {TUBULAR_DATA.map((t) => (
-                      <option key={t.type} value={t.type}>
-                        {t.type} — {t.factor.toFixed(4)} gal/ft (ID {t.id})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="grid-2 mb-2">
-                <NumField
-                  label={`Outer Diam OD (IN)${isCustom ? '' : ' — chart'}`}
-                  value={row.odIn}
-                  onChange={(v) =>
-                    updateSection(row.id, { odIn: v, tubular: isCustom ? 'custom' : row.tubular })
-                  }
-                  step="any"
-                />
-                <NumField
-                  label={`Inner Diam ID (IN)${isCustom ? ' — required' : ''}`}
-                  value={row.idIn}
-                  onChange={(v) => updateSection(row.id, { idIn: v, tubular: 'custom' })}
-                  step="any"
-                />
-              </div>
-              <div className="grid-2 mb-2">
-                <NumField
-                  label="Capacity (GAL/FT)"
-                  value={Number(row.galPerFt.toFixed(4))}
-                  onChange={(v) => updateSection(row.id, { galPerFt: v })}
-                  step="any"
-                />
-                <NumField
-                  label="Capacity (BBL/FT)"
-                  value={Number(row.bblPerFt.toFixed(4))}
-                  onChange={(v) => updateSection(row.id, { bblPerFt: v })}
-                  step="any"
-                />
-              </div>
-              <ResultTile
-                label="Section Volume"
-                value={`${secBbl.toFixed(2)} BBL · ${F.c(secGal)} GAL`}
-                emphasize
-                className="tile"
-              />
-            </div>
-          );
-        })}
-
-        <div className="flex gap-3 mt-3">
-          <ResultTile label="Total Gallons" value={F.c(totalGal)} unit="GAL" />
-          <ResultTile label="Total Barrels" value={totalBbl.toFixed(2)} unit="BBL" emphasize />
-        </div>
       </ToolCard>
 
       <ToolCard title="Frac Gradient & Related" tab={TAB}>
