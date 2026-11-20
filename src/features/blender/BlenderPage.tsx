@@ -52,7 +52,6 @@ export function BlenderPage() {
   const [blRate, setBlRate] = useState(60);
   const [blGpt, setBlGpt] = useState(1.0);
   const [blFine, setBlFine] = useState(1.0);
-  const [blBucket, setBlBucket] = useState(0.264);
   const [blDesired, setBlDesired] = useState(1.0);
   const [timerSec, setTimerSec] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
@@ -126,7 +125,7 @@ export function BlenderPage() {
     if (timerRunning) {
       setTimerRunning(false);
       if (timerSec > 0) {
-        const measured = (blBucket / timerSec) * 60;
+        const measured = (blDesired / timerSec) * 60;
         const target = thGpm;
         const err = target > 0 ? ((measured - target) / target) * 100 : 0;
         const base = F.gpm(blRate, blGpt, 1);
@@ -155,6 +154,73 @@ export function BlenderPage() {
         title="BLENDER CALCULATIONS"
         subtitle="CLEAN & SLURRY FORMULAS"
       />
+
+      <ToolCard title="Bucket Test Configuration" tab={TAB}>
+        <div className="grid-2 mb-3">
+          <NumField label="Simulated Rate (BPM)" value={blRate} onChange={setBlRate} step="0.1" />
+          <NumField label="Target GPT" value={blGpt} onChange={setBlGpt} step="0.01" />
+          <NumField label="Fine Adjust" value={blFine} onChange={setBlFine} step="0.001" />
+          <NumField label="Desired Volume (GAL)" value={blDesired} onChange={setBlDesired} step="0.001" />
+        </div>
+
+        <div className="divider" />
+        <div className="lbl mb-3">Bucket Test Targets</div>
+        <div className="flex justify-between items-center gap-3">
+          <div>
+            <div className="lbl">Theoretical GPM</div>
+            <div className="font-display" style={{ fontSize: 28, fontWeight: 900, color: 'var(--brand)' }}>
+              {thGpm.toFixed(3)}
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="lbl">Expected Time</div>
+            <div className="font-display" style={{ fontSize: 28, fontWeight: 900 }}>
+              {thTime.toFixed(1)}s
+            </div>
+          </div>
+        </div>
+
+        <div className="divider" />
+        <div className="lbl mb-3 text-center">Bucket Test Stopwatch</div>
+        <div className="timer mb-4" style={{ textAlign: 'center', fontSize: 36, fontWeight: 900 }}>
+          {timerSec.toFixed(1)}s
+        </div>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            className="btn btn-brand flex-1"
+            style={{ fontSize: 15, padding: 14 }}
+            onClick={handleStartStop}
+          >
+            {timerRunning ? '⏹ Stop' : '▶ Start'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost flex-1"
+            style={{ fontSize: 14, padding: 14 }}
+            onClick={handleReset}
+          >
+            ↺ Reset
+          </button>
+        </div>
+      </ToolCard>
+
+      {showResults ? (
+        <ToolCard title="Calibration Results" tab={TAB}>
+          <div className="flex gap-3 mb-3">
+            <ResultTile label="Target GPM" value={thGpm.toFixed(3)} />
+            <ResultTile label="Measured GPM" value={measuredGpm.toFixed(3)} emphasize />
+          </div>
+          <div className="flex gap-3">
+            <ResultTile
+              label="% Error"
+              value={`${errorPct.toFixed(1)}%`}
+              className="tile flex-1"
+            />
+            <ResultTile label="Rec. Fine Adjust" value={recFine.toFixed(3)} emphasize />
+          </div>
+        </ToolCard>
+      ) : null}
 
       <ToolCard title="Clean & Slurry Rate Conversion (CFR & Yield)" tab={TAB}>
         <div className="grid-2 mb-3">
@@ -223,74 +289,6 @@ export function BlenderPage() {
           <ResultTile label="Calc Clean Rate (BPM)" value={cleanBpm.toFixed(1)} unit="BPM" emphasize />
         </div>
       </ToolCard>
-
-      <ToolCard title="Bucket Test Configuration" tab={TAB}>
-        <div className="grid-2 mb-3">
-          <NumField label="Simulated Rate (BPM)" value={blRate} onChange={setBlRate} step="0.1" />
-          <NumField label="Target GPT" value={blGpt} onChange={setBlGpt} step="0.01" />
-          <NumField label="Fine Adjust" value={blFine} onChange={setBlFine} step="0.001" />
-          <NumField label="Bucket Volume (GAL)" value={blBucket} onChange={setBlBucket} step="0.001" />
-        </div>
-        <NumField label="Desired Volume (GAL)" value={blDesired} onChange={setBlDesired} step="0.001" className="" />
-
-        <div className="divider" />
-        <div className="lbl mb-3">Bucket Test Targets</div>
-        <div className="flex justify-between items-center gap-3">
-          <div>
-            <div className="lbl">Theoretical GPM</div>
-            <div className="font-display" style={{ fontSize: 28, fontWeight: 900, color: 'var(--brand)' }}>
-              {thGpm.toFixed(3)}
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="lbl">Expected Time</div>
-            <div className="font-display" style={{ fontSize: 28, fontWeight: 900 }}>
-              {thTime.toFixed(1)}s
-            </div>
-          </div>
-        </div>
-
-        <div className="divider" />
-        <div className="lbl mb-3 text-center">Bucket Test Stopwatch</div>
-        <div className="timer mb-4" style={{ textAlign: 'center', fontSize: 36, fontWeight: 900 }}>
-          {timerSec.toFixed(1)}s
-        </div>
-        <div className="flex gap-3">
-          <button
-            type="button"
-            className="btn btn-brand flex-1"
-            style={{ fontSize: 15, padding: 14 }}
-            onClick={handleStartStop}
-          >
-            {timerRunning ? '⏹ Stop' : '▶ Start'}
-          </button>
-          <button
-            type="button"
-            className="btn btn-ghost flex-1"
-            style={{ fontSize: 14, padding: 14 }}
-            onClick={handleReset}
-          >
-            ↺ Reset
-          </button>
-        </div>
-      </ToolCard>
-
-      {showResults ? (
-        <ToolCard title="Calibration Results" tab={TAB}>
-          <div className="flex gap-3 mb-3">
-            <ResultTile label="Target GPM" value={thGpm.toFixed(3)} />
-            <ResultTile label="Measured GPM" value={measuredGpm.toFixed(3)} emphasize />
-          </div>
-          <div className="flex gap-3">
-            <ResultTile
-              label="% Error"
-              value={`${errorPct.toFixed(1)}%`}
-              className="tile flex-1"
-            />
-            <ResultTile label="Rec. Fine Adjust" value={recFine.toFixed(3)} emphasize />
-          </div>
-        </ToolCard>
-      ) : null}
 
       <ToolCard title="Bucket Test Time & Adjustments" tab={TAB}>
         <div className="grid-2 mb-3">
