@@ -6,11 +6,20 @@ import { useTheme } from '../../context/ThemeContext';
 import { HeartIcon } from '../ui/HeartIcon';
 import { SmokyText } from '../ui/SmokyText';
 
+const AMPED_OPTIMIZER_FAVORITES = new Set([
+  'hp__high-rate-gear-optimizer',
+  'hp__gear-assignment',
+  'hp__field-management-notes',
+]);
+
 export function Dashboard() {
   const { tab, navigate, openFavoriteTool } = useNavigation();
   const { favorites, toggleFavorite } = useFavorites();
   const { theme, resolvedMode } = useTheme();
   const active = tab === 'dashboard';
+  const visibleFavorites = favorites.filter(
+    (f) => theme.profileId === 'amped' || !AMPED_OPTIMIZER_FAVORITES.has(f.id),
+  );
 
   // Replay smoke when entering Home or when profile / appearance changes
   const smokeKey = `${active}-${theme.profileId}-${theme.green}-${theme.blue}-${resolvedMode}`;
@@ -76,13 +85,13 @@ export function Dashboard() {
         <div className="lbl mb-3 tool-title" style={{ pointerEvents: 'none' }}>
           Favorites
         </div>
-        {favorites.length === 0 ? (
+        {visibleFavorites.length === 0 ? (
           <div id="favorites-empty">
             Tap the ♡ on any calculator tool to pin it here for quick access.
           </div>
         ) : (
           <div id="favorites-list">
-            {favorites.map((f) => (
+            {visibleFavorites.map((f) => (
               <div key={f.id} className="fav-item" style={{ cursor: 'default' }}>
                 <button
                   type="button"

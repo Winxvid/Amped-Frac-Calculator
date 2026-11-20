@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { F } from '../../lib/formulas';
 import { useNavigation } from '../../context/NavigationContext';
 import { useCalcState } from '../../context/CalcStateContext';
+import { useTheme } from '../../context/ThemeContext';
 import { SectionHeader } from '../../components/ui/SectionHeader';
 import { ToolCard } from '../../components/tools/ToolCard';
 import { NumField, ResultTile } from '../../components/ui/NumField';
@@ -37,17 +38,7 @@ const PUMP_SPECS: Record<
   GD_2500Q: { bore: 4.5, stroke: 8, plungers: 5, bblPerRev: 0.0656, maxPsi: 12400 },
 };
 
-const ALL_GEAR_RATES: Record<number, number> = {
-  1: 4.2,
-  2: 4.9,
-  3: 5.7,
-  4: 6.8,
-  5: 7.9,
-  6: 9.3,
-  7: 10.7,
-  8: 12.4,
-  9: 14.6,
-};
+const ALL_GEARS = [...BASE_GEARS, ...EXTRA_GEARS];
 
 type GoSolution = {
   gearCounts: Record<number, number>;
@@ -128,6 +119,8 @@ export function HpPage() {
   const { tab } = useNavigation();
   const active = tab === 'hp';
   const { cleanRate, setCleanRate } = useCalcState();
+  const { theme } = useTheme();
+  const isAmped = theme.profileId === 'amped';
 
   // Stage energy
   const [psi, setPsi] = useState(8500);
@@ -172,6 +165,7 @@ export function HpPage() {
   const [goPumps, setGoPumps] = useState(14);
   const [goTarget, setGoTarget] = useState(100);
   const [goExtreme, setGoExtreme] = useState(false);
+  const [goExcludeFifth, setGoExcludeFifth] = useState(false);
   const [goSols, setGoSols] = useState<GoSolution[]>([]);
   const [goSelIdx, setGoSelIdx] = useState(0);
   const [goShow, setGoShow] = useState(false);
@@ -219,8 +213,8 @@ export function HpPage() {
 
   // Gear range display
   const activeGears = useMemo(
-    () => (goExtreme ? [...BASE_GEARS, ...EXTRA_GEARS] : [...BASE_GEARS]),
-    [goExtreme],
+    () => (goExtreme ? ALL_GEARS : BASE_GEARS).filter(([gear]) => !goExcludeFifth || gear !== 5),
+    [goExtreme, goExcludeFifth],
   );
   const goMin = goPumps * (activeGears[0]?.[1] ?? 0);
   const goMax = goPumps * (activeGears[activeGears.length - 1]?.[1] ?? 0);
@@ -466,7 +460,7 @@ export function HpPage() {
         />
       </ToolCard>
 
-      <ToolCard title="High-Rate Gear Optimizer" tab={TAB}>
+      {isAmped && <ToolCard title="High-Rate Gear Optimizer" tab={TAB}>
         <div className="mb-4">
           <label className="lbl">Pumps Inline</label>
           <div className="flex gap-2 items-center mb-1">
@@ -538,16 +532,54 @@ export function HpPage() {
           <label className="toggle">
             <input
               type="checkbox"
+              aria-label="Extreme Mode"
               checked={goExtreme}
-              onChange={(e) => setGoExtreme(e.target.checked)}
+              disabled={goBusy}
+              onChange={(e) => {
+                setGoExtreme(e.target.checked);
+                setGoShow(false);
+              }}
             />
             <div className="toggle-track" />
             <div className="toggle-thumb" />
           </label>
         </div>
-      </ToolCard>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            padding: 12,
+            marginTop: 8,
+            background: 'var(--surface)',
+            borderRadius: 12,
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600 }}>Exclude 5th Gear</div>
+            <div style={{ fontSize: 11, color: 'var(--text2)', marginTop: 2 }}>
+              Optimize without assigning pumps to 5th gear
+            </div>
+          </div>
+          <label className="toggle">
+            <input
+              type="checkbox"
+              aria-label="Exclude 5th Gear"
+              checked={goExcludeFifth}
+              disabled={goBusy}
+              onChange={(e) => {
+                setGoExcludeFifth(e.target.checked);
+                setGoShow(false);
+              }}
+            />
+            <div className="toggle-track" />
+            <div className="toggle-thumb" />
+          </label>
+        </div>
+      </ToolCard>}
 
-      {goShow && best && (
+      {isAmped && goShow && best && (
         <>
           <div className="flex gap-3 mb-4">
             <div className="card flex-1">
@@ -606,11 +638,10 @@ export function HpPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Array.from({ length: 9 }, (_, i) => i + 1).map((g) => {
+                    {ALL_GEARS.map(([g, gr]) => {
                       const cnt = best.gearCounts[g] || 0;
                       if (!cnt) return null;
                       const isMid = g >= 4 && g <= 6;
-                      const gr = ALL_GEAR_RATES[g] || 0;
                       const pct = Math.round((cnt / goPumps) * 100);
                       return (
                         <tr key={g} className={isMid ? 'gear-mid-row' : undefined}>

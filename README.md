@@ -61,6 +61,10 @@ Available in **Settings (⚙)** and **Home → Favorites**. Preferences stay in 
 
 Profiles: **Default**, **Amped**, **Liberty** (A/B color variants).
 
+The High-Rate Gear Optimizer is shown only when the Amped company profile is selected.
+Profiles are locally selected appearance settings, not employee authentication.
+The optimizer can optionally exclude 5th gear, with or without Extreme Mode.
+
 ## Multi-section wellbore capacity
 
 Enter top and bottom measured depths for each section to calculate its length, or enter

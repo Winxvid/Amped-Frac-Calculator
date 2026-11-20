@@ -56,10 +56,10 @@ export const BASE_GEARS: [number, number][] = [
   [1, 4.2],
   [2, 4.9],
   [3, 5.7],
-  [4, 6.8],
+  [4, 7.7],
   [5, 7.9],
-  [6, 9.3],
-  [7, 10.7],
+  [6, 9.2],
+  [7, 10.6],
 ];
 export const EXTRA_GEARS: [number, number][] = [
   [8, 12.4],
