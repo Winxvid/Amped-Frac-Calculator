@@ -224,7 +224,7 @@ export function BlenderPage() {
         </div>
       </ToolCard>
 
-      <ToolCard title="Test Configuration" tab={TAB}>
+      <ToolCard title="Bucket Test Configuration" tab={TAB}>
         <div className="grid-2 mb-3">
           <NumField label="Simulated Rate (BPM)" value={blRate} onChange={setBlRate} step="0.1" />
           <NumField label="Target GPT" value={blGpt} onChange={setBlGpt} step="0.01" />
@@ -232,9 +232,9 @@ export function BlenderPage() {
           <NumField label="Bucket Volume (GAL)" value={blBucket} onChange={setBlBucket} step="0.001" />
         </div>
         <NumField label="Desired Volume (GAL)" value={blDesired} onChange={setBlDesired} step="0.001" className="" />
-      </ToolCard>
 
-      <ToolCard title="Bucket Test Targets" tab={TAB}>
+        <div className="divider" />
+        <div className="lbl mb-3">Bucket Test Targets</div>
         <div className="flex justify-between items-center gap-3">
           <div>
             <div className="lbl">Theoretical GPM</div>
@@ -249,9 +249,9 @@ export function BlenderPage() {
             </div>
           </div>
         </div>
-      </ToolCard>
 
-      <ToolCard title="Bucket Test Stopwatch" tab={TAB}>
+        <div className="divider" />
+        <div className="lbl mb-3 text-center">Bucket Test Stopwatch</div>
         <div className="timer mb-4" style={{ textAlign: 'center', fontSize: 36, fontWeight: 900 }}>
           {timerSec.toFixed(1)}s
         </div>
