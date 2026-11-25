@@ -59,6 +59,10 @@ export function SandPage() {
   const [rStart, setRStart] = useState(0.5);
   const [rEnd, setREnd] = useState(2.5);
   const [rVol, setRVol] = useState(1000);
+  const [raOldTotal, setRaOldTotal] = useState(1000);
+  const [raStart, setRaStart] = useState(0.25);
+  const [raOldMax, setRaOldMax] = useState(3.0);
+  const [raNewMax, setRaNewMax] = useState(2.0);
   const [augR, setAugR] = useState(6);
   const [shaftR, setShaftR] = useState(1);
   const [pitch, setPitch] = useState(10.5);
@@ -100,6 +104,10 @@ export function SandPage() {
   }
   const rAvg = (rStart + rEnd) / 2;
   const rTotal = rAvg * rVol * 42;
+  const raValid = raOldTotal > 0 && raStart >= 0 && raOldMax > raStart && raNewMax > raStart;
+  const raRatio = raValid ? (raNewMax - raStart) / (raOldMax - raStart) : null;
+  const raNewTotal = raRatio !== null ? raOldTotal * raRatio : null;
+  const raSand = raNewTotal !== null ? ((raStart + raNewMax) / 2) * raNewTotal * 42 : null;
   const ppr = (1.41 * (augR ** 2 - shaftR ** 2) * pitch * bulk) / 1728;
 
   // Share the calculated Auger Dimensions PPR app-wide so other PPR fields
@@ -336,6 +344,24 @@ export function SandPage() {
           <ResultTile label="Avg PPA" value={rAvg.toFixed(2)} />
           <ResultTile label="Total Sand" value={F.c(rTotal)} unit="LBS" emphasize />
         </div>
+      </ToolCard>
+
+      <ToolCard title="Sand Ramp Adjustment" tab={TAB}>
+        <div className="grid-2 mb-3">
+          <NumField label="Old Ramp Clean Volume (BBL)" value={raOldTotal} onChange={setRaOldTotal} className="" />
+          <NumField label="Starting Conc (PPA)" value={raStart} onChange={setRaStart} step="0.05" className="" />
+          <NumField label="Old Max Conc (PPA)" value={raOldMax} onChange={setRaOldMax} step="0.1" className="" />
+          <NumField label="New Max Conc (PPA)" value={raNewMax} onChange={setRaNewMax} step="0.1" className="" />
+        </div>
+        {!raValid ? (
+          <div className="lbl mb-3">Enter a positive ramp total, and old and new max conc above the starting conc.</div>
+        ) : null}
+        <div className="flex gap-3 mb-3">
+          <ResultTile label="Volume Ratio" value={raRatio !== null ? `${(raRatio * 100).toFixed(1)}%` : '–'} />
+          <ResultTile label="New Ramp Total" value={raNewTotal !== null ? raNewTotal.toFixed(1) : '–'} unit="BBL" emphasize />
+        </div>
+        <ResultTile label="Estimated Total Sand" value={raSand !== null ? F.c(raSand) : '–'} unit="LBS" emphasize className="tile" />
+        <div className="lbl mt-3">Sand estimate assumes a linear ramp and clean volume.</div>
       </ToolCard>
 
       <ToolCard title="PPR Calculator (Auger Dimensions)" tab={TAB}>
