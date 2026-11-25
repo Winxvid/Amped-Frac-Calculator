@@ -51,14 +51,14 @@ export function BlenderPage() {
   // Test config + stopwatch
   const [blRate, setBlRate] = useState(60);
   const [blGpt, setBlGpt] = useState(1.0);
-  const [blFine, setBlFine] = useState(1.0);
+  const [bktEfficiency, setBktEfficiency] = useState(100);
   const [blDesired, setBlDesired] = useState(1.0);
   const [timerSec, setTimerSec] = useState(0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [measuredGpm, setMeasuredGpm] = useState(0);
   const [errorPct, setErrorPct] = useState(0);
-  const [recFine, setRecFine] = useState(1);
+  const [recEfficiency, setRecEfficiency] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startRef = useRef(0);
 
@@ -67,7 +67,6 @@ export function BlenderPage() {
   const [bktRate, setBktRate] = useState(95);
   const [bktGpt, setBktGpt] = useState(0.5);
   const [bktActual, setBktActual] = useState(16);
-  const [bktEfficiency, setBktEfficiency] = useState(100);
 
   useEffect(() => {
     if (timerRunning) {
@@ -113,7 +112,7 @@ export function BlenderPage() {
   const cleanBpm = cleanM3 * 6.2898;
 
   // Test config theoretical
-  const thGpm = F.gpm(blRate, blGpt, blFine);
+  const thGpm = F.gpm(blRate, blGpt, bktEfficiency / 100);
   const thTime = thGpm > 0 ? (blDesired / thGpm) * 60 : 0;
 
   // Bucket test
@@ -132,10 +131,10 @@ export function BlenderPage() {
         const target = thGpm;
         const err = target > 0 ? ((measured - target) / target) * 100 : 0;
         const base = F.gpm(blRate, blGpt, 1);
-        const fine = base > 0 ? measured / base : 1;
+        const efficiency = base > 0 ? (measured / base) * 100 : null;
         setMeasuredGpm(measured);
         setErrorPct(err);
-        setRecFine(fine);
+        setRecEfficiency(efficiency);
         setShowResults(true);
       }
     } else {
@@ -162,7 +161,7 @@ export function BlenderPage() {
         <div className="grid-2 mb-3">
           <NumField label="Simulated Rate (BPM)" value={blRate} onChange={setBlRate} step="0.1" />
           <NumField label="Target GPT" value={blGpt} onChange={setBlGpt} step="0.01" />
-          <NumField label="Fine Adjust" value={blFine} onChange={setBlFine} step="0.001" />
+          <NumField label="Current Efficiency (100 = baseline)" value={bktEfficiency} onChange={setBktEfficiency} step="0.01" />
           <NumField label="Desired Volume (GAL)" value={blDesired} onChange={setBlDesired} step="0.001" />
         </div>
 
@@ -214,10 +213,9 @@ export function BlenderPage() {
           <NumField label="Clean Rate (BPM)" value={bktRate} onChange={setBktRate} />
           <NumField label="Setpoint (GPT)" value={bktGpt} onChange={setBktGpt} step="0.1" />
           <NumField label="Actual Time (SEC)" value={bktActual} onChange={setBktActual} />
-          <NumField label="Current Efficiency (100 = baseline)" value={bktEfficiency} onChange={setBktEfficiency} step="0.01" />
         </div>
         {!validBktEstimate || bktActual <= 0 || bktEfficiency <= 0 ? (
-          <div className="lbl mb-3">Enter positive values for all bucket test inputs.</div>
+          <div className="lbl mb-3">Enter positive values for all bucket test inputs and current efficiency in Bucket Test Configuration.</div>
         ) : null}
         <div className="flex gap-3 mb-3">
           <ResultTile label="Estimated Time" value={bktEst !== null ? bktEst.toFixed(1) : '–'} unit="SEC" />
@@ -238,8 +236,11 @@ export function BlenderPage() {
               value={`${errorPct.toFixed(1)}%`}
               className="tile flex-1"
             />
-            <ResultTile label="Rec. Fine Adjust" value={recFine.toFixed(3)} emphasize />
+            <ResultTile label="Rec. Efficiency" value={recEfficiency !== null ? recEfficiency.toFixed(2) : '–'} emphasize />
           </div>
+          {recEfficiency === null ? (
+            <div className="lbl mt-3">Enter a positive simulated rate and target GPT to calculate efficiency.</div>
+          ) : null}
         </ToolCard>
       ) : null}
 

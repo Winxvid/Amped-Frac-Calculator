@@ -162,7 +162,7 @@ export function HpPage() {
   const [prPe, setPrPe] = useState(283);
 
   // Gear optimizer
-  const [goPumps, setGoPumps] = useState(14);
+  const [goPumps, setGoPumps] = useState<number | ''>(14);
   const [goTarget, setGoTarget] = useState(100);
   const [goExtreme, setGoExtreme] = useState(false);
   const [goExcludeFifth, setGoExcludeFifth] = useState(false);
@@ -216,8 +216,8 @@ export function HpPage() {
     () => (goExtreme ? ALL_GEARS : BASE_GEARS).filter(([gear]) => !goExcludeFifth || gear !== 5),
     [goExtreme, goExcludeFifth],
   );
-  const goMin = goPumps * (activeGears[0]?.[1] ?? 0);
-  const goMax = goPumps * (activeGears[activeGears.length - 1]?.[1] ?? 0);
+  const goMin = goPumps === '' ? null : goPumps * (activeGears[0]?.[1] ?? 0);
+  const goMax = goPumps === '' ? null : goPumps * (activeGears[activeGears.length - 1]?.[1] ?? 0);
 
   const best = goSols[goSelIdx];
 
@@ -243,10 +243,12 @@ export function HpPage() {
   }, [best]);
 
   const runOptimizer = () => {
+    if (goPumps === '') return;
+    const numPumps = goPumps;
     setGoBusy(true);
     // Defer heavy solve so UI can paint busy state
     setTimeout(() => {
-      const sols = goSolve(goPumps, goTarget, activeGears);
+      const sols = goSolve(numPumps, goTarget, activeGears);
       setGoSols(sols);
       setGoSelIdx(0);
       setGoShow(sols.length > 0);
@@ -470,8 +472,13 @@ export function HpPage() {
               value={goPumps}
               min={1}
               max={30}
+              disabled={goBusy}
               style={{ width: 90 }}
-              onChange={(e) => setGoPumps(Math.max(1, Math.min(30, parseInt(e.target.value, 10) || 1)))}
+              onChange={(e) => {
+                const value = e.target.value;
+                setGoPumps(value === '' ? '' : Math.max(1, Math.min(30, parseInt(value, 10) || 1)));
+                setGoShow(false);
+              }}
             />
             <div className="flex gap-1">
               {[10, 12, 14, 16].map((n) => (
@@ -479,7 +486,11 @@ export function HpPage() {
                   key={n}
                   type="button"
                   className={`quick-btn${goPumps === n ? ' sel' : ''}`}
-                  onClick={() => setGoPumps(n)}
+                  disabled={goBusy}
+                  onClick={() => {
+                    setGoPumps(n);
+                    setGoShow(false);
+                  }}
                 >
                   {n}
                 </button>
@@ -487,7 +498,9 @@ export function HpPage() {
             </div>
           </div>
           <div style={{ fontSize: 10, color: 'var(--text2)', marginTop: 4 }}>
-            Range: {goMin.toFixed(1)} – {goMax.toFixed(1)} BPM
+            {goMin !== null && goMax !== null
+              ? `Range: ${goMin.toFixed(1)} – ${goMax.toFixed(1)} BPM`
+              : 'Enter a pump count from 1 to 30.'}
           </div>
         </div>
 
@@ -507,7 +520,7 @@ export function HpPage() {
             className="btn btn-brand"
             style={{ padding: '10px 20px', whiteSpace: 'nowrap' }}
             onClick={runOptimizer}
-            disabled={goBusy}
+            disabled={goBusy || goPumps === ''}
           >
             {goBusy ? '⏳ Calculating…' : '⚡ Optimize'}
           </button>
@@ -579,7 +592,7 @@ export function HpPage() {
         </div>
       </ToolCard>}
 
-      {isAmped && goShow && best && (
+      {isAmped && goShow && best && goPumps !== '' && (
         <>
           <div className="flex gap-3 mb-4">
             <div className="card flex-1">

@@ -67,10 +67,12 @@ The optimizer can optionally exclude 5th gear, with or without Extreme Mode.
 
 ## Blender bucket test adjustments
 
-Enter the current efficiency on the 100-baseline scale. New efficiency is the
-current efficiency multiplied by estimated bucket test time divided by actual
-bucket test time. The estimated time is based on the entered rate, setpoint,
-and gallons filled; percentage error is unchanged.
+Enter the current efficiency on the 100-baseline scale in Bucket Test
+Configuration. It scales that card's theoretical GPM and is also used by
+Bucket Test Time & Adjustments. New efficiency is the current efficiency
+multiplied by estimated bucket test time divided by actual bucket test time.
+The estimated time is based on the entered rate, setpoint, and gallons filled;
+percentage error is unchanged.
 
 ## Multi-section wellbore capacity
 
