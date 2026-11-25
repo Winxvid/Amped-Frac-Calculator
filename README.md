@@ -65,6 +65,13 @@ The High-Rate Gear Optimizer is shown only when the Amped company profile is sel
 Profiles are locally selected appearance settings, not employee authentication.
 The optimizer can optionally exclude 5th gear, with or without Extreme Mode.
 
+## Blender bucket test adjustments
+
+Enter the current efficiency on the 100-baseline scale. New efficiency is the
+current efficiency multiplied by estimated bucket test time divided by actual
+bucket test time. The estimated time is based on the entered rate, setpoint,
+and gallons filled; percentage error is unchanged.
+
 ## Multi-section wellbore capacity
 
 Enter top and bottom measured depths for each section to calculate its length, or enter

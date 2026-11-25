@@ -67,6 +67,7 @@ export function BlenderPage() {
   const [bktRate, setBktRate] = useState(95);
   const [bktGpt, setBktGpt] = useState(0.5);
   const [bktActual, setBktActual] = useState(16);
+  const [bktEfficiency, setBktEfficiency] = useState(100);
 
   useEffect(() => {
     if (timerRunning) {
@@ -117,9 +118,11 @@ export function BlenderPage() {
 
   // Bucket test
   const bktDenom = bktRate * 0.042 * bktGpt;
-  const bktEst = bktDenom > 0 ? (60 * bktGal) / bktDenom : 0;
-  const bktError = bktActual > 0 ? (bktEst / bktActual - 1) * 100 : 0;
-  const bktNewFine = bktActual > 0 ? bktEst / bktActual : 1;
+  const validBktEstimate = bktGal > 0 && bktRate > 0 && bktGpt > 0;
+  const bktEst = validBktEstimate ? (60 * bktGal) / bktDenom : null;
+  const bktRatio = bktEst !== null && bktActual > 0 ? bktEst / bktActual : null;
+  const bktError = bktRatio !== null ? (bktRatio - 1) * 100 : null;
+  const bktNewEfficiency = bktRatio !== null && bktEfficiency > 0 ? bktEfficiency * bktRatio : null;
 
   const handleStartStop = () => {
     if (timerRunning) {
@@ -205,6 +208,24 @@ export function BlenderPage() {
         </div>
       </ToolCard>
 
+      <ToolCard title="Bucket Test Time & Adjustments" tab={TAB}>
+        <div className="grid-2 mb-3">
+          <NumField label="Gallons Filled" value={bktGal} onChange={setBktGal} />
+          <NumField label="Clean Rate (BPM)" value={bktRate} onChange={setBktRate} />
+          <NumField label="Setpoint (GPT)" value={bktGpt} onChange={setBktGpt} step="0.1" />
+          <NumField label="Actual Time (SEC)" value={bktActual} onChange={setBktActual} />
+          <NumField label="Current Efficiency (100 = baseline)" value={bktEfficiency} onChange={setBktEfficiency} step="0.01" />
+        </div>
+        {!validBktEstimate || bktActual <= 0 || bktEfficiency <= 0 ? (
+          <div className="lbl mb-3">Enter positive values for all bucket test inputs.</div>
+        ) : null}
+        <div className="flex gap-3 mb-3">
+          <ResultTile label="Estimated Time" value={bktEst !== null ? bktEst.toFixed(1) : '–'} unit="SEC" />
+          <ResultTile label="% Error" value={bktError !== null ? `${bktError.toFixed(1)}%` : '–'} />
+        </div>
+        <ResultTile label="New Efficiency" value={bktNewEfficiency !== null ? bktNewEfficiency.toFixed(2) : '–'} emphasize className="tile" />
+      </ToolCard>
+
       {showResults ? (
         <ToolCard title="Calibration Results" tab={TAB}>
           <div className="flex gap-3 mb-3">
@@ -288,20 +309,6 @@ export function BlenderPage() {
           <ResultTile label="Calc Clean Rate (m³/min)" value={cleanM3.toFixed(2)} unit="M³/MIN" emphasize />
           <ResultTile label="Calc Clean Rate (BPM)" value={cleanBpm.toFixed(1)} unit="BPM" emphasize />
         </div>
-      </ToolCard>
-
-      <ToolCard title="Bucket Test Time & Adjustments" tab={TAB}>
-        <div className="grid-2 mb-3">
-          <NumField label="Gallons Filled" value={bktGal} onChange={setBktGal} />
-          <NumField label="Clean Rate (BPM)" value={bktRate} onChange={setBktRate} />
-          <NumField label="Setpoint (GPT)" value={bktGpt} onChange={setBktGpt} step="0.1" />
-          <NumField label="Actual Time (SEC)" value={bktActual} onChange={setBktActual} />
-        </div>
-        <div className="flex gap-3 mb-3">
-          <ResultTile label="Estimated Time" value={bktEst.toFixed(1)} unit="SEC" />
-          <ResultTile label="% Error" value={`${bktError.toFixed(1)}%`} />
-        </div>
-        <ResultTile label="New Fine Adjust" value={bktNewFine.toFixed(2)} emphasize className="tile" />
       </ToolCard>
     </div>
   );
