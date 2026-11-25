@@ -30,7 +30,14 @@ function loadFavorites(): FavoriteItem[] {
     if (!raw) return [];
     const data = JSON.parse(raw);
     if (!Array.isArray(data)) return [];
-    return data.filter((f) => f && f.id && f.label && f.tab);
+    const items: FavoriteItem[] = data.filter((f) => f && f.id && f.label && f.tab);
+    let hasSandRamp = false;
+    return items.flatMap((item) => {
+      if (item.id !== 'sand__sand-ramp-adjustment' && item.id !== 'sand__sand-ramp-calculator') return [item];
+      if (hasSandRamp) return [];
+      hasSandRamp = true;
+      return [{ id: 'sand__sand-ramp-calculator', label: 'Sand Ramp Calculator', tab: 'sand' }];
+    });
   } catch {
     return [];
   }

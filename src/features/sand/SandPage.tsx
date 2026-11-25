@@ -335,6 +335,7 @@ export function SandPage() {
       </ToolCard>
 
       <ToolCard title="Sand Ramp Calculator" tab={TAB}>
+        <div className="lbl mb-2">Sand Ramp</div>
         <div className="grid-3 mb-3">
           <NumField label="Start PPA" value={rStart} onChange={setRStart} step="0.1" className="" />
           <NumField label="End PPA" value={rEnd} onChange={setREnd} step="0.1" className="" />
@@ -344,9 +345,8 @@ export function SandPage() {
           <ResultTile label="Avg PPA" value={rAvg.toFixed(2)} />
           <ResultTile label="Total Sand" value={F.c(rTotal)} unit="LBS" emphasize />
         </div>
-      </ToolCard>
-
-      <ToolCard title="Sand Ramp Adjustment" tab={TAB}>
+        <div className="divider" />
+        <div className="lbl mb-2">Sand Ramp Adjustment</div>
         <div className="grid-2 mb-3">
           <NumField label="Old Ramp Clean Volume (BBL)" value={raOldTotal} onChange={setRaOldTotal} className="" />
           <NumField label="Starting Conc (PPA)" value={raStart} onChange={setRaStart} step="0.05" className="" />
